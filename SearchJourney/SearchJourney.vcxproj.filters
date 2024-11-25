@@ -39,6 +39,9 @@
     <Filter Include="Source Files\SymbolManger">
       <UniqueIdentifier>{89bc49a5-f76b-426a-b32a-2851f7141035}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\SelectFeatureTool">
+      <UniqueIdentifier>{e52fd97b-9ef1-4d3b-b50b-3bd9bc722eb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -89,6 +92,15 @@
     <ClCompile Include="SymbolManger.cpp">
       <Filter>Source Files\SymbolManger</Filter>
     </ClCompile>
+    <ClCompile Include="SelectFeatureTool.cpp">
+      <Filter>Source Files\SelectFeatureTool</Filter>
+    </ClCompile>
+    <ClCompile Include="EditFeatureAttri.cpp">
+      <Filter>Source Files\SelectFeatureTool</Filter>
+    </ClCompile>
+    <ClCompile Include="DeleteFeature.cpp">
+      <Filter>Source Files\SelectFeatureTool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="MainWidget.ui">
@@ -122,6 +134,9 @@
     </QtMoc>
     <QtMoc Include="SymbolManger.h">
       <Filter>Source Files\SymbolManger</Filter>
+    </QtMoc>
+    <QtMoc Include="SelectFeatureTool.h">
+      <Filter>Source Files\SelectFeatureTool</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
