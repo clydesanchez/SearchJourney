@@ -11,11 +11,12 @@ AttributeViewWidget::AttributeViewWidget(QgsVectorLayer* curVecLayer, QgsMapCanv
 
 	// 自定义的tableview替换到原有的tableview的布局中
 	mTableView = new CustomAttributeTableView(this);
-	ui.gridLayout->addWidget(mTableView);
+	ui.verticalLayout_2->addWidget(mTableView);
 	delete ui.tableView;
 	ui.ctrl_btnAddAttri->setEnabled(false);
 	ui.ctrl_btnAddFeature->setEnabled(false);
 	ui.ctrl_btnDelAttri->setEnabled(false);
+	ui.ctrl_btnModifyAttri->setEnabled(false);
 	ui.ctrl_btnDelFeature->setEnabled(false);
 	// 设置model
 	mCurVecLayer = curVecLayer;
@@ -32,6 +33,7 @@ AttributeViewWidget::AttributeViewWidget(QgsVectorLayer* curVecLayer, QgsMapCanv
 	connect(ui.ctrl_btnAddFeature, &QPushButton::clicked, this, &AttributeViewWidget::addFeature);
 	connect(ui.ctrl_btnDelAttri, &QPushButton::clicked, this, &AttributeViewWidget::deleteAttribute);
 	connect(ui.ctrl_btnDelFeature, &QPushButton::clicked, this, &AttributeViewWidget::deleteFeature);
+	connect(ui.ctrl_btnModifyAttri, &QPushButton::clicked, this, &AttributeViewWidget::modifyAttribute);
 }
 
 AttributeViewWidget::~AttributeViewWidget()
@@ -185,6 +187,7 @@ void AttributeViewWidget::changeEditMode()
 		ui.ctrl_btnAddFeature->setEnabled(true);
 		ui.ctrl_btnDelAttri->setEnabled(true);
 		ui.ctrl_btnDelFeature->setEnabled(true);
+		ui.ctrl_btnModifyAttri->setEnabled(true);
 
 		mTableView->setEditMode(true);
 	}
@@ -197,7 +200,143 @@ void AttributeViewWidget::changeEditMode()
 		ui.ctrl_btnAddFeature->setEnabled(false);
 		ui.ctrl_btnDelAttri->setEnabled(false);
 		ui.ctrl_btnDelFeature->setEnabled(false);
+		ui.ctrl_btnModifyAttri->setEnabled(false);
 		
 		mTableView->setEditMode(false);
 	}
+}
+
+void AttributeViewWidget::modifyAttribute() {
+	QgsVectorLayer* pLayer = mCurVecLayer;  // ��ȡ��ǰͼ��
+	pLayer->startEditing();
+	if (!pLayer || !pLayer->isEditable()) {
+		QMessageBox::warning(this, QStringLiteral("错误"), QStringLiteral("请选择一个有效的图层"));
+		return;
+	}
+
+	const QgsFields& fields = pLayer->fields();
+	if (fields.isEmpty()) {
+		QMessageBox::information(this, QStringLiteral("错误"), QStringLiteral("字段为空"));
+		return;
+	}
+
+	QStringList fieldNames;
+	for (const QgsField& field : fields) {
+		fieldNames << field.name();
+	}
+
+	bool ok;
+	QString fieldNameToModify = QInputDialog::getItem(this, QStringLiteral("请选择需要修改的字段"),
+		QStringLiteral("选择字段"), fieldNames, 0, false, &ok);
+	if (!ok || fieldNameToModify.isEmpty()) {
+		return;
+	}
+
+	int fieldIndex = fields.indexOf(fieldNameToModify);
+	if (fieldIndex == -1) {
+		QMessageBox::warning(this, QStringLiteral("错误"), QStringLiteral("字段无效"));
+		return;
+	}
+
+	QStringList fieldTypes = { QStringLiteral("字符型"), QStringLiteral("整型"), QStringLiteral("浮点型") };
+
+	QDialog* pModify = new QDialog();
+	pModify->setWindowModality(Qt::ApplicationModal);
+	pModify->setWindowTitle(QStringLiteral("修改字段"));
+	// 字段名相关控件
+	QHBoxLayout* hbl = new QHBoxLayout();
+	QLabel* pFNLabel = new QLabel();
+	QLineEdit* pFNLineEdit = new QLineEdit();
+	pFNLabel->setText(QStringLiteral("字段名称"));
+	pFNLineEdit->setText(fieldNameToModify);
+	hbl->addWidget(pFNLabel);
+	hbl->addWidget(pFNLineEdit);
+	// 字段类型相关控件
+	QHBoxLayout* hbl2 = new QHBoxLayout();
+	QLabel* pFTLabel = new QLabel();
+	QComboBox* pFTComboBox = new QComboBox();
+	pFTLabel->setText(QStringLiteral("字段类型"));
+	pFTComboBox->addItems(fieldTypes);
+	hbl2->addWidget(pFTLabel);
+	hbl2->addWidget(pFTComboBox);
+	// 字段长度相关控件
+	QHBoxLayout* hbl3 = new QHBoxLayout();
+	QLabel* pFLLabel = new QLabel();
+	QSpinBox* pFLSpinBox = new QSpinBox();
+	pFLLabel->setText(QStringLiteral("字段长度"));
+	hbl3->addWidget(pFLLabel);
+	hbl3->addWidget(pFLSpinBox);
+	// 确定取消相关控件
+	QHBoxLayout* hbl4 = new QHBoxLayout();
+	QPushButton* pYes = new QPushButton();
+	QPushButton* pNo = new QPushButton();
+	pYes->setText(QStringLiteral("确定"));
+	pNo->setText(QStringLiteral("取消"));
+	hbl4->addWidget(pYes);
+	hbl4->addWidget(pNo);
+	// 窗口设置
+	QVBoxLayout* vbl = new QVBoxLayout();
+	vbl->addLayout(hbl);
+	vbl->addLayout(hbl2);
+	vbl->addLayout(hbl3);
+	vbl->addLayout(hbl4);
+	pModify->setLayout(vbl);
+
+	connect(pYes, &QPushButton::clicked, pModify, [=]() {
+		QString newFieldName = pFNLineEdit->text();
+		QString fieldTypeStr = pFTComboBox->currentText();
+		int newFieldLength = 0;
+		
+		QVariant::Type newFieldType;
+
+		if (fieldTypeStr == QStringLiteral("字符型")) {
+			newFieldType = QVariant::String;
+			newFieldLength = pFLSpinBox->value();
+			if (newFieldLength > 255) {
+				QMessageBox::warning(this, QStringLiteral("错误"), QStringLiteral("字符长度超出限制"));
+			}
+		}
+		else if (fieldTypeStr == QStringLiteral("整型")) {
+			newFieldType = QVariant::Int;
+		}
+		else if (fieldTypeStr == QStringLiteral("浮点型")) {
+			newFieldType = QVariant::Double;
+		}
+		else {
+			QMessageBox::warning(this, QStringLiteral("错误"), QStringLiteral("请选择有效的字段"));
+			return;
+		}
+
+		if (!pLayer->dataProvider()->deleteAttributes({ fieldIndex })) {
+			QMessageBox::warning(this, QStringLiteral("错误"), QStringLiteral("字段修改错误"));
+			pLayer->rollBack();
+			return;
+		}
+		pLayer->updateFields();
+
+		QgsField newField(newFieldName, newFieldType, "", newFieldLength);
+		if (!pLayer->dataProvider()->addAttributes({ newField })) {
+			QMessageBox::warning(this, QStringLiteral("错误"), QStringLiteral("字段修改错误"));
+			pLayer->rollBack();
+			return;
+		}
+
+		if (!pLayer->commitChanges()) {
+			QMessageBox::warning(this, QStringLiteral("错误"), QStringLiteral("提交修改错误"));
+			return;
+		}
+
+		QMessageBox::information(this, QStringLiteral("提示"), QStringLiteral("字段修改成功"));
+
+		
+		pLayer->updateFields();
+		// 更新数据
+		mCurVecLayer->updateExtents();
+		mCurVecLayer->triggerRepaint();
+		// 更新表格
+		mTableView->update();
+		pModify->accept();
+		});
+
+	pModify->exec();
 }

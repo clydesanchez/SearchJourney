@@ -9,7 +9,6 @@
 // 获取点击图层要素
 void MainWidget::onMapCanvasClicked(const QPoint& point)
 {
-
     mbDragging = true;
     // 将屏幕坐标转换为地图坐标
     QgsPointXY mapPoint = mcanMapCanvas->getCoordinateTransform()->toMapCoordinates(point);
