@@ -42,7 +42,6 @@ Function Lists:
 #include "LayerItemMenu.h"
 #include <QGis.h>
 #include <qgsapplication.h>
-#include <gdal.h>
 #include <QSqlDatabase>
 #include <qgsstylemanagerdialog.h>
 #include <QgsFeatureIterator.h>
