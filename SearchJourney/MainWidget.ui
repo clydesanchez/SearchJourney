@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWidgetClass</class>
+ <widget class="QMainWindow" name="MainWidgetClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>981</width>
+    <height>682</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWidget</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="MainWidget.qrc">
+    <normaloff>:/icon/logistic.png</normaloff>:/icon/logistic.png</iconset>
+  </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Rounded</enum>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QWidget" name="ctrlMapView" native="true">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>614</width>
+        <height>574</height>
+       </size>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_7">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="GISMapCanvas" name="graphicsView"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>981</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color:white;
+color:black</string>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>工程·</string>
+    </property>
+    <addaction name="ctrlOpenProjectAction"/>
+    <addaction name="ctrlSaveProjectAction"/>
+    <addaction name="ctrlSaveAsSHPAction"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>视图</string>
+    </property>
+    <addaction name="ctrlStatisticsViewAction"/>
+    <addaction name="ctrlToolViewAction"/>
+    <addaction name="ctrlLayerListViewAction"/>
+   </widget>
+   <widget class="QMenu" name="menu_4">
+    <property name="title">
+     <string>图层</string>
+    </property>
+    <addaction name="ctrlOpenVectorAction"/>
+    <addaction name="ctrlOpenRasterAction"/>
+    <addaction name="ctrlOpenTextAction"/>
+   </widget>
+   <widget class="QMenu" name="menu_5">
+    <property name="title">
+     <string>矢量</string>
+    </property>
+    <addaction name="ctrlConnectAction"/>
+    <addaction name="ctrlKMeansAction"/>
+   </widget>
+   <widget class="QMenu" name="menu_6">
+    <property name="title">
+     <string>栅格</string>
+    </property>
+    <addaction name="ctrlRasterStatisticsAction"/>
+    <addaction name="ctrlSaveAsTxtAction"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_3"/>
+   <addaction name="menu_4"/>
+   <addaction name="menu_5"/>
+   <addaction name="menu_6"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="ctrlOpenProjectAction"/>
+   <addaction name="ctrlSaveProjectAction"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="ctrlLayerListDock">
+   <property name="styleSheet">
+    <string notr="true">border:1px soild black;
+background-color:#CCCCCC;</string>
+   </property>
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
+   <property name="windowTitle">
+    <string>图层</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="ctrlLayerWidget">
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid black;
+background-color:#F0F0F0;</string>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <property name="horizontalSpacing">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QgsLayerTreeView" name="ctrlLayerTreeView">
+       <property name="styleSheet">
+        <string notr="true">color:black</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="ctrlToolDock">
+   <property name="minimumSize">
+    <size>
+     <width>159</width>
+     <height>135</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border:1px soild black;
+background-color:#CCCCCC;</string>
+   </property>
+   <property name="windowTitle">
+    <string>分析工具</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid black;
+background-color:#F0F0F0;</string>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_4">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QScrollArea" name="scrollArea_3">
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="scrollAreaWidgetContents_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>157</width>
+          <height>563</height>
+         </rect>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_5">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QTreeWidget" name="ctrlTreeWidget">
+           <property name="animated">
+            <bool>true</bool>
+           </property>
+           <property name="wordWrap">
+            <bool>false</bool>
+           </property>
+           <property name="columnCount">
+            <number>1</number>
+           </property>
+           <attribute name="headerVisible">
+            <bool>false</bool>
+           </attribute>
+           <column>
+            <property name="text">
+             <string>工具箱</string>
+            </property>
+           </column>
+           <item>
+            <property name="text">
+             <string>矢量分析</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>K-Means聚类</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>按空间连接</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>保存为SHP</string>
+             </property>
+            </item>
+           </item>
+           <item>
+            <property name="text">
+             <string>栅格分析</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>栅格统计</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>保存统计结果</string>
+             </property>
+            </item>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="ctrlStatisticsDock">
+   <property name="minimumSize">
+    <size>
+     <width>176</width>
+     <height>135</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border:1px soild black;
+background-color:#CCCCCC;</string>
+   </property>
+   <property name="windowTitle">
+    <string>统计</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4">
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid black;
+background-color:#F0F0F0;</string>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_3">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QScrollArea" name="scrollArea_2">
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="scrollAreaWidgetContents">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>174</width>
+          <height>266</height>
+         </rect>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_6">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QListView" name="ctrlStatisticsView"/>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="ctrlOpenVectorAction"/>
+   <addaction name="ctrlOpenRasterAction"/>
+   <addaction name="ctrlOpenTextAction"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar_2">
+   <property name="windowTitle">
+    <string>toolBar_2</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="ctrlEditableAction"/>
+   <addaction name="ctrlKMeansAction"/>
+   <addaction name="ctrlConnectAction"/>
+   <addaction name="ctrlRasterStatisticsAction"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar_3">
+   <property name="windowTitle">
+    <string>toolBar_3</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="ctrlSaveAsSHPAction"/>
+   <addaction name="ctrlSaveAsTxtAction"/>
+   <addaction name="ctrlCRSAction"/>
+  </widget>
+  <action name="ctrlOpenVectorAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/icon/openVector.png</normaloff>:/icon/openVector.png</iconset>
+   </property>
+   <property name="text">
+    <string>添加矢量图层</string>
+   </property>
+  </action>
+  <action name="ctrlOpenRasterAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/icon/OpenRaster.png</normaloff>:/icon/OpenRaster.png</iconset>
+   </property>
+   <property name="text">
+    <string>添加栅格图层</string>
+   </property>
+  </action>
+  <action name="ctrlOpenTextAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/icon/openCSV.png</normaloff>:/icon/openCSV.png</iconset>
+   </property>
+   <property name="text">
+    <string>添加分隔符文本图层</string>
+   </property>
+  </action>
+  <action name="ctrlKMeansAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/icon/kmeans.png</normaloff>:/icon/kmeans.png</iconset>
+   </property>
+   <property name="text">
+    <string>K-Means聚类分析</string>
+   </property>
+  </action>
+  <action name="ctrlConnectAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/icon/connect.png</normaloff>:/icon/connect.png</iconset>
+   </property>
+   <property name="text">
+    <string>空间连接</string>
+   </property>
+  </action>
+  <action name="ctrlRasterStatisticsAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/icon/RasterStatistics.png</normaloff>:/icon/RasterStatistics.png</iconset>
+   </property>
+   <property name="text">
+    <string>栅格图层统计</string>
+   </property>
+  </action>
+  <action name="ctrlSaveProjectAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/icon/savePRJ.png</normaloff>:/icon/savePRJ.png</iconset>
+   </property>
+   <property name="text">
+    <string>保存工程</string>
+   </property>
+  </action>
+  <action name="ctrlOpenProjectAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/icon/openPRJ.png</normaloff>:/icon/openPRJ.png</iconset>
+   </property>
+   <property name="text">
+    <string>打开工程文件</string>
+   </property>
+  </action>
+  <action name="ctrlSaveAsSHPAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/icon/saveSHP.png</normaloff>:/icon/saveSHP.png</iconset>
+   </property>
+   <property name="text">
+    <string>保存为shp</string>
+   </property>
+  </action>
+  <action name="ctrlSaveAsTxtAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/icon/saveStstistics.png</normaloff>:/icon/saveStstistics.png</iconset>
+   </property>
+   <property name="text">
+    <string>保存统计结果</string>
+   </property>
+  </action>
+  <action name="ctrlLayerListViewAction">
+   <property name="text">
+    <string>图层列表视图</string>
+   </property>
+  </action>
+  <action name="ctrlStatisticsViewAction">
+   <property name="text">
+    <string>统计视图</string>
+   </property>
+  </action>
+  <action name="ctrlToolViewAction">
+   <property name="text">
+    <string>工具视图</string>
+   </property>
+  </action>
+  <action name="ctrlEditableAction">
+   <property name="text">
+    <string>启用编辑</string>
+   </property>
+  </action>
+  <action name="ctrlCRSAction">
+   <property name="text">
+    <string>坐标系</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QgsLayerTreeView</class>
+   <extends>QTreeWidget</extends>
+   <header>qgslayertreeview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>GISMapCanvas</class>
+   <extends>QGraphicsView</extends>
+   <header>GISMapCanvas.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="MainWidget.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>ctrlTreeWidget</sender>
+   <signal>itemClicked(QTreeWidgetItem*,int)</signal>
+   <receiver>MainWidgetClass</receiver>
+   <slot>onTreeItemClicked(QTreeWidgetItem*,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>901</x>
+     <y>359</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>490</x>
+     <y>333</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>onTreeItemClicked(QTreeWidgetItem*,int)</slot>
+ </slots>
+</ui>

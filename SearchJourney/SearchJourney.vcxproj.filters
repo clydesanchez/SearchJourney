@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>qml;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>qrc;rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="Translation Files">
+      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
+      <Extensions>ts</Extensions>
+    </Filter>
+    <Filter Include="Source Files\SelectDialog">
+      <UniqueIdentifier>{7b429dc4-f51b-4df4-81c7-3e8a7ba1b72c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Attribute">
+      <UniqueIdentifier>{b8d064fb-9706-413b-80b8-bc91598d767e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\LayerItem">
+      <UniqueIdentifier>{d29efa3b-4955-4e91-8013-0215834448a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\mapcanvas">
+      <UniqueIdentifier>{d10385a1-6f2d-4341-8615-b4ef5120fa90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MainWidget">
+      <UniqueIdentifier>{e7912ea6-49e2-40ce-966a-821ca94e7d22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SymbolManger">
+      <UniqueIdentifier>{89bc49a5-f76b-426a-b32a-2851f7141035}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectSelect.cpp">
+      <Filter>Source Files\SelectDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSaveSelect.cpp">
+      <Filter>Source Files\SelectDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="KMeansSelect.cpp">
+      <Filter>Source Files\SelectDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="RasterStatisticsSelect.cpp">
+      <Filter>Source Files\SelectDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="TextSelect.cpp">
+      <Filter>Source Files\SelectDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="AttributeViewWidget.cpp">
+      <Filter>Source Files\Attribute</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomAttributeTableView.cpp">
+      <Filter>Source Files\Attribute</Filter>
+    </ClCompile>
+    <ClCompile Include="LayerItemMenu.cpp">
+      <Filter>Source Files\LayerItem</Filter>
+    </ClCompile>
+    <ClCompile Include="GISMapCanvas.cpp">
+      <Filter>Source Files\mapcanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="AnalyticalFunction.cpp">
+      <Filter>Source Files\MainWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="EditVectorLayer.cpp">
+      <Filter>Source Files\MainWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="LayerView.cpp">
+      <Filter>Source Files\MainWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWidget.cpp">
+      <Filter>Source Files\MainWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFileIO.cpp">
+      <Filter>Source Files\MainWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="SymbolManger.cpp">
+      <Filter>Source Files\SymbolManger</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="MainWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="TextSelect.ui">
+      <Filter>Source Files\SelectDialog</Filter>
+    </QtUic>
+    <QtUic Include="AttributeViewWidget.ui">
+      <Filter>Source Files\Attribute</Filter>
+    </QtUic>
+    <QtUic Include="SymbolManger.ui">
+      <Filter>Source Files\SymbolManger</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="SelectDialog.h">
+      <Filter>Source Files\SelectDialog</Filter>
+    </QtMoc>
+    <QtMoc Include="AttributeViewWidget.h">
+      <Filter>Source Files\Attribute</Filter>
+    </QtMoc>
+    <QtMoc Include="CustomAttributeTableView.h">
+      <Filter>Source Files\Attribute</Filter>
+    </QtMoc>
+    <QtMoc Include="GISMapCanvas.h">
+      <Filter>Source Files\mapcanvas</Filter>
+    </QtMoc>
+    <QtMoc Include="MainWidget.h">
+      <Filter>Source Files\MainWidget</Filter>
+    </QtMoc>
+    <QtMoc Include="SymbolManger.h">
+      <Filter>Source Files\SymbolManger</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LayerItemMenu.h">
+      <Filter>Source Files\LayerItem</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="MainWidget.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+</Project>

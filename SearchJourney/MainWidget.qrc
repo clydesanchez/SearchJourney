@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icon/connect.png</file>
+        <file>icon/kmeans.png</file>
+        <file>icon/openCSV.png</file>
+        <file>icon/openPRJ.png</file>
+        <file>icon/OpenRaster.png</file>
+        <file>icon/RasterStatistics.png</file>
+        <file>icon/savePRJ.png</file>
+        <file>icon/saveStstistics.png</file>
+        <file>icon/openVector.png</file>
+        <file>icon/saveSHP.png</file>
+        <file>icon/logistic.png</file>
+    </qresource>
+</RCC>
