@@ -42,7 +42,7 @@ Function Lists:
 #include "LayerItemMenu.h"
 #include <QGis.h>
 #include <qgsapplication.h>
-#include <gdal.h>
+//#include <gdal.h>
 #include <QSqlDatabase>
 #include <qgsstylemanagerdialog.h>
 #include <QgsFeatureIterator.h>
@@ -53,6 +53,7 @@ MainWidget::MainWidget(QWidget *parent)
     ui.setupUi(this);
     // 初始化工程项目
     mppjProject = new QgsProject();
+    this->resize(1940, 1230);
     // 初始化地图画布
     mcanMapCanvas = ui.graphicsView;
     mcanMapCanvas->setStatusBar(ui.statusBar);
@@ -80,6 +81,11 @@ MainWidget::MainWidget(QWidget *parent)
 
 MainWidget::~MainWidget()
 {
+    if (mpBuffer)
+    {
+        delete mpBuffer;
+        mpBuffer = nullptr;
+    }
 }
 // 绘制地图
 void MainWidget::paintEvent(QPaintEvent *event)
@@ -194,6 +200,11 @@ void MainWidget::onTreeItemClicked(QTreeWidgetItem *item, int column)
     {
         saveAsSHP();
     }
+}
+void MainWidget::on_actionbuffer_triggered() {
+    mpBuffer = new Buffer(this, mcanMapCanvas, mppjProject);
+    mpBuffer->setMapLayers(mliLayersList);
+    mpBuffer->show();
 }
 // 更新图层列表
 void MainWidget::updateLayerList()

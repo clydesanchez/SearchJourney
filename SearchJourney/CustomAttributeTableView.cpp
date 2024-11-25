@@ -4,6 +4,7 @@
 #include <QgsAttributeTableModel.h>
 #include <QMessageBox>
 #include <QHeaderView>
+#include <qdebug>
 //#include "CustomAttributeFliterModel.h"
 CustomAttributeTableView::CustomAttributeTableView(QWidget* parent)
 	: QgsAttributeTableView(parent)

@@ -60,7 +60,7 @@
      <x>0</x>
      <y>0</y>
      <width>981</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -97,6 +97,7 @@ color:black</string>
     </property>
     <addaction name="ctrlConnectAction"/>
     <addaction name="ctrlKMeansAction"/>
+    <addaction name="actionbuffer"/>
    </widget>
    <widget class="QMenu" name="menu_6">
     <property name="title">
@@ -165,6 +166,11 @@ background-color:#F0F0F0;</string>
        <property name="styleSheet">
         <string notr="true">color:black</string>
        </property>
+       <column>
+        <property name="text">
+         <string notr="true">1</string>
+        </property>
+       </column>
       </widget>
      </item>
     </layout>
@@ -215,8 +221,8 @@ background-color:#F0F0F0;</string>
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>157</width>
-          <height>563</height>
+          <width>163</width>
+          <height>582</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_5">
@@ -341,7 +347,7 @@ background-color:#F0F0F0;</string>
           <x>0</x>
           <y>0</y>
           <width>174</width>
-          <height>266</height>
+          <height>278</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_6">
@@ -523,6 +529,11 @@ background-color:#F0F0F0;</string>
   <action name="ctrlCRSAction">
    <property name="text">
     <string>坐标系</string>
+   </property>
+  </action>
+  <action name="actionbuffer">
+   <property name="text">
+    <string>缓冲区</string>
    </property>
   </action>
  </widget>

@@ -14,6 +14,7 @@ Description:
 #include <QgsMultiPolygon.h>
 #include <QgsLayerTreeView.h>
 #include <QgsVertexMarker.h>
+#include "Buffer.h"
 class MainWidget : public QMainWindow
 {
     Q_OBJECT
@@ -39,6 +40,8 @@ private:
 
     QTimer* mTimer; // 定时器
     int mnProgressValue = 0; // 进度值
+
+    Buffer* mpBuffer; // 缓冲区分析
 public:
     void updateLayerList(); // 更新图层列表
 public:
@@ -74,6 +77,8 @@ public slots:
     void onChangeLayerVisible(QgsLayerTreeNode *pltnNode);          // 改变图层可见性
 
     void slotApplySymbol(QString strLayerName, QgsSymbol* psSymbol); // 设置图层样式
+
+    void on_actionbuffer_triggered(); // 缓冲区分析
 
     // 分析工具
 public:

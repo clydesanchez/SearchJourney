@@ -39,6 +39,9 @@
     <Filter Include="Source Files\SymbolManger">
       <UniqueIdentifier>{89bc49a5-f76b-426a-b32a-2851f7141035}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\SpatialAnalysisTools">
+      <UniqueIdentifier>{01dcb0d4-a8aa-49a7-9be4-df4439d565e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -89,11 +92,11 @@
     <ClCompile Include="SymbolManger.cpp">
       <Filter>Source Files\SymbolManger</Filter>
     </ClCompile>
+    <ClCompile Include="Buffer.cpp">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="MainWidget.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="TextSelect.ui">
       <Filter>Source Files\SelectDialog</Filter>
     </QtUic>
@@ -102,6 +105,12 @@
     </QtUic>
     <QtUic Include="SymbolManger.ui">
       <Filter>Source Files\SymbolManger</Filter>
+    </QtUic>
+    <QtUic Include="Buffer.ui">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </QtUic>
+    <QtUic Include="MainWidget.ui">
+      <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>
@@ -122,6 +131,9 @@
     </QtMoc>
     <QtMoc Include="SymbolManger.h">
       <Filter>Source Files\SymbolManger</Filter>
+    </QtMoc>
+    <QtMoc Include="Buffer.h">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
