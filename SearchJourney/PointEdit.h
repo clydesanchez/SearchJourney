@@ -15,23 +15,23 @@ public:
 	PointEdit(QgsMapCanvas* canvas);
 	PointEdit(QgsMapCanvas* canvas, QgsVectorLayer* layer);
 	~PointEdit();
-	void addPoint(QgsMapMouseEvent* e);					// Ìí¼Óµã¹¦ÄÜ£¨µØÍ¼µã»ò×¢¼Ç£©
-	void addAnnotation(const QgsPointXY& position);		// Ìí¼Ó×¢¼Ç
-	void setVectorLayer(QgsVectorLayer* layer);	// ÉèÖÃÍâ²¿´«ÈëµÄÊ¸Á¿Í¼²ã
-	void setGeometryEditTool(GeometryEditTool* tool);	// ÉèÖÃ¼¸ºÎÌåÖØ×ö±à¼­¹¤¾ß
+	void addPoint(QgsMapMouseEvent* e);					// ï¿½ï¿½Óµã¹¦ï¿½Ü£ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½×¢ï¿½Ç£ï¿½
+	void addAnnotation(const QgsPointXY& position);		// ï¿½ï¿½ï¿½×¢ï¿½ï¿½
+	void setVectorLayer(QgsVectorLayer* layer);	// ï¿½ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½Ê¸ï¿½ï¿½Í¼ï¿½ï¿½
+	void setGeometryEditTool(GeometryEditTool* tool);	// ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½à¼­ï¿½ï¿½ï¿½ï¿½
 
 private:
-	QString mPointType;									// µãµÄÀàÐÍ£¨µØÍ¼µã¡¢×¢¼ÇµÈ£©
-	void showAddPointDialog();							// ÏÔÊ¾Ìí¼ÓµãÀàÐÍÑ¡Ôñ¶Ô»°¿ò
-	QgsVectorLayer* mVectorLayer;						// Íâ²¿´«ÈëµÄÊ¸Á¿Í¼²ã
-	GeometryEditTool* mGeometryEditTool;					// ¼¸ºÎÌåÖØ×ö±à¼­¹¤¾ß
+	QString mPointType;									// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½ï¿½Í¼ï¿½ã¡¢×¢ï¿½ÇµÈ£ï¿½
+	void showAddPointDialog();							// ï¿½ï¿½Ê¾ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Ô»ï¿½ï¿½ï¿½
+	QgsVectorLayer* mVectorLayer;						// ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½Ê¸ï¿½ï¿½Í¼ï¿½ï¿½
+	GeometryEditTool* mGeometryEditTool;					// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½à¼­ï¿½ï¿½ï¿½ï¿½
 
 protected:
-	void canvasPressEvent(QgsMapMouseEvent* e) override;	// Êó±ê°´ÏÂÊÂ¼þ
+	void canvasPressEvent(QgsMapMouseEvent* e) override;	// ï¿½ï¿½ê°´ï¿½ï¿½ï¿½Â¼ï¿½
 
 signals:
-	void pointAdded(QgsPointXY, QString);				// ·¢³öÐÅºÅ£ºµãÎ»ÖÃºÍÀàÐÍ
-	//void annotationAdded(QgsPointXY);					// ·¢³öÐÅºÅ£º×¢¼ÇÎ»ÖÃ
+	void pointAdded(QgsPointXY, QString);				// ï¿½ï¿½ï¿½ï¿½ï¿½ÅºÅ£ï¿½ï¿½ï¿½Î»ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½
+	//void annotationAdded(QgsPointXY);					// ï¿½ï¿½ï¿½ï¿½ï¿½ÅºÅ£ï¿½×¢ï¿½ï¿½Î»ï¿½ï¿½
 };
 
 #endif // POINTEDIT-H

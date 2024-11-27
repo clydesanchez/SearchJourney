@@ -99,6 +99,7 @@ public slots:
     //void onAnnotationAdded(const QgsPointXY& position);             // 槽函数处理注记
 	void on_ctrlUndoAction_triggered();                             // 撤销
 	void on_ctrlRedoAction_triggered();                             // 重做
+	void on_ctrlSaveAction_triggered();                             // 保存编辑
 
     // 分析工具
 public:

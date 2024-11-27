@@ -356,6 +356,8 @@ background-color:#F0F0F0;</string>
    <addaction name="ctrlEditableAction"/>
    <addaction name="ctrlAddPointAction"/>
    <addaction name="ctralSelectAction"/>
+   <addaction name="ctrlCutLineAction"/>
+   <addaction name="ctrlSmoothLineAction"/>
   </widget>
   <widget class="QToolBar" name="toolBar_3">
    <property name="windowTitle">
@@ -403,6 +405,7 @@ background-color:#F0F0F0;</string>
    </attribute>
    <addaction name="ctrlUndoAction"/>
    <addaction name="ctrlRedoAction"/>
+   <addaction name="ctrlSaveEditAction"/>
   </widget>
   <action name="ctrlOpenVectorAction">
    <property name="icon">
@@ -546,6 +549,30 @@ background-color:#F0F0F0;</string>
   <action name="ctrlRedoAction">
    <property name="text">
     <string>重做</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="ctrlSaveEditAction">
+   <property name="text">
+    <string>保存</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="ctrlCutLineAction">
+   <property name="text">
+    <string>剪断线</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="ctrlSmoothLineAction">
+   <property name="text">
+    <string>光滑线</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>

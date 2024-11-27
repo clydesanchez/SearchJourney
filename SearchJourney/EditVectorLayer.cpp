@@ -120,6 +120,8 @@ void MainWidget::on_ctrlEditableAction_triggered() {
 	mGeometryEditTool = new GeometryEditTool(mcanMapCanvas);
     //设置应用图层
 	mGeometryEditTool->setVectorLayer(mvlEditableLayer);
+    //启用事务编辑
+	mvlEditableLayer->startEditing();
 
     //判断数据类型，启用对应编辑工具
 	if (mvlEditableLayer->geometryType() == Qgis::GeometryType::Point){
@@ -270,23 +272,34 @@ void MainWidget::on_ctrlAddPointAction_triggered()
     //connect(pointEditTool, &PointEdit::annotationAdded, this, &MainWidget::onAnnotationAdded);
 	ui.ctrlAddPointAction->setEnabled(false);
 }
-////注记信号回收
-//void MainWidget::onAnnotationAdded(const QgsPointXY& position)
-//{
-//    qDebug() << "注记已添加，位置：" << position;
-//
-//    QMessageBox::information(this, "注记添加", QString("注记已添加到位置：(%1, %2)")
-//        .arg(position.x())
-//        .arg(position.y()));
-//}
 
 //撤销
 void MainWidget::on_ctrlUndoAction_triggered()
 {
-	mGeometryEditTool->undo();
+	//调用QGIS的撤销重做
+	if (mvlEditableLayer->undoStack()->canUndo())
+	{
+		mvlEditableLayer->undoStack()->undo();
+		mcanMapCanvas->refresh();
+	}
+
 }
 //重做
 void MainWidget::on_ctrlRedoAction_triggered()
 {
-	mGeometryEditTool->redo();
+	//mGeometryEditTool->redo();
+	//调用QGIS的撤销重做
+	if (mvlEditableLayer->undoStack()->canRedo())
+	{
+		mvlEditableLayer->undoStack()->redo();
+		mcanMapCanvas->refresh();
+	}
+}
+//保存编辑
+void MainWidget::on_ctrlSaveAction_triggered()
+{
+	//结束编辑
+	mvlEditableLayer->commitChanges();
+	//刷新地图
+	mcanMapCanvas->refresh();
 }

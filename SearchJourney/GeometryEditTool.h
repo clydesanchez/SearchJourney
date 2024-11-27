@@ -9,37 +9,37 @@
 #include <qgstextannotation.h>
 
 
-// ±à¼­¹¤¾ßÀà£¬Ö§³Öµã¡¢Ïß¡¢Ãæ¼¸ºÎÌåµÄÌí¼Ó¡¢É¾³ýºÍ¸üÐÂ²Ù×÷£¬Í¬Ê±Ìá¹©³·ÏúºÍÖØ×ö¹¦ÄÜ
+// ï¿½à¼­ï¿½ï¿½ï¿½ï¿½ï¿½à£¬Ö§ï¿½Öµã¡¢ï¿½ß¡ï¿½ï¿½æ¼¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½É¾ï¿½ï¿½ï¿½Í¸ï¿½ï¿½Â²ï¿½ï¿½ï¿½ï¿½ï¿½Í¬Ê±ï¿½á¹©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 class GeometryEditTool : public QObject {
     Q_OBJECT
 
 public:
-    // ¹¹Ôìº¯Êý£º½ÓÊÕ QGIS µÄµØÍ¼»­²¼×÷Îª²ÎÊý
+    // ï¿½ï¿½ï¿½ìº¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ QGIS ï¿½Äµï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½
     explicit GeometryEditTool(QgsMapCanvas* canvas);
 
-    // Îö¹¹º¯Êý£ºÊÍ·ÅÃüÁîÕ»ÄÚ´æ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½Õ»ï¿½Ú´ï¿½
     ~GeometryEditTool();
 
-    // ÉèÖÃµ±Ç°±à¼­µÄÊ¸Á¿Í¼²ã
+    // ï¿½ï¿½ï¿½Ãµï¿½Ç°ï¿½à¼­ï¿½ï¿½Ê¸ï¿½ï¿½Í¼ï¿½ï¿½
     void setVectorLayer(QgsVectorLayer* layer);
 
-    // Ìí¼Ó¼¸ºÎÒªËØ
+    // ï¿½ï¿½Ó¼ï¿½ï¿½ï¿½Òªï¿½ï¿½
     void addGeometry(const QgsFeature& feature);
 
-    // É¾³ý¼¸ºÎÒªËØ
+    // É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½
     void deleteGeometry(const QgsFeature& feature);
 
-    // ¸üÐÂ¼¸ºÎÒªËØ
+    // ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½Òªï¿½ï¿½
     void updateGeometry(const QgsFeature& oldFeature, const QgsFeature& newFeature);
 
-    // ³·Ïú²Ù×÷
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void undo();
 
-    // ÖØ×ö²Ù×÷
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void redo();
 
 private:
-    QUndoStack* mUndoStack;       // ÃüÁîÕ»£¬ÓÃÓÚ´æ´¢±à¼­ÃüÁî
-    QgsVectorLayer* mVectorLayer; // µ±Ç°±à¼­µÄÊ¸Á¿Í¼²ã
-    QgsMapCanvas* mCanvas;        // µØÍ¼»­²¼£¬ÓÃÓÚ´¥·¢Í¼²ãË¢ÐÂ
+    QUndoStack* mUndoStack;       // ï¿½ï¿½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½Ú´æ´¢ï¿½à¼­ï¿½ï¿½ï¿½ï¿½
+    QgsVectorLayer* mVectorLayer; // ï¿½ï¿½Ç°ï¿½à¼­ï¿½ï¿½Ê¸ï¿½ï¿½Í¼ï¿½ï¿½
+    QgsMapCanvas* mCanvas;        // ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½Í¼ï¿½ï¿½Ë¢ï¿½ï¿½
 };

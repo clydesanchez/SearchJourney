@@ -1,151 +1,151 @@
 #include "GeometryEditTool.h"
 #include <QMessageBox>
 
-// ÃüÁîÀà£º»ù´¡±à¼­ÃüÁî
+// ï¿½ï¿½ï¿½ï¿½ï¿½à£ºï¿½ï¿½ï¿½ï¿½ï¿½à¼­ï¿½ï¿½ï¿½ï¿½
 #include <QUndoCommand>
 
 #include <QUndoCommand>
 #include <qgsvectorlayer.h>
 #include <qgsfeature.h>
 
-// Ìí¼Ó¼¸ºÎÌåµÄÃüÁîÀà
+// ï¿½ï¿½Ó¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 class AddGeometryCommand : public QUndoCommand {
 public:
     AddGeometryCommand(QgsVectorLayer* layer, const QgsFeature& feature)
         : mLayer(layer), mFeature(feature) {}
 
     void undo() override {
-        // ¿ªÆô±à¼­Ä£Ê½£¬É¾³ý¸Õ¸ÕÌí¼ÓµÄ¼¸ºÎÌå
+        // ï¿½ï¿½ï¿½ï¿½à¼­Ä£Ê½ï¿½ï¿½É¾ï¿½ï¿½ï¿½Õ¸ï¿½ï¿½ï¿½ÓµÄ¼ï¿½ï¿½ï¿½ï¿½ï¿½
         mLayer->startEditing();
         if (!mLayer->deleteFeature(mFeature.id())) {
-            QMessageBox::warning(nullptr, "´íÎó", "³·ÏúÊ§°Ü£¬ÎÞ·¨É¾³ýÒªËØ£¡");
+            QMessageBox::warning(nullptr, "ï¿½ï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½ï¿½Ê§ï¿½Ü£ï¿½ï¿½Þ·ï¿½É¾ï¿½ï¿½Òªï¿½Ø£ï¿½");
         }
         qDebug() << "Redo adding feature with ID:" << mFeature.id();
-        mLayer->commitChanges();  // Ìá½»¸ü¸Ä
-        mLayer->triggerRepaint(); // Ë¢ÐÂÍ¼²ã
+        mLayer->commitChanges();  // ï¿½á½»ï¿½ï¿½ï¿½ï¿½
+        mLayer->triggerRepaint(); // Ë¢ï¿½ï¿½Í¼ï¿½ï¿½
     }
 
     void redo() override {
-        // ¿ªÆô±à¼­Ä£Ê½£¬ÖØÐÂÌí¼Ó¼¸ºÎÌå
+        // ï¿½ï¿½ï¿½ï¿½à¼­Ä£Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¼ï¿½ï¿½ï¿½ï¿½ï¿½
         mLayer->startEditing();
         if (!mLayer->addFeature(mFeature)) {
-            QMessageBox::warning(nullptr, "´íÎó", "ÖØ×öÊ§°Ü£¬ÎÞ·¨Ìí¼ÓÒªËØ£¡");
+            QMessageBox::warning(nullptr, "ï¿½ï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½ï¿½Ê§ï¿½Ü£ï¿½ï¿½Þ·ï¿½ï¿½ï¿½ï¿½Òªï¿½Ø£ï¿½");
         }
-        mLayer->commitChanges();  // Ìá½»¸ü¸Ä
-        mLayer->triggerRepaint(); // Ë¢ÐÂÍ¼²ã
+        mLayer->commitChanges();  // ï¿½á½»ï¿½ï¿½ï¿½ï¿½
+        mLayer->triggerRepaint(); // Ë¢ï¿½ï¿½Í¼ï¿½ï¿½
     }
 
 private:
-    QgsVectorLayer* mLayer; // Ê¸Á¿Í¼²ã
-    QgsFeature mFeature;    // ÒªÌí¼ÓµÄ¼¸ºÎÌå
+    QgsVectorLayer* mLayer; // Ê¸ï¿½ï¿½Í¼ï¿½ï¿½
+    QgsFeature mFeature;    // Òªï¿½ï¿½ÓµÄ¼ï¿½ï¿½ï¿½ï¿½ï¿½
 };
 
 
-// É¾³ý¼¸ºÎÌåµÄÃüÁîÀà
+// É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 class DeleteGeometryCommand : public QUndoCommand {
 public:
     DeleteGeometryCommand(QgsVectorLayer* layer, const QgsFeature& feature)
         : mLayer(layer), mFeature(feature) {}
 
-    // ³·ÏúÉ¾³ý£ºÖØÐÂÌí¼Ó±»É¾³ýµÄ¼¸ºÎÌå
+    // ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó±ï¿½É¾ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
     void undo() override {
-        mLayer->startEditing();                       // ¿ªÆô±à¼­Ä£Ê½
-        mLayer->addFeature(mFeature);                 // ÖØÐÂÌí¼ÓÒªËØ
-        mLayer->commitChanges();                      // Ìá½»¸ü¸Ä
-        mLayer->triggerRepaint();                     // Ë¢ÐÂÍ¼²ã
+        mLayer->startEditing();                       // ï¿½ï¿½ï¿½ï¿½à¼­Ä£Ê½
+        mLayer->addFeature(mFeature);                 // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½
+        mLayer->commitChanges();                      // ï¿½á½»ï¿½ï¿½ï¿½ï¿½
+        mLayer->triggerRepaint();                     // Ë¢ï¿½ï¿½Í¼ï¿½ï¿½
     }
 
-    // ÖØ×öÉ¾³ý£ºÉ¾³ý¼¸ºÎÌå
+    // ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void redo() override {
-        mLayer->startEditing();                       // ¿ªÆô±à¼­Ä£Ê½
-        mLayer->deleteFeature(mFeature.id());         // É¾³ýÒªËØ
-        mLayer->commitChanges();                      // Ìá½»¸ü¸Ä
-        mLayer->triggerRepaint();                     // Ë¢ÐÂÍ¼²ã
+        mLayer->startEditing();                       // ï¿½ï¿½ï¿½ï¿½à¼­Ä£Ê½
+        mLayer->deleteFeature(mFeature.id());         // É¾ï¿½ï¿½Òªï¿½ï¿½
+        mLayer->commitChanges();                      // ï¿½á½»ï¿½ï¿½ï¿½ï¿½
+        mLayer->triggerRepaint();                     // Ë¢ï¿½ï¿½Í¼ï¿½ï¿½
     }
 
 private:
-    QgsVectorLayer* mLayer;    // Ê¸Á¿Í¼²ã
-    QgsFeature mFeature;       // ÒªÉ¾³ýµÄ¼¸ºÎÌå
+    QgsVectorLayer* mLayer;    // Ê¸ï¿½ï¿½Í¼ï¿½ï¿½
+    QgsFeature mFeature;       // ÒªÉ¾ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
 };
 
-// ¸üÐÂ¼¸ºÎÌåµÄÃüÁîÀà
+// ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 class UpdateGeometryCommand : public QUndoCommand {
 public:
     UpdateGeometryCommand(QgsVectorLayer* layer, const QgsFeature& oldFeature, const QgsFeature& newFeature)
         : mLayer(layer), mOldFeature(oldFeature), mNewFeature(newFeature) {}
 
-    // ³·Ïú¸üÐÂ£º½«¼¸ºÎÌå»Ö¸´Îª¾É×´Ì¬
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½Îªï¿½ï¿½×´Ì¬
     void undo() override {
-        mLayer->startEditing();                       // ¿ªÆô±à¼­Ä£Ê½
-        mLayer->updateFeature(mOldFeature);           // »Ö¸´¾É¼¸ºÎ
-        mLayer->commitChanges();                      // Ìá½»¸ü¸Ä
-        mLayer->triggerRepaint();                     // Ë¢ÐÂÍ¼²ã
+        mLayer->startEditing();                       // ï¿½ï¿½ï¿½ï¿½à¼­Ä£Ê½
+        mLayer->updateFeature(mOldFeature);           // ï¿½Ö¸ï¿½ï¿½É¼ï¿½ï¿½ï¿½
+        mLayer->commitChanges();                      // ï¿½á½»ï¿½ï¿½ï¿½ï¿½
+        mLayer->triggerRepaint();                     // Ë¢ï¿½ï¿½Í¼ï¿½ï¿½
     }
 
-    // ÖØ×ö¸üÐÂ£º½«¼¸ºÎÌå¸üÐÂÎªÐÂ×´Ì¬
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½×´Ì¬
     void redo() override {
-        mLayer->startEditing();                       // ¿ªÆô±à¼­Ä£Ê½
-        mLayer->updateFeature(mNewFeature);           // ¸üÐÂÎªÐÂ¼¸ºÎ
-        mLayer->commitChanges();                      // Ìá½»¸ü¸Ä
-        mLayer->triggerRepaint();                     // Ë¢ÐÂÍ¼²ã
+        mLayer->startEditing();                       // ï¿½ï¿½ï¿½ï¿½à¼­Ä£Ê½
+        mLayer->updateFeature(mNewFeature);           // ï¿½ï¿½ï¿½ï¿½Îªï¿½Â¼ï¿½ï¿½ï¿½
+        mLayer->commitChanges();                      // ï¿½á½»ï¿½ï¿½ï¿½ï¿½
+        mLayer->triggerRepaint();                     // Ë¢ï¿½ï¿½Í¼ï¿½ï¿½
     }
 
 private:
-    QgsVectorLayer* mLayer;    // Ê¸Á¿Í¼²ã
-    QgsFeature mOldFeature;    // ¾É¼¸ºÎÌå
-    QgsFeature mNewFeature;    // ÐÂ¼¸ºÎÌå
+    QgsVectorLayer* mLayer;    // Ê¸ï¿½ï¿½Í¼ï¿½ï¿½
+    QgsFeature mOldFeature;    // ï¿½É¼ï¿½ï¿½ï¿½ï¿½ï¿½
+    QgsFeature mNewFeature;    // ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½
 };
 
-// ¹¹Ôìº¯Êý£º³õÊ¼»¯ÃüÁîÕ»ºÍ³ÉÔ±±äÁ¿
+// ï¿½ï¿½ï¿½ìº¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ»ï¿½Í³ï¿½Ô±ï¿½ï¿½ï¿½ï¿½
 GeometryEditTool::GeometryEditTool(QgsMapCanvas* canvas)
     : mCanvas(canvas), mVectorLayer(nullptr) {
-    mUndoStack = new QUndoStack(this); // ´´½¨ÃüÁîÕ»
+    mUndoStack = new QUndoStack(this); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ»
 }
 
-// Îö¹¹º¯Êý£ºÊÍ·ÅÃüÁîÕ»ÄÚ´æ
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½Õ»ï¿½Ú´ï¿½
 GeometryEditTool::~GeometryEditTool() {
-    delete mUndoStack; // É¾³ýÃüÁîÕ»
+    delete mUndoStack; // É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ»
 }
-// ÉèÖÃµ±Ç°±à¼­µÄÊ¸Á¿Í¼²ã
+// ï¿½ï¿½ï¿½Ãµï¿½Ç°ï¿½à¼­ï¿½ï¿½Ê¸ï¿½ï¿½Í¼ï¿½ï¿½
 void GeometryEditTool::setVectorLayer(QgsVectorLayer* layer) {
     mVectorLayer = layer;
 }
-// Ìí¼Ó¼¸ºÎÌå²Ù×÷
+// ï¿½ï¿½Ó¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void GeometryEditTool::addGeometry(const QgsFeature& feature) {
     if (!mVectorLayer) return;
 
-    // ´´½¨Ìí¼Ó¼¸ºÎÌåÃüÁî£¬²¢ÍÆÈëÃüÁîÕ»
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½î£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ»
     AddGeometryCommand* cmd = new AddGeometryCommand(mVectorLayer, feature);
-    mUndoStack->push(cmd); // Ìí¼Óµ½³·ÏúÕ»
+    mUndoStack->push(cmd); // ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½Õ»
 }
 
-// É¾³ý¼¸ºÎÌå²Ù×÷
+// É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void GeometryEditTool::deleteGeometry(const QgsFeature& feature) {
     if (!mVectorLayer) return;
 
-    // ´´½¨É¾³ý¼¸ºÎÌåÃüÁî£¬²¢ÍÆÈëÃüÁîÕ»
+    // ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½î£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ»
     DeleteGeometryCommand* cmd = new DeleteGeometryCommand(mVectorLayer, feature);
-    mUndoStack->push(cmd); // Ìí¼Óµ½³·ÏúÕ»
+    mUndoStack->push(cmd); // ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½Õ»
 }
-// ¸üÐÂ¼¸ºÎÌå²Ù×÷
+// ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void GeometryEditTool::updateGeometry(const QgsFeature& oldFeature, const QgsFeature& newFeature) {
     if (!mVectorLayer) return;
 
-    // ´´½¨¸üÐÂ¼¸ºÎÌåÃüÁî£¬²¢ÍÆÈëÃüÁîÕ»
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½î£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ»
     UpdateGeometryCommand* cmd = new UpdateGeometryCommand(mVectorLayer, oldFeature, newFeature);
-    mUndoStack->push(cmd); // Ìí¼Óµ½³·ÏúÕ»
+    mUndoStack->push(cmd); // ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½Õ»
 }
-// ³·ÏúÉÏÒ»²½²Ù×÷
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void GeometryEditTool::undo() {
-    if (mUndoStack->canUndo()) { // ¼ì²éÊÇ·ñÓÐ¿ÉÒÔ³·ÏúµÄ²Ù×÷
+    if (mUndoStack->canUndo()) { // ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ð¿ï¿½ï¿½Ô³ï¿½ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½
         mUndoStack->undo();
-        mCanvas->refresh(); // Ë¢ÐÂµØÍ¼»­²¼
+        mCanvas->refresh(); // Ë¢ï¿½Âµï¿½Í¼ï¿½ï¿½ï¿½ï¿½
     }
 }
-// ÖØ×ö×î½ü³·ÏúµÄ²Ù×÷
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½
 void GeometryEditTool::redo() {
-    if (mUndoStack->canRedo()) { // ¼ì²éÊÇ·ñÓÐ¿ÉÒÔÖØ×öµÄ²Ù×÷
+    if (mUndoStack->canRedo()) { // ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ð¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½
         mUndoStack->redo();
-        mCanvas->refresh(); // Ë¢ÐÂµØÍ¼»­²¼
+        mCanvas->refresh(); // Ë¢ï¿½Âµï¿½Í¼ï¿½ï¿½ï¿½ï¿½
     }
 }

@@ -104,7 +104,9 @@ void PointEdit::addPoint(QgsMapMouseEvent* e)
         }
 
         // 调用 GeometryEditTool 的 addGeometry 方法
-        mGeometryEditTool->addGeometry(feature);
+        //mGeometryEditTool->addGeometry(feature);
+		//添加点
+		mVectorLayer->addFeature(feature);
     }
 
     else if (mPointType == "注记") {
