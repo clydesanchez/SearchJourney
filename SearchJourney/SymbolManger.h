@@ -18,19 +18,20 @@ class SymbolManger : public QDockWidget
 	Q_OBJECT
 
 public:
-	SymbolManger(QString strLayerName, Qgis::GeometryType layerType, MainWidget* widMain, QgsSymbolList Srcsymbol,QWidget *parent = nullptr);
+	SymbolManger(QgsVectorLayer* pvLayer, MainWidget* widMain, QgsSymbolList Srcsymbol,QWidget *parent = nullptr);
 	~SymbolManger();
 private:
-	QFileSystemModel* mfsmModel;
+	QFileSystemModel* mfsmModel;// 文件系统模型
+	
+	QgsVectorLayer* mpvLayer;// 图层
+	QString mstrLayerName;// 图层名称
+	Qgis::GeometryType mLayerType;// 图层类型
 
-	QString mstrLayerName;
-	Qgis::GeometryType mLayerType;
-
-	QColor mFillColor = Qt::red;
-	QColor mStrokeColor = Qt::black;
-	double mStrokeWidth=0.3;
-	int mPenStyle = Qt::SolidLine;
-	double mOpacity = 1.0;
+	QColor mFillColor = Qt::red;// 填充颜色
+	QColor mStrokeColor = Qt::black;// 边界颜色
+	double mStrokeWidth=0.3;// 边界宽度
+	int mPenStyle = Qt::SolidLine;// 边界样式
+	double mOpacity = 1.0;// 透明度
 private:
 	// 预览符号
 	void previewSymbol();
@@ -40,6 +41,8 @@ private:
 	void resizeEvent(QResizeEvent* event) override;
 signals:
 	void signalApplySymbol(QString strLayerName,QgsSymbol* psSymbol);
+	//void signalApplyMark(QString strLayerName,QgsVectorLayerSimpleLabeling* pMark);
+	void signalApplyMark(QString strLayerName, QgsPalLayerSettings settings);
 private slots:
 	void onDirectoryClicked(const QModelIndex& index);// 点击文件夹时的槽函数
 public slots:
@@ -49,8 +52,10 @@ public slots:
 	void getSelectStrokeWidth(double strokewidth);// 获取边界宽度
 	void getSelecctPenStyle(int penstyle);// 获取边界样式
 	void getSelectOpacity(double opacity);// 获取透明度
+
 	// 应用按钮
 	void onConfirmBtnClicked();
+	void onConfirmBtnClicked_Mark();
 	// 响应svg符号选择
 	void onSymbolSelect(QString strSvgPath);
 	// 更换符号类型
@@ -60,5 +65,6 @@ private:
 	QgsColorButton* mctrlFillColorBtn;
 	QgsColorButton* mctrlStrokeColorBtn;
 	QgsColorButton* mctrlStrokeColorBtn_svg;
+	QgsColorButton* mctrlFontColor;
 };
 #endif

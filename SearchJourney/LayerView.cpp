@@ -26,7 +26,7 @@ Function Lists:
 #include <qgsfillsymbol.h>
 #include <qgsfillsymbollayer.h>
 #include <QgsSymbolLayerRegistry.h>
-
+#include <QInputDialog>
 #include <qgslabeling.h>
 // 添加矢量图层
 void MainWidget::addVectorLayer()
@@ -180,4 +180,32 @@ void MainWidget::slotApplySymbol(QString strLayer, QgsSymbol *psSymbol)
 	QgsSingleSymbolRenderer *renderer = new QgsSingleSymbolRenderer(psSymbol);
 	pvlLayer->setRenderer(renderer);
 	pvlLayer->triggerRepaint();
+}
+
+// 设置图层标注
+void MainWidget::slotApplyMark(QString strLayer, QgsPalLayerSettings settings)
+{
+    // 根据名称获取图层
+    QgsVectorLayer* pvlLayer = nullptr;
+    QList<QgsMapLayer*> layers = mppjProject->mapLayersByName(strLayer);
+    if (layers.size() > 0)
+    {
+        pvlLayer = dynamic_cast<QgsVectorLayer*>(layers.at(0));
+    }
+    if (!pvlLayer)
+    {
+        QMessageBox::critical(this, "error", QString("图层不存在: \n") + strLayer);
+        return;
+    }
+    if (settings.fieldName == "关闭标注") {
+        pvlLayer->setLabelsEnabled(false);
+        pvlLayer->triggerRepaint();
+        return;
+    }
+    // 启用注记
+    pvlLayer->setLabelsEnabled(true);
+    QgsVectorLayerSimpleLabeling* labeling = new QgsVectorLayerSimpleLabeling(settings);
+    pvlLayer->setLabeling(labeling);
+    pvlLayer->setLabelsEnabled(true);
+    pvlLayer->triggerRepaint();
 }

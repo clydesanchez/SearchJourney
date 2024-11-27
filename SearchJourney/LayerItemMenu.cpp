@@ -61,7 +61,7 @@ QMenu* LayerItemMenu::createContextMenu()
 
 			menu->addAction(actionZoomToLayer(mcanMapCanvas,menu));//缩放到图层
 			menu->addAction(actionRemoveLayer(layer->name()));	//移除图层
-			menu->addAction(actionSymbolManger(layer->name(), layerType,symbollist));	//符号管理
+			menu->addAction(actionSymbolManger(layer->name(), symbollist));	//符号管理
 			menu->addAction(actionLabelManger(layer->name()));	//标注管理
 			menu->addAction(actionShowProperties(layer->name(),vectorLayer));	//属性表
 			menu->addAction(actionCrsTransform_vec( vectorLayer));	//坐标转换
@@ -81,6 +81,7 @@ QMenu* LayerItemMenu::createContextMenu()
 QAction* LayerItemMenu::actionZoomToLayer(QgsMapCanvas* canvas, QMenu* menu)
 {
     QAction* action = new QAction("缩放到图层");
+	// 点击节点
     QgsLayerTreeNode* node = mctrlLayerItem->index2node(mctrlLayerItem->currentIndex());
     QgsMapLayer* layer = QgsLayerTree::toLayer(node)->layer();
     QObject::connect(action, &QAction::triggered, [canvas, layer]() {
@@ -120,13 +121,21 @@ QAction* LayerItemMenu::actionRemoveLayer(QString strLayerName)
 	return action;
 }
 // 符号管理右键菜单
-QAction* LayerItemMenu::actionSymbolManger(QString strLayerName, Qgis::GeometryType layerType, QgsSymbolList Srcsymbol)
+QAction* LayerItemMenu::actionSymbolManger(QString strLayerName, QgsSymbolList Srcsymbol)
 {
 	QAction* action = new QAction("符号管理");
 	MainWidget* widMain = mwidMain;
-	QObject::connect(action, &QAction::triggered, [strLayerName, layerType,widMain,Srcsymbol]() {
+	QgsProject* prjSrc = mprjProject;
+	QObject::connect(action, &QAction::triggered, [strLayerName, prjSrc,widMain,Srcsymbol]() {
+		// 根据名称获取图层
+		QgsVectorLayer* pvlLayer = nullptr;
+		QList<QgsMapLayer*> layers = prjSrc->mapLayersByName(strLayerName);
+		if (layers.size() > 0)
+		{
+			pvlLayer = dynamic_cast<QgsVectorLayer*>(layers.at(0));
+		}
 		// 弹出新的符号管理窗口
-		SymbolManger* symbolManger = new SymbolManger(strLayerName,layerType,widMain,Srcsymbol);
+		SymbolManger* symbolManger = new SymbolManger(pvlLayer,widMain,Srcsymbol);
 		symbolManger->show();
 		//QgsStyleManagerDialog* styleManager = new QgsStyleManagerDialog();
 		//styleManager->show();
@@ -170,6 +179,7 @@ QAction* LayerItemMenu::actionLabelManger(QString strLayerName)
 	QAction* action = new QAction("标注管理");
 	QgsMapCanvas* canvas = mcanMapCanvas;
 	QgsProject* prjSrc = mprjProject;
+	// 点击节点
 	QgsLayerTreeNode* node = mctrlLayerItem->index2node(mctrlLayerItem->currentIndex());
 	QgsVectorLayer* pvLayer = qobject_cast<QgsVectorLayer*>(QgsLayerTree::toLayer(node)->layer());
 	QObject::connect(action, &QAction::triggered, [pvLayer, prjSrc, canvas]() {
@@ -230,6 +240,7 @@ QAction* LayerItemMenu::actionCrsTransform_vec( QgsVectorLayer* veclayer)
 		});
 	return action;
 }
+// 栅格图层坐标转换
 QAction* LayerItemMenu::actionCrsTransform_ras( QgsRasterLayer* rasLayer)
 {
 	QAction* action = new QAction("坐标转换");
