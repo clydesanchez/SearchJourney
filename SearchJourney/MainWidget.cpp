@@ -25,13 +25,12 @@ Function Lists:
     16. void on_ctrlLayerListViewAction_triggered() 图层列表视图
     17. void on_ctrlStatisticsViewAction_triggered() 统计视图
     18. void on_ctrlToolViewAction_triggered() 工具视图
-    19. void on_ctrlChooseAction_triggered() 选中图元
-    20. void on_ctrlCancelSelectAction_triggered(); 取消选择
-    21. void on_ctrlDeleteAction_triggered(); 删除图元
-    22. void on_ctrlEditAttriAction_triggered(); 编辑属性
-    23. void onTreeItemClicked(QTreeWidgetItem *item, int column) 点击工具栏事件
-    24. void updateLayerList() 更新图层列表
-    25. void onChangeLayerVisible(QgsLayerTreeNode *pltnNode) 改变图层可见性
+    19. void on_ctrlDeleteAction_triggered(); 删除图元
+    20. void on_ctrlEditAttriAction_triggered(); 编辑属性
+    21. void on_ctrlMoveAction_triggered(); 平移图元
+    22. void onTreeItemClicked(QTreeWidgetItem *item, int column) 点击工具栏事件
+    23. void updateLayerList() 更新图层列表
+    24. void onChangeLayerVisible(QgsLayerTreeNode *pltnNode) 改变图层可见性
 */
 
 #include "MainWidget.h"
@@ -50,7 +49,6 @@ Function Lists:
 #include <qgsstylemanagerdialog.h>
 #include <QgsFeatureIterator.h>
 #include <Qgsvectorlayer.h>
-#include "SelectFeatureTool.h"
 
 MainWidget::MainWidget(QWidget *parent)
     : QMainWindow(parent)
@@ -80,9 +78,9 @@ MainWidget::MainWidget(QWidget *parent)
     // listview禁用编辑
     ui.ctrlStatisticsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     // 编辑工具栏禁用
-    ui.ctrlCancelSelectAction->setEnabled(false);
     ui.ctrlDeleteAction->setEnabled(false);
     ui.ctrlEditAttriAction->setEnabled(false);
+    ui.ctrlMoveAction->setEnabled(false);
     // 重命名窗口标题
     this->setWindowTitle("OOP_GIS_System");
 }
@@ -174,20 +172,6 @@ void MainWidget::on_ctrlStatisticsViewAction_triggered()
 void MainWidget::on_ctrlToolViewAction_triggered()
 {
     ui.ctrlToolDock->setVisible(!ui.ctrlToolDock->isVisible());
-}
-// 选中图元
-void MainWidget::on_ctrlSelectAction_triggered() {
-    ui.ctrlCancelSelectAction->setEnabled(true);
-    ui.ctrlDeleteAction->setEnabled(true);
-    ui.ctrlEditAttriAction->setEnabled(true);
-    ui.ctrlSelectAction->setEnabled(false);
-}
-void MainWidget::on_ctrlCancelSelectAction_triggered() {
-    mcanMapCanvas->unsetMapTool(mcanMapCanvas->mapTool());
-    ui.ctrlCancelSelectAction->setEnabled(false);
-    ui.ctrlDeleteAction->setEnabled(false);
-    ui.ctrlEditAttriAction->setEnabled(false);
-    ui.ctrlSelectAction->setEnabled(true);
 }
 // 点击工具栏
 void MainWidget::onTreeItemClicked(QTreeWidgetItem *item, int column)

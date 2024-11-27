@@ -10,7 +10,7 @@ QgsMapToolSelectFeatures::QgsMapToolSelectFeatures(QgsMapCanvas* mapCanvas, QgsV
 
 void QgsMapToolSelectFeatures::canvasMoveEvent(QgsMapMouseEvent* e)
 {
-    if (e->buttons() != Qt::LeftButton)
+    if (e->buttons() != Qt::RightButton)
         return;
     QRect rect;
     if (!mSelectionActive)

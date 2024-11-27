@@ -8,14 +8,14 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\OSGeo4W\include;D:\OSGeo4W\apps\qgis-ltr\include;D:\OSGeo4W\apps\Qt5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\OSGeo4W\include;D:\OSGeo4W\apps\qgis-ltr\include;D:\OSGeo4W\apps\Qt5\include;./thirdlib/gdal2.0.2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NOMINMAX;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>D:\OSGeo4W\lib;D:\OSGeo4W\apps\qgis-ltr\lib;D:\OSGeo4W\apps\Qt5\lib;./thirdlib/SQLite/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>qgis_app.lib;qgis_core.lib;qgis_gui.lib;sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\OSGeo4W\lib;D:\OSGeo4W\apps\qgis-ltr\lib;D:\OSGeo4W\apps\Qt5\lib;./thirdlib/SQLite/lib;./thirdlib/gdal2.0.2/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>qgis_app.lib;qgis_core.lib;qgis_gui.lib;sqlite3.lib;gdal_i.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

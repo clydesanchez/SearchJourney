@@ -21,7 +21,7 @@
    <enum>QTabWidget::Rounded</enum>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
+   <layout class="QGridLayout" name="gridLayout_7">
     <item row="0" column="0">
      <widget class="QWidget" name="ctrlMapView" native="true">
       <property name="enabled">
@@ -33,19 +33,7 @@
         <height>574</height>
        </size>
       </property>
-      <layout class="QGridLayout" name="gridLayout_7">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
+      <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">
         <widget class="GISMapCanvas" name="graphicsView"/>
        </item>
@@ -112,6 +100,9 @@ color:black</string>
    <addaction name="menu_6"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -216,7 +207,7 @@ background-color:#F0F0F0;</string>
           <x>0</x>
           <y>0</y>
           <width>157</width>
-          <height>568</height>
+          <height>490</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_5">
@@ -341,7 +332,7 @@ background-color:#F0F0F0;</string>
           <x>0</x>
           <y>0</y>
           <width>174</width>
-          <height>268</height>
+          <height>229</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_6">
@@ -371,6 +362,9 @@ background-color:#F0F0F0;</string>
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -385,20 +379,26 @@ background-color:#F0F0F0;</string>
    <property name="windowTitle">
     <string>toolBar_2</string>
    </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>false</bool>
+    <bool>true</bool>
    </attribute>
    <addaction name="ctrlEditableAction"/>
-   <addaction name="ctrlKMeansAction"/>
-   <addaction name="ctrlConnectAction"/>
-   <addaction name="ctrlRasterStatisticsAction"/>
+   <addaction name="ctrlMoveAction"/>
+   <addaction name="ctrlDeleteAction"/>
+   <addaction name="ctrlEditAttriAction"/>
   </widget>
   <widget class="QToolBar" name="toolBar_3">
    <property name="windowTitle">
     <string>toolBar_3</string>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -414,21 +414,24 @@ background-color:#F0F0F0;</string>
    <property name="windowTitle">
     <string>toolBar_4</string>
    </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="ctrlSelectAction"/>
-   <addaction name="ctrlCancelSelectAction"/>
-   <addaction name="ctrlDeleteAction"/>
-   <addaction name="ctrlEditAttriAction"/>
+   <addaction name="ctrlKMeansAction"/>
+   <addaction name="ctrlConnectAction"/>
+   <addaction name="ctrlRasterStatisticsAction"/>
+   <addaction name="ctrlVecToRasAction"/>
   </widget>
   <action name="ctrlOpenVectorAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/icon/openVector.png</normaloff>:/icon/openVector.png</iconset>
+     <normaloff>:/resource/shp导入.png</normaloff>:/resource/shp导入.png</iconset>
    </property>
    <property name="text">
     <string>添加矢量图层</string>
@@ -437,7 +440,7 @@ background-color:#F0F0F0;</string>
   <action name="ctrlOpenRasterAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/icon/OpenRaster.png</normaloff>:/icon/OpenRaster.png</iconset>
+     <normaloff>:/resource/栅格影像.png</normaloff>:/resource/栅格影像.png</iconset>
    </property>
    <property name="text">
     <string>添加栅格图层</string>
@@ -455,7 +458,7 @@ background-color:#F0F0F0;</string>
   <action name="ctrlKMeansAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/icon/kmeans.png</normaloff>:/icon/kmeans.png</iconset>
+     <normaloff>:/resource/密度聚类.png</normaloff>:/resource/密度聚类.png</iconset>
    </property>
    <property name="text">
     <string>K-Means聚类分析</string>
@@ -464,7 +467,7 @@ background-color:#F0F0F0;</string>
   <action name="ctrlConnectAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/icon/connect.png</normaloff>:/icon/connect.png</iconset>
+     <normaloff>:/resource/连接.png</normaloff>:/resource/连接.png</iconset>
    </property>
    <property name="text">
     <string>空间连接</string>
@@ -473,7 +476,7 @@ background-color:#F0F0F0;</string>
   <action name="ctrlRasterStatisticsAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/icon/RasterStatistics.png</normaloff>:/icon/RasterStatistics.png</iconset>
+     <normaloff>:/resource/栅格统计.png</normaloff>:/resource/栅格统计.png</iconset>
    </property>
    <property name="text">
     <string>栅格图层统计</string>
@@ -482,7 +485,7 @@ background-color:#F0F0F0;</string>
   <action name="ctrlSaveProjectAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/icon/savePRJ.png</normaloff>:/icon/savePRJ.png</iconset>
+     <normaloff>:/resource/保存.png</normaloff>:/resource/保存.png</iconset>
    </property>
    <property name="text">
     <string>保存工程</string>
@@ -491,7 +494,7 @@ background-color:#F0F0F0;</string>
   <action name="ctrlOpenProjectAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/icon/openPRJ.png</normaloff>:/icon/openPRJ.png</iconset>
+     <normaloff>:/resource/打开文档.png</normaloff>:/resource/打开文档.png</iconset>
    </property>
    <property name="text">
     <string>打开工程文件</string>
@@ -500,7 +503,7 @@ background-color:#F0F0F0;</string>
   <action name="ctrlSaveAsSHPAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/icon/saveSHP.png</normaloff>:/icon/saveSHP.png</iconset>
+     <normaloff>:/resource/保存为数据集.png</normaloff>:/resource/保存为数据集.png</iconset>
    </property>
    <property name="text">
     <string>保存为shp</string>
@@ -509,23 +512,35 @@ background-color:#F0F0F0;</string>
   <action name="ctrlSaveAsTxtAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/icon/saveStstistics.png</normaloff>:/icon/saveStstistics.png</iconset>
+     <normaloff>:/resource/导出统计图.png</normaloff>:/resource/导出统计图.png</iconset>
    </property>
    <property name="text">
     <string>保存统计结果</string>
    </property>
   </action>
   <action name="ctrlLayerListViewAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/视图.png</normaloff>:/resource/视图.png</iconset>
+   </property>
    <property name="text">
     <string>图层列表视图</string>
    </property>
   </action>
   <action name="ctrlStatisticsViewAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/统计图表.png</normaloff>:/resource/统计图表.png</iconset>
+   </property>
    <property name="text">
     <string>统计视图</string>
    </property>
   </action>
   <action name="ctrlToolViewAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/工具.png</normaloff>:/resource/工具.png</iconset>
+   </property>
    <property name="text">
     <string>工具视图</string>
    </property>
@@ -536,34 +551,47 @@ background-color:#F0F0F0;</string>
    </property>
   </action>
   <action name="ctrlCRSAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/坐标定位.png</normaloff>:/resource/坐标定位.png</iconset>
+   </property>
    <property name="text">
     <string>坐标系</string>
    </property>
   </action>
   <action name="ctrlDeleteAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/清除.png</normaloff>:/resource/清除.png</iconset>
+   </property>
    <property name="text">
     <string>删除图元</string>
    </property>
    <property name="toolTip">
     <string>删除图元</string>
-   </property>
-  </action>
-  <action name="ctrlCancelSelectAction">
-   <property name="text">
-    <string>取消选择</string>
-   </property>
-   <property name="toolTip">
-    <string>取消选择</string>
    </property>
   </action>
   <action name="ctrlEditAttriAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/缺省属性.png</normaloff>:/resource/缺省属性.png</iconset>
+   </property>
    <property name="text">
     <string>编辑图元属性</string>
    </property>
   </action>
-  <action name="ctrlSelectAction">
+  <action name="ctrlMoveAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/地图操作.png</normaloff>:/resource/地图操作.png</iconset>
+   </property>
    <property name="text">
-    <string>选择</string>
+    <string>平移图元</string>
+   </property>
+  </action>
+  <action name="ctrlVecToRasAction">
+   <property name="text">
+    <string>矢量转栅格</string>
    </property>
   </action>
  </widget>

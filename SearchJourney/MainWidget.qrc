@@ -11,5 +11,30 @@
         <file>icon/openVector.png</file>
         <file>icon/saveSHP.png</file>
         <file>icon/logistic.png</file>
+        <file>resource/shp导入.png</file>
+        <file>resource/vector text.png</file>
+        <file>resource/保存.png</file>
+        <file>resource/保存到模版库.png</file>
+        <file>resource/保存为数据集.png</file>
+        <file>resource/打开文档.png</file>
+        <file>resource/导出统计图.png</file>
+        <file>resource/等级移动符号.png</file>
+        <file>resource/工具.png</file>
+        <file>resource/连接.png</file>
+        <file>resource/密度聚类.png</file>
+        <file>resource/清除.png</file>
+        <file>resource/缺省属性.png</file>
+        <file>resource/视图.png</file>
+        <file>resource/统计图表.png</file>
+        <file>resource/栅格影像.png</file>
+        <file>resource/栅格统计.png</file>
+        <file>resource/icons8-编辑-30.png</file>
+        <file>resource/icons8-开始-30.png</file>
+        <file>resource/icons8-删除列-30.png</file>
+        <file>resource/icons8-删除行-30.png</file>
+        <file>resource/icons8-添加列-30.png</file>
+        <file>resource/icons8-添加行-30.png</file>
+        <file>resource/地图操作.png</file>
+        <file>resource/坐标定位.png</file>
     </qresource>
 </RCC>
