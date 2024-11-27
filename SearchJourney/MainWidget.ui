@@ -420,7 +420,10 @@ background-color:#F0F0F0;</string>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="ctrlChooseAction"/>
+   <addaction name="ctrlSelectAction"/>
+   <addaction name="ctrlCancelSelectAction"/>
+   <addaction name="ctrlDeleteAction"/>
+   <addaction name="ctrlEditAttriAction"/>
   </widget>
   <action name="ctrlOpenVectorAction">
    <property name="icon">
@@ -537,9 +540,30 @@ background-color:#F0F0F0;</string>
     <string>坐标系</string>
    </property>
   </action>
-  <action name="ctrlChooseAction">
+  <action name="ctrlDeleteAction">
    <property name="text">
-    <string>选中图元</string>
+    <string>删除图元</string>
+   </property>
+   <property name="toolTip">
+    <string>删除图元</string>
+   </property>
+  </action>
+  <action name="ctrlCancelSelectAction">
+   <property name="text">
+    <string>取消选择</string>
+   </property>
+   <property name="toolTip">
+    <string>取消选择</string>
+   </property>
+  </action>
+  <action name="ctrlEditAttriAction">
+   <property name="text">
+    <string>编辑图元属性</string>
+   </property>
+  </action>
+  <action name="ctrlSelectAction">
+   <property name="text">
+    <string>选择</string>
    </property>
   </action>
  </widget>

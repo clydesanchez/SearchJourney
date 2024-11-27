@@ -71,9 +71,6 @@
     <ClCompile Include="LayerItemMenu.cpp">
       <Filter>Source Files\LayerItem</Filter>
     </ClCompile>
-    <ClCompile Include="GISMapCanvas.cpp">
-      <Filter>Source Files\mapcanvas</Filter>
-    </ClCompile>
     <ClCompile Include="AnalyticalFunction.cpp">
       <Filter>Source Files\MainWidget</Filter>
     </ClCompile>
@@ -95,10 +92,13 @@
     <ClCompile Include="SelectFeatureTool.cpp">
       <Filter>Source Files\SelectFeatureTool</Filter>
     </ClCompile>
-    <ClCompile Include="EditFeatureAttri.cpp">
+    <ClCompile Include="EditFeature.cpp">
       <Filter>Source Files\SelectFeatureTool</Filter>
     </ClCompile>
-    <ClCompile Include="DeleteFeature.cpp">
+    <ClCompile Include="GISMapCanvas.cpp">
+      <Filter>Source Files\MainWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="UseSelected.cpp">
       <Filter>Source Files\SelectFeatureTool</Filter>
     </ClCompile>
   </ItemGroup>
@@ -142,6 +142,9 @@
   <ItemGroup>
     <ClInclude Include="LayerItemMenu.h">
       <Filter>Source Files\LayerItem</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveFeatureTool.h">
+      <Filter>Source Files\SelectFeatureTool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

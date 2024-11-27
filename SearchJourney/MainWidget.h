@@ -31,7 +31,7 @@ private:
     QList<QgsMapLayer *> mliLayersList;    // 所有图层
     QList<QgsMapLayer *> mliVisibleLayers; // 可见图层
 
-    int mnActiveLayerIndex = -1; // 激活图层索引
+    int mnActiveLayerIndex = -1; // 激活图层索引  
     QgsFeature mpfSelectFeature; // 激活要素
     int mnSelectVertexIndex = -1; // 激活顶点索引
     bool mbDragging = false; // 是否拖拽
@@ -69,7 +69,10 @@ public slots:
     void on_ctrlStatisticsViewAction_triggered();   // 统计视图
     void on_ctrlToolViewAction_triggered();         // 工具视图
     void on_ctrlCRSAction_triggered();              // 设置坐标系
-    void on_ctrlChooseAction_triggered();           // 选中图元
+    void on_ctrlSelectAction_triggered();           // 选择图元
+    void on_ctrlCancelSelectAction_triggered();     // 取消选择
+    void on_ctrlDeleteAction_triggered();           // 删除图元
+    void on_ctrlEditAttriAction_triggered();        // 编辑属性
 
     void onTreeItemClicked(QTreeWidgetItem *ptwiItem, int nColumn); // 点击工具栏事件
     void onChangeLayerVisible(QgsLayerTreeNode *pltnNode);          // 改变图层可见性
@@ -107,6 +110,7 @@ public:
 
     // 图层操作
 public:
+    void deleteFeature(const QList<QgsFeature>& selectedFeatures);
     void editAttribute(const QList<QgsFeature>& selectedFeatures);
 };
 #endif

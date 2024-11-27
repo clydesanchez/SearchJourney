@@ -1,9 +1,31 @@
 #include "MainWidget.h"
+#include "SelectFeatureTool.h"
 #include <QMessageBox>
 #include <qgsvectorlayer.h>
 #include <qformlayout.h>
 #include <qlineedit.h>
 #include <QDialogButtonBox>
+#include <QInputDialog>
+
+void MainWidget::deleteFeature(const QList<QgsFeature>& selectedFeatures) {
+	if (!selectedFeatures.isEmpty())
+	{
+		// 删除选中的图元
+		QList<QgsMapLayer*> selectedLayers = mcanMapCanvas->layers();
+
+		if (selectedLayers.isEmpty())
+		{
+			return;
+		}
+
+		QgsMapLayer* currentLayer = selectedLayers[mnActiveLayerIndex];
+
+		QgsVectorLayer* vectorLayer = dynamic_cast<QgsVectorLayer*>(currentLayer);
+		vectorLayer->startEditing();
+		vectorLayer->deleteSelectedFeatures();  // 删除当前选中的图元
+		vectorLayer->commitChanges();  // 提交更改
+	}
+}
 
 void MainWidget::editAttribute(const QList<QgsFeature>& selectedFeatures) {
 	if (selectedFeatures.isEmpty())
