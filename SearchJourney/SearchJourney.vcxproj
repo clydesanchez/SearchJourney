@@ -34,6 +34,7 @@
     <QtInstall>5.15.2_msvc2019_64</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
+    <QtToolsDesignTime>true</QtToolsDesignTime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>5.15.2_msvc2019_64</QtInstall>
@@ -63,12 +64,12 @@
     <ClCompile>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <DebugInformationFormat>None</DebugInformationFormat>
-      <Optimization>MaxSpeed</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -98,6 +99,7 @@
     <ClCompile Include="MainWidget.cpp" />
     <ClCompile Include="ProjectFileIO.cpp" />
     <ClCompile Include="RasterStatisticsSelect.cpp" />
+    <ClCompile Include="SvgLabel.cpp" />
     <ClCompile Include="SymbolManger.cpp" />
     <ClCompile Include="TextSelect.cpp" />
   </ItemGroup>
@@ -115,6 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LayerItemMenu.h" />
+    <QtMoc Include="SvgLabel.h" />
     <QtMoc Include="SymbolManger.h" />
     <QtMoc Include="SelectDialog.h" />
     <QtMoc Include="MainWidget.h" />

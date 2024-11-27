@@ -11,10 +11,12 @@
       <AdditionalIncludeDirectories>D:\OSGeo4W\apps\qgis-ltr\include;D:\OSGeo4W\apps\Qt5\include;..\alglib-cpp\src;..\CPPLIB\gdal\include;..\CPPLIB\proj\include;..\CPPLIB\SQLite\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>D:\OSGeo4W\apps\qgis-ltr\lib;D:\OSGeo4W\apps\Qt5\lib;..\alglib-cpp\lib;..\CPPLIB\gdal\lib;..\CPPLIB\proj\lib;..\CPPLIB\SQLite\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>qgis_core.lib;qgis_app.lib;qgis_gui.lib;alglib.lib;gdal.lib;proj.lib;..\CPPLIB\openjp2.lib;sqlite3.lib;ws2_32.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

@@ -73,8 +73,8 @@ MainWidget::MainWidget(QWidget *parent)
     //ui.ctrlLayerTreeView->setMenuProvider(new LayerItemMenu(ui.ctrlLayerTreeView,mcanMapCanvas));
     // listview禁用编辑
     ui.ctrlStatisticsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    // 重命名窗口标题
-    this->setWindowTitle("OOP_GIS_System");
+    
+
 }
 
 MainWidget::~MainWidget()
@@ -202,7 +202,7 @@ void MainWidget::updateLayerList()
     QgsLayerTreeModel* pqltLayerTreeModel = new QgsLayerTreeModel(pqltLayerTreeRoot, this);
     connect(pqltLayerTreeRoot, &QgsLayerTree::visibilityChanged, this, &MainWidget::onChangeLayerVisible);
     pqltLayerTreeModel->setFlag(QgsLayerTreeModel::AllowNodeRename);
-    //pqltLayerTreeModel->setFlag(QgsLayerTreeModel::AllowNodeReorder);  // TODO: 活动改变图层顺序
+    pqltLayerTreeModel->setFlag(QgsLayerTreeModel::AllowNodeReorder);  // TODO: 活动改变图层顺序
     pqltLayerTreeModel->setFlag(QgsLayerTreeModel::AllowNodeChangeVisibility);
     pqltLayerTreeModel->setFlag(QgsLayerTreeModel::ShowLegendAsTree);
     pqltLayerTreeModel->setFlag(QgsLayerTreeModel::UseEmbeddedWidgets);
@@ -210,6 +210,16 @@ void MainWidget::updateLayerList()
     pqltLayerTreeModel->setAutoCollapseLegendNodes(10);
     ui.ctrlLayerTreeView->setModel(pqltLayerTreeModel); // 更新列表
     ui.ctrlLayerTreeView->setMenuProvider(new LayerItemMenu(ui.ctrlLayerTreeView, mcanMapCanvas,this,mppjProject));// 连接右键菜单
+    // 重置图层顺序
+    ui.ctrlLayerTreeView->setDragDropMode(QAbstractItemView::InternalMove);
+    ui.ctrlLayerTreeView->setDefaultDropAction(Qt::MoveAction);
+    ui.ctrlLayerTreeView->setAcceptDrops(true);
+    ui.ctrlLayerTreeView->setDropIndicatorShown(true);
+    ui.ctrlLayerTreeView->setDragEnabled(true);
+    mppjProject->layerTreeRoot()->reorderGroupLayers(pqltLayerTreeRoot->layerOrder());
+    mcanMapCanvas->setLayers(pqltLayerTreeRoot->layerOrder());
+    // 查看
+    mcanMapCanvas->refresh();
 }
 // 改变图层可见性
 void MainWidget::onChangeLayerVisible(QgsLayerTreeNode *pltnNode)
@@ -241,4 +251,9 @@ void MainWidget::onChangeLayerVisible(QgsLayerTreeNode *pltnNode)
     mcanMapCanvas->destroyed();
     mcanMapCanvas->setLayers(mliVisibleLayers);
     mcanMapCanvas->refresh();
+}
+// 返回工具栏
+QDockWidget *MainWidget::getToolDock() const
+{
+	return ui.ctrlToolDock;
 }

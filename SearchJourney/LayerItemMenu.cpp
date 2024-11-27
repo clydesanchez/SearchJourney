@@ -20,6 +20,7 @@
 #include <qgsattributedialog.h>
 #include <qgsattributeeditorcontext.h>
 #include <QInputDialog>
+#include <QgsTextFormat.h>
 LayerItemMenu::LayerItemMenu(QgsLayerTreeView*view, QgsMapCanvas *canvas, MainWidget* widMain,QgsProject* prjSrc)
 	: QgsLayerTreeViewMenuProvider()
 {
@@ -44,6 +45,7 @@ QMenu* LayerItemMenu::createContextMenu()
 
 	if (QgsLayerTree::isLayer(node)) {
 		QgsMapLayer* layer = QgsLayerTree::toLayer(node)->layer();
+		// 矢量图层菜单
 		if (layer&& layer->type() == Qgis::LayerType::Vector) {
 			QgsVectorLayer* vectorLayer = qobject_cast<QgsVectorLayer*>(layer);
 			Qgis::GeometryType layerType = vectorLayer->geometryType();
@@ -59,12 +61,14 @@ QMenu* LayerItemMenu::createContextMenu()
 			menu->addAction(actionZoomToLayer(mcanMapCanvas,menu));//缩放到图层
 			menu->addAction(actionRemoveLayer(layer->name()));	//移除图层
 			menu->addAction(actionSymbolManger(layer->name(), layerType,symbollist));	//符号管理
+			menu->addAction(actionLabelManger(layer->name()));	//标注管理
 			menu->addAction(actionShowProperties(layer->name(),vectorLayer));	//属性表
 			menu->addAction(actionCrsTransform_vec(layer->name(), vectorLayer));	//坐标转换
 			//menu->addAction(mctrlLayerItem->defaultActions()->actionZoomToLayer(mcanMapCanvas, menu));//缩放到图层
 			//menu->addAction(mctrlLayerItem->defaultActions()->actionRemoveGroupOrLayer(menu));	//删除
 			//menu->addAction(mctrlLayerItem->defaultActions()->actionRenameGroupOrLayer(menu)); //重命名
 		}
+		// 栅格图层菜单
 		else if (layer) {
 			QgsRasterLayer* rasterLayer = qobject_cast<QgsRasterLayer*>(layer);
 			menu->addAction(actionZoomToLayer(mcanMapCanvas, menu));//缩放到图层
@@ -161,6 +165,44 @@ QAction* LayerItemMenu::actionShowProperties(QString strLayerName, QgsVectorLaye
 			attriView->show();
 		}
 		});
+	return action;
+}
+// 设置标注
+QAction* LayerItemMenu::actionLabelManger(QString strLayerName)
+{
+	QAction* action = new QAction("标注管理");
+	QgsMapCanvas* canvas = mcanMapCanvas;
+	QgsProject* prjSrc = mprjProject;
+	QgsLayerTreeNode* node = mctrlLayerItem->index2node(mctrlLayerItem->currentIndex());
+	QgsVectorLayer* pvLayer = qobject_cast<QgsVectorLayer*>(QgsLayerTree::toLayer(node)->layer());
+	QObject::connect(action, &QAction::triggered, [pvLayer, prjSrc, canvas]() {
+		// 获取所有字段名
+		QStringList vfieldNames = pvLayer->fields().names();
+        vfieldNames.prepend("关闭标注");
+		QString attriType = QInputDialog::getItem(nullptr, "标注", "选择字段作为标注", vfieldNames);
+		if (attriType.isEmpty()||attriType=="关闭标注")
+		{
+			pvLayer->setLabelsEnabled(false);
+			pvLayer->triggerRepaint();
+			return;
+		}
+		// 启用注记
+		pvLayer->setLabelsEnabled(true);
+		// 创建文本格式
+		QgsTextFormat textFormat;
+		textFormat.setFont(QFont("Arial", 12)); // 设置字体
+		textFormat.setSize(12);                 // 设置字号
+		textFormat.setColor(Qt::blue);          // 设置颜色
+
+		QgsPalLayerSettings settings;
+		settings.setLegendString(attriType);
+		settings.setFormat(textFormat);
+		settings.fieldName = attriType;
+		QgsVectorLayerSimpleLabeling* labeling = new QgsVectorLayerSimpleLabeling(settings);
+		pvLayer->setLabeling(labeling);
+		pvLayer->setLabelsEnabled(true);
+		pvLayer->triggerRepaint();
+	});
 	return action;
 }
 

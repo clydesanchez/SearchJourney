@@ -10,6 +10,7 @@
 #include <qgscolorbutton.h>
 #include <qgscolordialog.h>
 #include <qgssymbolselectordialog.h>
+#include <QDockWidget>
 #include "MainWidget.h"
 class SvgTableModel : public QAbstractTableModel {
 	Q_OBJECT
@@ -34,8 +35,8 @@ public:
 signals:
 	void signalCellClicked(const QString& filePath);
 };
-
-class SymbolManger : public QWidget
+// 符号管理窗口
+class SymbolManger : public QDockWidget
 {
 	Q_OBJECT
 
@@ -53,9 +54,14 @@ private:
 	QColor mStrokeColor = Qt::black;
 	double mStrokeWidth=0.3;
 	int mPenStyle = Qt::SolidLine;
+	double mOpacity = 1.0;
 private:
+	// 预览符号
 	void previewSymbol();
+	// 根据图层类型设置svg符号
 	void setSymbolByLayerType(Qgis::GeometryType layerType, QgsSymbol* psSymbol, QString svgPath);
+	// 窗口大小改变事件
+	void resizeEvent(QResizeEvent* event) override;
 signals:
 	void signalApplySymbol(QString strLayerName,QgsSymbol* psSymbol);
 private slots:
@@ -66,11 +72,17 @@ public slots:
 	void getSelectStrokeColor(QColor StrokeColor);// 获取边界颜色
 	void getSelectStrokeWidth(double strokewidth);// 获取边界宽度
 	void getSelecctPenStyle(int penstyle);// 获取边界样式
+	void getSelectOpacity(double opacity);// 获取透明度
 	// 应用按钮
 	void onConfirmBtnClicked();
+	// 响应svg符号选择
+	void onSymbolSelect(QString strSvgPath);
+	// 更换符号类型
+	void onSymbolTypeChanged(int nIndex);
 private:
 	Ui::SymbolMangerClass ui;
 	QgsColorButton* mctrlFillColorBtn;
 	QgsColorButton* mctrlStrokeColorBtn;
+	QgsColorButton* mctrlStrokeColorBtn_svg;
 };
 #endif

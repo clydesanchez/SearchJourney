@@ -27,6 +27,7 @@ Function Lists:
 #include <qgsfillsymbollayer.h>
 #include <QgsSymbolLayerRegistry.h>
 
+#include <qgslabeling.h>
 // 添加矢量图层
 void MainWidget::addVectorLayer()
 {
@@ -47,6 +48,29 @@ void MainWidget::addVectorLayer()
         QMessageBox::critical(this, "error", QString("导入矢量图层失败： \n") + qstrFileName);
         return;
     }
+    //if (auto* singleSymbolRenderer = dynamic_cast<QgsSingleSymbolRenderer*>(renderer)) {
+    //    QgsFillSymbol* symbol = dynamic_cast<QgsFillSymbol*>(singleSymbolRenderer->symbol());
+    //    if (symbol) {
+    //        symbol->setOpacity(0.2); // 设置透明度，值范围为0.0到1.0
+    //    }
+    //}
+    //qvlVectorLayer->triggerRepaint(); // 重新渲染图层
+    // 添加注记
+    // 创建文本格式
+    //QgsTextFormat textFormat;
+    //textFormat.setFont(QFont("Arial", 12)); // 设置字体
+    //textFormat.setSize(12);                 // 设置字号
+    //textFormat.setColor(Qt::blue);          // 设置颜色
+
+    //QgsPalLayerSettings settings ;
+    //settings.setLegendString("NAME");
+    //settings.setFormat(textFormat) ;
+    //settings.fieldName = "NAME";
+    //QgsVectorLayerSimpleLabeling *labeling = new QgsVectorLayerSimpleLabeling(settings);
+    //qvlVectorLayer->setLabeling(labeling);
+    //qvlVectorLayer->setLabelsEnabled(true);
+    //qvlVectorLayer->triggerRepaint();
+
     // 添加到当前qgz工程
     mppjProject->addMapLayer(qvlVectorLayer);
     setLayerToMap(static_cast<QgsMapLayer *>(qvlVectorLayer));
@@ -63,6 +87,8 @@ void MainWidget::addRasterLayer()
         QMessageBox::critical(this, "error", QString("导入栅格图层失败： \n") + qstrFileName);
         return;
     }
+    // 添加图层透明度
+    //qvlRasterLayer->setOpacity(0.5);
     // 添加到当前qgz工程
     mppjProject->addMapLayer(qvlRasterLayer);
     setLayerToMap(static_cast<QgsMapLayer *>(qvlRasterLayer));

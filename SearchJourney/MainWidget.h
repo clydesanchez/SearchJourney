@@ -97,11 +97,17 @@ public:
     void setLayerToMap(QgsMapLayer *pmlNewLayer);                   // 设置图层到地图
     void setLayerColor(QgsVectorLayer *pvlChoose, QColor qcChoose); // 改变图层颜色
 
+    QgsVectorLayer* TransformCRS_Vec(QgsVectorLayer* veclayer, int newCRScode); // 坐标转换 矢量
+    QgsRasterLayer* TransformCRS_Ras(QgsRasterLayer* raslayer, int newCRScode); // 坐标转换 栅格
+
     // 文件操作
 public:
     void saveProjectAsQGZ();   // 保存工程为QGZ
     void openProjectFromQGZ(); // 从QGZ打开工程
     void saveAsSHP();          // 将矢量图层保存为shp文件
     void saveAsTxt();          // 将栅格统计结果保存为txt文件
+    // ui控制
+public:
+    QDockWidget* getToolDock() const; // 获取工具栏
 };
 #endif
