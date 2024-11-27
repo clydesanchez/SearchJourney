@@ -82,6 +82,7 @@ color:black</string>
     <addaction name="ctrlStatisticsViewAction"/>
     <addaction name="ctrlToolViewAction"/>
     <addaction name="ctrlLayerListViewAction"/>
+    <addaction name="ctrlActionCanvasFullScreen"/>
    </widget>
    <widget class="QMenu" name="menu_4">
     <property name="title">
@@ -523,6 +524,14 @@ background-color:#F0F0F0;</string>
   <action name="ctrlCRSAction">
    <property name="text">
     <string>坐标系</string>
+   </property>
+  </action>
+  <action name="ctrlActionCanvasFullScreen">
+   <property name="text">
+    <string>地图全屏</string>
+   </property>
+   <property name="shortcut">
+    <string>F11</string>
    </property>
   </action>
  </widget>

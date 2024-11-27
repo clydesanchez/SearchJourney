@@ -70,8 +70,6 @@ SymbolManger::SymbolManger(QString strLayerName, Qgis::GeometryType layerType, M
 	ui.ctrlTreeView->setColumnHidden(2, true);  // 隐藏文件类型列
 	ui.ctrlTreeView->setColumnHidden(3, true);  // 隐藏修改日期列
 
-    mSvgTableModel = new SvgTableModel(this);
-
     // 设置初始符号
     mFillColor = Srcsymbol.at(0)->symbolLayer(0)->color();
     mStrokeColor = Srcsymbol.at(0)->symbolLayer(0)->strokeColor();
@@ -355,58 +353,3 @@ void SymbolManger::setSymbolByLayerType(Qgis::GeometryType layerType, QgsSymbol*
      }
      emit signalApplySymbol(mstrLayerName, srcSymbol);
  }
-
-
-/***********************************************************************************************************************/
-void SvgTableModel::setSvgFiles(const QStringList& filePaths) {
-    beginResetModel();
-    mSvgFiles = filePaths;
-    endResetModel();
-}
-
-int SvgTableModel::rowCount(const QModelIndex& parent) const {
-    Q_UNUSED(parent);
-	return mSvgFiles.size();
-}
-
-int SvgTableModel::columnCount(const QModelIndex& parent) const {
-	Q_UNUSED(parent);
-	return 2;
-}
-
-QVariant SvgTableModel::data(const QModelIndex& index, int role) const {
-    if (!index.isValid())
-        return QVariant();
-
-    const QString& filePath = mSvgFiles.at(index.row());
-    if (role == Qt::DecorationRole && index.column() == 0) {  // 第一列显示图片
-        QSvgRenderer renderer(filePath);
-        QPixmap pixmap(70, 70);  // 设置图片大小
-        pixmap.fill(Qt::transparent);
-        QPainter painter(&pixmap);
-        renderer.render(&painter);  // 渲染 .svg 文件
-        return pixmap;
-    }
-
-    if (role == Qt::DisplayRole && index.column() == 1) {  // 第二列显示文件名
-        return QFileInfo(filePath).fileName();
-    }
-
-    return QVariant();
-}
-
-QVariant SvgTableModel::headerData(int section, Qt::Orientation orientation, int role) const {
-    if (role == Qt::DisplayRole) {
-        if (orientation == Qt::Horizontal) {
-            if (section == 0)
-                return QStringLiteral("Image");
-            else if (section == 1)
-                return QStringLiteral("File Name");
-        }
-    }
-    return QVariant();
-}
-
-void SvgTableModel::onCellClicked(const QModelIndex& index) {
-	emit signalCellClicked(mSvgFiles.at(index.row()));
-}

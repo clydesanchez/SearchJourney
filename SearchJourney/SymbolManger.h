@@ -12,29 +12,6 @@
 #include <qgssymbolselectordialog.h>
 #include <QDockWidget>
 #include "MainWidget.h"
-class SvgTableModel : public QAbstractTableModel {
-	Q_OBJECT
-
-public:
-	SvgTableModel(QObject* parent = nullptr) : QAbstractTableModel(parent) {};
-	// 设置模型数据
-	void setSvgFiles(const QStringList& filePaths);
-	// 返回行数
-	int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-	// 返回列数
-	int columnCount(const QModelIndex& parent = QModelIndex()) const override;
-	// 返回每个单元格的数据
-	QVariant data(const QModelIndex& index, int role = Qt::DisplayRole)const override;
-	// 设置每个单元格的标头
-	QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-private:
-	QStringList mSvgFiles;
-public:
-	// 单元格点击事件
-	void onCellClicked(const QModelIndex& index);
-signals:
-	void signalCellClicked(const QString& filePath);
-};
 // 符号管理窗口
 class SymbolManger : public QDockWidget
 {
@@ -45,7 +22,6 @@ public:
 	~SymbolManger();
 private:
 	QFileSystemModel* mfsmModel;
-	SvgTableModel* mSvgTableModel;
 
 	QString mstrLayerName;
 	Qgis::GeometryType mLayerType;

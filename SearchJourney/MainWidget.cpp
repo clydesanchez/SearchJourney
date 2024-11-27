@@ -74,7 +74,6 @@ MainWidget::MainWidget(QWidget *parent)
     // listview禁用编辑
     ui.ctrlStatisticsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     
-
 }
 
 MainWidget::~MainWidget()
@@ -256,4 +255,43 @@ void MainWidget::onChangeLayerVisible(QgsLayerTreeNode *pltnNode)
 QDockWidget *MainWidget::getToolDock() const
 {
 	return ui.ctrlToolDock;
+}
+// 全屏显示
+void MainWidget::on_ctrlActionCanvasFullScreen_triggered()
+{
+    QGridLayout* layout = new QGridLayout;
+    GISMapCanvas* Canvas = new GISMapCanvas(mcanMapCanvas);
+    qDebug() << Canvas->extent().center().toQPointF() <<mcanMapCanvas->extent().center().toQPointF();
+    if(mFullWidget==nullptr)
+	{
+		mFullWidget = new QWidget();
+	}
+    else {
+        delete mFullWidget;
+        mFullWidget = new QWidget();
+    }
+	if (!mbCanvasFullScreen)
+    {
+        // 将画布复制到新窗口
+        layout->setSpacing(0);
+        layout->setMargin(0);
+        layout->addWidget(Canvas);
+        mFullWidget->setLayout(layout);
+        mFullWidget->showFullScreen();
+        // 设置焦点
+        Canvas->setFocus();
+        QAction *action = ui.ctrlActionCanvasFullScreen;
+        mFullWidget->addAction(action);
+
+        mbCanvasFullScreen = true;
+	}
+	else
+	{
+        mFullWidget->close();
+        layout->removeWidget(Canvas);
+        delete Canvas;
+        delete layout;
+        mFullWidget->close();
+        mbCanvasFullScreen = false;
+	}
 }

@@ -19,6 +19,7 @@ class GISMapCanvas : public QgsMapCanvas
 
 public:
 	GISMapCanvas(QWidget *parent);
+	GISMapCanvas(GISMapCanvas* srcCanvas);
 	~GISMapCanvas();
 
 public:
