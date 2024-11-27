@@ -39,6 +39,9 @@
     <Filter Include="Source Files\SymbolManger">
       <UniqueIdentifier>{89bc49a5-f76b-426a-b32a-2851f7141035}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Edit">
+      <UniqueIdentifier>{a8fea365-54d1-4bde-9b54-80cf87d3c298}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -89,6 +92,12 @@
     <ClCompile Include="SymbolManger.cpp">
       <Filter>Source Files\SymbolManger</Filter>
     </ClCompile>
+    <ClCompile Include="PointEdit.cpp">
+      <Filter>Source Files\Edit</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryEditTool.cpp">
+      <Filter>Source Files\Edit</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="MainWidget.ui">
@@ -122,6 +131,12 @@
     </QtMoc>
     <QtMoc Include="SymbolManger.h">
       <Filter>Source Files\SymbolManger</Filter>
+    </QtMoc>
+    <QtMoc Include="PointEdit.h">
+      <Filter>Source Files\Edit</Filter>
+    </QtMoc>
+    <QtMoc Include="GeometryEditTool.h">
+      <Filter>Source Files\Edit</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

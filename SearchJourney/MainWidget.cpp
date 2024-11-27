@@ -76,6 +76,11 @@ MainWidget::MainWidget(QWidget *parent)
     ui.ctrlStatisticsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     // 重命名窗口标题
     this->setWindowTitle("OOP_GIS_System");
+    //设置编辑控件可用性
+    mGeometryEditTool = new GeometryEditTool(mcanMapCanvas);
+	ui.ctrlAddPointAction->setEnabled(false);
+	ui.ctrlUndoAction->setEnabled(false);
+	ui.ctrlRedoAction->setEnabled(false);
 }
 
 MainWidget::~MainWidget()

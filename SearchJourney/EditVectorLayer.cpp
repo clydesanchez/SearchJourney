@@ -30,113 +30,6 @@ void MainWidget::onMapCanvasClicked(const QPoint& point)
         return;
     }
 
-    // 构建查询矩形区域
-    double searchRadius = mcanMapCanvas->mapUnitsPerPixel() * 5;  // 调整搜索半径
-    QgsRectangle searchRect(mapPoint.x() - searchRadius, mapPoint.y() - searchRadius,
-        mapPoint.x() + searchRadius, mapPoint.y() + searchRadius);
-
-    // 查询要素
-    QgsFeature feature;
-    QgsFeatureIterator fit = vectorLayer->getFeatures(QgsFeatureRequest().setFilterRect(searchRect));
-    if (fit.nextFeature(feature))
-    {
-        // 获取要素属性
-        QgsFields fields = feature.fields();
-        mpfSelectFeature = feature;
-        for (int i = 0; i < fields.size(); i++)
-        {
-            QgsField field = fields.at(i);
-            qDebug() << field.name() << ":" << mpfSelectFeature.attribute(i);
-        }
-        // 获取要素几何
-        QgsGeometry geometry = mpfSelectFeature.geometry();
-        if (!geometry.isEmpty())
-        {
-            QgsPointXY point = geometry.asPoint();
-            qDebug() << "x:" << point.x() << "y:" << point.y();
-        }
-        // 刷新地图
-        mcanMapCanvas->refresh();
-        // 设置要素几何
-
-    }
-    // 查询节点
-    // 如果为多多边形
-    qDebug() << mpfSelectFeature.geometry().type();
-    mnSelectVertexIndex = -1;
-    if (mpfSelectFeature.geometry().type() == Qgis::GeometryType::Polygon) {
-        for (const auto& polygon : mpfSelectFeature.geometry().asMultiPolygon()) {
-            for (const auto& vertex : polygon) {
-                for (int i = 0; i < vertex.size(); ++i) {
-                    double distance = vertex[i].distance(mapPoint);
-                    if (distance < searchRadius) {
-                        mnSelectVertexIndex = i;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-    // 如果为多线
-    else if (mpfSelectFeature.geometry().type() == Qgis::GeometryType::Line) {
-        for (const auto& line : mpfSelectFeature.geometry().asMultiPolyline()) {
-            int i = 0;
-            for (const auto& vertex : line) {
-                double distance = vertex.distance(mapPoint);
-                if (distance < searchRadius) {
-                    mnSelectVertexIndex = i;
-                    break;
-                }
-                i++;
-            }
-        }
-    }
-    // 如果为点
-    else if (mpfSelectFeature.geometry().type() == Qgis::GeometryType::Point) {
-        double distance = mpfSelectFeature.geometry().asPoint().distance(mapPoint);
-        if (distance < searchRadius) {
-            mnSelectVertexIndex = 0;
-        }
-    }
-    // 修改选中要素的符号
-    QgsMultiPointXY points;
-    QgsSymbol* symbol = QgsSymbol::defaultSymbol(vectorLayer->geometryType());
-    // 修改选中要素中所有节点的符号
-    if (mpfSelectFeature.geometry().type() == Qgis::GeometryType::Polygon) {
-        for (const auto& polygon : mpfSelectFeature.geometry().asMultiPolygon()) {
-            for (const auto& vertex : polygon) {
-                for (int i = 0; i < vertex.size(); ++i) {
-                    points.append(vertex[i]);
-                }
-            }
-        }
-    }
-    else if (mpfSelectFeature.geometry().type() == Qgis::GeometryType::Line) {
-        for (const auto& line : mpfSelectFeature.geometry().asMultiPolyline()) {
-            for (const auto& vertex : line) {
-                points.append(vertex);
-            }
-        }
-    }
-    else if (mpfSelectFeature.geometry().type() == Qgis::GeometryType::Point) {
-        points.append(mpfSelectFeature.geometry().asPoint());
-    }
-    // 删除原有符号
-    for (int i = 0; i < mvVertices.size()&& !mvVertices.isEmpty(); i++) {
-        delete mvVertices[i];
-    }
-    mvVertices.clear();
-    // 添加符号
-    for (int i = 0; i < points.size()&& mnActiveLayerIndex != -1; i++) {
-        mvVertices.append(new QgsVertexMarker(mcanMapCanvas));
-        mvVertices[i]->setCenter(points[i]);
-        mvVertices[i]->setColor(QColor(255, 0, 0));
-        mvVertices[i]->setFillColor(QColor(0, 191, 255));
-        mvVertices[i]->setIconType(QgsVertexMarker::ICON_RHOMBUS);
-        mvVertices[i]->setPenWidth(1);
-        mvVertices[i]->show();
-    }
-    mcanMapCanvas->refresh();
 }
 
 void MainWidget::onMapCanvasReleased(const QPoint& point)
@@ -210,7 +103,190 @@ void MainWidget::on_ctrlEditableAction_triggered() {
             break;
         }
 	}
+    if (mnActiveLayerIndex == -1) {
+		QMessageBox::information(this, "提示", "未选择图层");
+        return;
+    }
+	//判断所选矢量图层的类型
+    mvlEditableLayer = qobject_cast<QgsVectorLayer*>(layers[mnActiveLayerIndex]);
+	if (!mvlEditableLayer)
+	{
+		QMessageBox::information(this, "提示", "未选择图层");
+		return;
+	}
+	ui.ctrlUndoAction->setEnabled(true);
+	ui.ctrlRedoAction->setEnabled(true);
+	// 创建撤销重做工具
+	mGeometryEditTool = new GeometryEditTool(mcanMapCanvas);
+    //设置应用图层
+	mGeometryEditTool->setVectorLayer(mvlEditableLayer);
 
-    qDebug() << chooseLayer;
+    //判断数据类型，启用对应编辑工具
+	if (mvlEditableLayer->geometryType() == Qgis::GeometryType::Point){
+		// 设置编辑工具
+        /*PointEdit* editTool = new PointEdit(mcanMapCanvas, mvlEditableLayer);
+		mcanMapCanvas->setMapTool(editTool);*/
+		ui.ctrlAddPointAction->setEnabled(true);
+    
+    }
+	else if (mvlEditableLayer->geometryType() == Qgis::GeometryType::Line) {
 
+	}
+	else if (mvlEditableLayer->geometryType() == Qgis::GeometryType::Polygon) {
+
+	}
+	else {
+		QMessageBox::information(this, "提示", "不支持的图层类型");
+		return;
+	}
+
+}
+
+// 显示点并编辑
+void MainWidget::showBreakPoint(const QPoint& point)
+{
+    mbDragging = true;
+    // 将屏幕坐标转换为地图坐标
+    QgsPointXY mapPoint = mcanMapCanvas->getCoordinateTransform()->toMapCoordinates(point);
+
+    // 获取当前的矢量图层
+    QList<QgsMapLayer*> layers = mcanMapCanvas->layers();
+    // 构建查询矩形区域
+    double searchRadius = mcanMapCanvas->mapUnitsPerPixel() * 5;  // 调整搜索半径
+    QgsRectangle searchRect(mapPoint.x() - searchRadius, mapPoint.y() - searchRadius,
+        mapPoint.x() + searchRadius, mapPoint.y() + searchRadius);
+
+    // 查询要素
+    QgsFeature feature;
+    QgsFeatureIterator fit = mvlEditableLayer->getFeatures(QgsFeatureRequest().setFilterRect(searchRect));
+    if (fit.nextFeature(feature))
+    {
+        // 获取要素属性
+        QgsFields fields = feature.fields();
+        mpfSelectFeature = feature;
+        for (int i = 0; i < fields.size(); i++)
+        {
+            QgsField field = fields.at(i);
+            qDebug() << field.name() << ":" << mpfSelectFeature.attribute(i);
+        }
+        // 获取要素几何
+        QgsGeometry geometry = mpfSelectFeature.geometry();
+        if (!geometry.isEmpty())
+        {
+            QgsPointXY point = geometry.asPoint();
+            qDebug() << "x:" << point.x() << "y:" << point.y();
+        }
+        // 刷新地图
+        mcanMapCanvas->refresh();
+        // 设置要素几何
+
+    }
+    // 查询节点
+    // 如果为多多边形
+    qDebug() << mpfSelectFeature.geometry().type();
+    mnSelectVertexIndex = -1;
+    if (mpfSelectFeature.geometry().type() == Qgis::GeometryType::Polygon) {
+        for (const auto& polygon : mpfSelectFeature.geometry().asMultiPolygon()) {
+            for (const auto& vertex : polygon) {
+                for (int i = 0; i < vertex.size(); ++i) {
+                    double distance = vertex[i].distance(mapPoint);
+                    if (distance < searchRadius) {
+                        mnSelectVertexIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    // 如果为多线
+    else if (mpfSelectFeature.geometry().type() == Qgis::GeometryType::Line) {
+        for (const auto& line : mpfSelectFeature.geometry().asMultiPolyline()) {
+            int i = 0;
+            for (const auto& vertex : line) {
+                double distance = vertex.distance(mapPoint);
+                if (distance < searchRadius) {
+                    mnSelectVertexIndex = i;
+                    break;
+                }
+                i++;
+            }
+        }
+    }
+    // 如果为点
+    else if (mpfSelectFeature.geometry().type() == Qgis::GeometryType::Point) {
+        double distance = mpfSelectFeature.geometry().asPoint().distance(mapPoint);
+        if (distance < searchRadius) {
+            mnSelectVertexIndex = 0;
+        }
+    }
+    // 修改选中要素的符号
+    QgsMultiPointXY points;
+    QgsSymbol* symbol = QgsSymbol::defaultSymbol(mvlEditableLayer->geometryType());
+    // 修改选中要素中所有节点的符号
+    if (mpfSelectFeature.geometry().type() == Qgis::GeometryType::Polygon) {
+        for (const auto& polygon : mpfSelectFeature.geometry().asMultiPolygon()) {
+            for (const auto& vertex : polygon) {
+                for (int i = 0; i < vertex.size(); ++i) {
+                    points.append(vertex[i]);
+                }
+            }
+        }
+    }
+    else if (mpfSelectFeature.geometry().type() == Qgis::GeometryType::Line) {
+        for (const auto& line : mpfSelectFeature.geometry().asMultiPolyline()) {
+            for (const auto& vertex : line) {
+                points.append(vertex);
+            }
+        }
+    }
+    else if (mpfSelectFeature.geometry().type() == Qgis::GeometryType::Point) {
+        points.append(mpfSelectFeature.geometry().asPoint());
+    }
+    // 删除原有符号
+    for (int i = 0; i < mvVertices.size() && !mvVertices.isEmpty(); i++) {
+        delete mvVertices[i];
+    }
+    mvVertices.clear();
+    // 添加符号
+    for (int i = 0; i < points.size() && mnActiveLayerIndex != -1; i++) {
+        mvVertices.append(new QgsVertexMarker(mcanMapCanvas));
+        mvVertices[i]->setCenter(points[i]);
+        mvVertices[i]->setColor(QColor(255, 0, 0));
+        mvVertices[i]->setFillColor(QColor(0, 191, 255));
+        mvVertices[i]->setIconType(QgsVertexMarker::ICON_RHOMBUS);
+        mvVertices[i]->setPenWidth(1);
+        mvVertices[i]->show();
+    }
+    mcanMapCanvas->refresh();
+}
+
+//添加点
+void MainWidget::on_ctrlAddPointAction_triggered()
+{
+	// 设置编辑工具
+	PointEdit* pointEditTool = new PointEdit(mcanMapCanvas, mvlEditableLayer);
+	pointEditTool->setGeometryEditTool(mGeometryEditTool);
+	mcanMapCanvas->setMapTool(pointEditTool);
+    //connect(pointEditTool, &PointEdit::annotationAdded, this, &MainWidget::onAnnotationAdded);
+	ui.ctrlAddPointAction->setEnabled(false);
+}
+////注记信号回收
+//void MainWidget::onAnnotationAdded(const QgsPointXY& position)
+//{
+//    qDebug() << "注记已添加，位置：" << position;
+//
+//    QMessageBox::information(this, "注记添加", QString("注记已添加到位置：(%1, %2)")
+//        .arg(position.x())
+//        .arg(position.y()));
+//}
+
+//撤销
+void MainWidget::on_ctrlUndoAction_triggered()
+{
+	mGeometryEditTool->undo();
+}
+//重做
+void MainWidget::on_ctrlRedoAction_triggered()
+{
+	mGeometryEditTool->redo();
 }
