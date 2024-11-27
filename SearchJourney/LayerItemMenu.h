@@ -18,8 +18,8 @@ public:
     QAction* actionSymbolManger(QString strLayerName,Qgis::GeometryType layerType, QgsSymbolList Srcsymbol);//符号管理
     QAction* actionLabelManger(QString strLayerName);//标注管理
     QAction* actionShowProperties(QString strLayerName, QgsVectorLayer* veclayer);//显示属性
-    QAction* actionCrsTransform_vec(QString strLayerName, QgsVectorLayer* veclayer);//坐标转换 矢量
-    QAction* actionCrsTransform_ras(QString strLayerName, QgsRasterLayer* rasLayer);// 坐标转换 栅格
+    QAction* actionCrsTransform_vec( QgsVectorLayer* veclayer);//坐标转换 矢量
+    QAction* actionCrsTransform_ras( QgsRasterLayer* rasLayer);// 坐标转换 栅格
 private:
     QgsMapCanvas* mcanMapCanvas;
     QgsLayerTreeView* mctrlLayerItem;

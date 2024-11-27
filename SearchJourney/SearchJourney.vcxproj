@@ -98,6 +98,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWidget.cpp" />
     <ClCompile Include="ProjectFileIO.cpp" />
+    <ClCompile Include="Projection.cpp" />
     <ClCompile Include="RasterStatisticsSelect.cpp" />
     <ClCompile Include="SvgLabel.cpp" />
     <ClCompile Include="SymbolManger.cpp" />

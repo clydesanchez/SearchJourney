@@ -140,7 +140,10 @@ void MainWidget::setLayerToMap(QgsMapLayer *pmlNewLayer)
     mcanMapCanvas->setExtent(pmlNewLayer->extent());
     mliLayersList.append(pmlNewLayer);
     mliVisibleLayers.append(pmlNewLayer);
-    mcanMapCanvas->setLayers(mliVisibleLayers);
+    //mcanMapCanvas->setLayers(mliVisibleLayers);
+    // 获取工程中所有图层
+    QList<QgsMapLayer *> layers = mppjProject->mapLayers().values();
+    mcanMapCanvas->setLayers(layers);
     mcanMapCanvas->refresh();
     mppjProject->addMapLayer(pmlNewLayer);
     updateLayerList();

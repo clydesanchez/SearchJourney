@@ -100,8 +100,8 @@ public:
     void setLayerToMap(QgsMapLayer *pmlNewLayer);                   // 设置图层到地图
     void setLayerColor(QgsVectorLayer *pvlChoose, QColor qcChoose); // 改变图层颜色
 
-    QgsVectorLayer* TransformCRS_Vec(QgsVectorLayer* veclayer, int newCRScode); // 坐标转换 矢量
-    QgsRasterLayer* TransformCRS_Ras(QgsRasterLayer* raslayer, int newCRScode); // 坐标转换 栅格
+    static QgsVectorLayer* TransformCRS_Vec(QgsVectorLayer* veclayer, int newCRScode); // 坐标转换 矢量
+    static QgsRasterLayer* TransformCRS_Ras(QgsRasterLayer* raslayer, int newCRScode); // 坐标转换 栅格
 
     // 文件操作
 public:
