@@ -19,6 +19,8 @@
 #include <qobject.h>
 #include <qlabel.h>
 #include <qspinbox.h>
+#include <cmath>
+#include <vector>
 
 //区边界转线
 QgsVectorLayer* polygonToLines(QgsVectorLayer* polygonLayer, const QString& outputLineLayerPath)
@@ -105,6 +107,155 @@ QgsVectorLayer* polygonToLines(QgsVectorLayer* polygonLayer, const QString& outp
 
     qDebug() << "Polygon boundaries successfully converted to lines.";
 	return lineLayer;
+}
+//光滑线
+void smoothLines(QgsVectorLayer* lineLayer, const QList<QgsFeature>& selectedFeatures)
+{
+    if (!lineLayer || selectedFeatures.isEmpty())
+    {
+        qDebug() << "Invalid layer or no features selected.";
+        return;
+    }
+
+    // 创建弹窗
+    QDialog dialog;
+    dialog.setWindowTitle("选择光滑算法");
+    dialog.resize(300, 250);
+
+    QVBoxLayout* layout = new QVBoxLayout(&dialog);
+
+    // 创建算法选择框
+    QComboBox* comboBox = new QComboBox(&dialog);
+    comboBox->addItem("贝塞尔光滑");
+    comboBox->addItem("样条光滑");
+    comboBox->addItem("高斯光滑"); // 新算法
+    layout->addWidget(new QLabel("选择光滑算法:", &dialog));
+    layout->addWidget(comboBox);
+
+    // 参数输入区
+    QLabel* paramLabel1 = new QLabel("细分数量:", &dialog);
+    QSpinBox* paramInput1 = new QSpinBox(&dialog);
+    paramInput1->setRange(1, 100);
+    paramInput1->setValue(20); // 贝塞尔默认细分数量
+    paramInput1->setVisible(true);
+
+    QLabel* paramLabel2 = new QLabel("张力系数:", &dialog);
+    QDoubleSpinBox* paramInput2 = new QDoubleSpinBox(&dialog);
+    paramInput2->setRange(0.0, 1.0);
+    paramInput2->setDecimals(2);
+    paramInput2->setSingleStep(0.1);
+    paramInput2->setValue(0.2); // 样条默认张力
+    paramInput2->setVisible(false);
+
+    QLabel* paramLabel3 = new QLabel("插值点数:", &dialog);
+    QSpinBox* paramInput3 = new QSpinBox(&dialog);
+    paramInput3->setRange(1, 50);
+    paramInput3->setValue(10); // 样条默认插值点数
+    paramInput3->setVisible(false);
+
+    QLabel* paramLabel4 = new QLabel("窗口大小:", &dialog); // 高斯平滑参数
+    QSpinBox* paramInput4 = new QSpinBox(&dialog);
+    paramInput4->setRange(1, 20);
+    paramInput4->setValue(5); // 默认窗口大小
+    paramInput4->setVisible(false);
+
+    QLabel* paramLabel5 = new QLabel("标准差 (Sigma):", &dialog); // 高斯平滑参数
+    QDoubleSpinBox* paramInput5 = new QDoubleSpinBox(&dialog);
+    paramInput5->setRange(0.1, 10.0); // 标准差范围
+    paramInput5->setValue(1.0);       // 默认标准差
+    paramInput5->setVisible(false);
+
+    layout->addWidget(paramLabel1);
+    layout->addWidget(paramInput1);
+    layout->addWidget(paramLabel2);
+    layout->addWidget(paramInput2);
+    layout->addWidget(paramLabel3);
+    layout->addWidget(paramInput3);
+    layout->addWidget(paramLabel4);
+    layout->addWidget(paramInput4);
+    layout->addWidget(paramLabel5);
+    layout->addWidget(paramInput5);
+
+    // 确认按钮
+    QPushButton* okButton = new QPushButton("确定", &dialog);
+    layout->addWidget(okButton);
+
+    // 动态调整界面参数设置
+    QObject::connect(comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), [&](int index) {
+        if (comboBox->itemText(index) == "贝塞尔光滑")
+        {
+            paramLabel1->setVisible(true);
+            paramInput1->setVisible(true);
+
+            paramLabel2->setVisible(false);
+            paramInput2->setVisible(false);
+            paramLabel3->setVisible(false);
+            paramInput3->setVisible(false);
+            paramLabel4->setVisible(false);
+            paramInput4->setVisible(false);
+            paramLabel5->setVisible(false);
+            paramInput5->setVisible(false);
+        }
+        else if (comboBox->itemText(index) == "样条光滑")
+        {
+            paramLabel1->setVisible(false);
+            paramInput1->setVisible(false);
+
+            paramLabel2->setVisible(true);
+            paramInput2->setVisible(true);
+            paramLabel3->setVisible(true);
+            paramInput3->setVisible(true);
+            paramLabel4->setVisible(false);
+            paramInput4->setVisible(false);
+            paramLabel5->setVisible(false);
+            paramInput5->setVisible(false);
+        }
+        else if (comboBox->itemText(index) == "高斯光滑")
+        {
+            paramLabel1->setVisible(false);
+            paramInput1->setVisible(false);
+
+            paramLabel2->setVisible(false);
+            paramInput2->setVisible(false);
+            paramLabel3->setVisible(false);
+            paramInput3->setVisible(false);
+
+            paramLabel4->setVisible(true);
+            paramInput4->setVisible(true);
+            paramLabel5->setVisible(true);
+            paramInput5->setVisible(true);
+        }
+        });
+
+    // 点击确认按钮，调用对应算法
+    QObject::connect(okButton, &QPushButton::clicked, &dialog, &QDialog::accept);
+
+    // 显示弹窗
+    if (dialog.exec() == QDialog::Accepted)
+    {
+        QString method = comboBox->currentText();
+        if (method == "贝塞尔光滑")
+        {
+            int subdivision = paramInput1->value();
+            applyBezierSmoothing(lineLayer, selectedFeatures, subdivision);
+        }
+        else if (method == "样条光滑")
+        {
+            double tension = paramInput2->value();
+            int interpolationPoints = paramInput3->value();
+            applySplineSmoothing(lineLayer, selectedFeatures, tension, interpolationPoints);
+        }
+        else if (method == "高斯光滑")
+        {
+            int kernelSize = paramInput4->value();
+            double sigma = paramInput5->value();
+            applyGaussianSmoothing(lineLayer, selectedFeatures, kernelSize, sigma);
+        }
+        else
+        {
+            qDebug() << "Unsupported smoothing method.";
+        }
+    }
 }
 
 // 平滑线
@@ -350,110 +501,122 @@ void applySplineSmoothing(QgsVectorLayer* layer, const QList<QgsFeature>& select
     qDebug() << "Spline smoothing applied successfully.";
 }
 
-void smoothLines(QgsVectorLayer* lineLayer, const QList<QgsFeature>& selectedFeatures)
+void applyGaussianSmoothing(QgsVectorLayer* layer, const QList<QgsFeature>& selectedFeatures, int kernelSize, double sigma)
 {
-    if (!lineLayer || selectedFeatures.isEmpty())
+    if (!layer || selectedFeatures.isEmpty() || kernelSize <= 0 || sigma <= 0)
     {
-        qDebug() << "Invalid layer or no features selected.";
+        qDebug() << "无效的图层或选择的要素，或者无效的核大小或标准差。";
         return;
     }
 
-    // 创建弹窗
-    QDialog dialog;
-    dialog.setWindowTitle("选择光滑算法");
-    dialog.resize(300, 200);
-
-    QVBoxLayout* layout = new QVBoxLayout(&dialog);
-
-    // 创建算法选择框
-    QComboBox* comboBox = new QComboBox(&dialog);
-    comboBox->addItem("贝塞尔光滑");
-    comboBox->addItem("样条光滑");
-    layout->addWidget(new QLabel("选择光滑算法:", &dialog));
-    layout->addWidget(comboBox);
-
-    // 参数输入区
-    QLabel* paramLabel1 = new QLabel("细分数量:", &dialog);
-    QSpinBox* paramInput1 = new QSpinBox(&dialog);
-    paramInput1->setRange(1, 100);  // 默认范围
-    paramInput1->setValue(20);      // 贝塞尔平滑默认细分数量
-    paramInput1->setVisible(true);
-
-    QLabel* paramLabel2 = new QLabel("张力系数:", &dialog);
-    QDoubleSpinBox* paramInput2 = new QDoubleSpinBox(&dialog);
-    paramInput2->setRange(0.0, 1.0); // 张力范围
-    paramInput2->setDecimals(2);
-    paramInput2->setSingleStep(0.1);
-    paramInput2->setValue(0.2);      // 样条平滑默认张力
-    paramInput2->setVisible(false);
-
-    QLabel* paramLabel3 = new QLabel("插值点数:", &dialog);
-    QSpinBox* paramInput3 = new QSpinBox(&dialog);
-    paramInput3->setRange(1, 50);   // 插值点数范围
-    paramInput3->setValue(10);      // 样条平滑默认插值点数
-    paramInput3->setVisible(false);
-
-    layout->addWidget(paramLabel1);
-    layout->addWidget(paramInput1);
-    layout->addWidget(paramLabel2);
-    layout->addWidget(paramInput2);
-    layout->addWidget(paramLabel3);
-    layout->addWidget(paramInput3);
-
-    // 确认按钮
-    QPushButton* okButton = new QPushButton("确定", &dialog);
-    layout->addWidget(okButton);
-
-    // 动态调整界面参数设置
-    QObject::connect(comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), [&](int index) {
-        if (comboBox->itemText(index) == "贝塞尔光滑")
-        {
-            paramLabel1->setText("细分数量:");
-            paramInput1->setVisible(true);
-            paramLabel2->setVisible(false);
-            paramInput2->setVisible(false);
-            paramLabel3->setVisible(false);
-            paramInput3->setVisible(false);
-        }
-        else if (comboBox->itemText(index) == "样条光滑")
-        {
-            paramLabel1->setVisible(false);
-            paramInput1->setVisible(false);
-            paramLabel2->setText("张力系数:");
-            paramLabel2->setVisible(true);
-            paramInput2->setVisible(true);
-            paramLabel3->setText("插值点数:");
-            paramLabel3->setVisible(true);
-            paramInput3->setVisible(true);
-        }
-        });
-
-    // 点击确认按钮，调用对应算法
-    QObject::connect(okButton, &QPushButton::clicked, &dialog, &QDialog::accept);
-
-    // 显示弹窗
-    if (dialog.exec() == QDialog::Accepted)
+    // 处理每个要素
+    for (const QgsFeature& feature : selectedFeatures)
     {
-        QString method = comboBox->currentText();
-        if (method == "贝塞尔光滑")
+		QVector<QgsPointXY> points;  // 存储要素的点
+
+        // 获取几何类型并提取点
+        Qgis::WkbType geomType = feature.geometry().wkbType();
+        qDebug() << "几何类型：" << geomType;
+
+        // 处理 LineString 类型
+        if (geomType == Qgis::WkbType::LineString)
         {
-            int subdivision = paramInput1->value();
-            applyBezierSmoothing(lineLayer, selectedFeatures, subdivision);
+            points = feature.geometry().asPolyline();
         }
-        else if (method == "样条光滑")
+        // 处理 MultiLineString 类型
+        else if (geomType == Qgis::WkbType::MultiLineString)
         {
-            double tension = paramInput2->value();
-            int interpolationPoints = paramInput3->value();
-            applySplineSmoothing(lineLayer, selectedFeatures, tension, interpolationPoints);
+            const auto multiPolyline = feature.geometry().asMultiPolyline();
+            for (const auto& line : multiPolyline)
+            {
+                points.append(line);  // 将多个线段的点合并
+            }
         }
         else
         {
-            qDebug() << "Unsupported smoothing method.";
+            qDebug() << "不支持的几何类型，跳过此要素。";
+            continue;  // 如果是其他几何类型，跳过该要素
+        }
+
+        qDebug() << "提取的点的数量：" << points.size();
+
+        // 如果点数不足，跳过该要素
+        if (points.size() < kernelSize)
+        {
+            qDebug() << "点数不足，跳过该要素的高斯平滑。";
+            continue; // 如果点数不足，跳过平滑处理
+        }
+
+        // 计算高斯核
+        std::vector<double> kernel(kernelSize);
+        double sum = 0.0;
+        int radius = kernelSize / 2;
+
+        // 构建高斯核
+        for (int i = 0; i < kernelSize; ++i)
+        {
+            double x = i - radius;
+            kernel[i] = std::exp(-0.5 * (x * x) / (sigma * sigma));  // 使用高斯公式
+            sum += kernel[i];  // 计算高斯核的总和，用于归一化
+        }
+
+        // 归一化高斯核，使得权重之和为 1
+        for (int i = 0; i < kernelSize; ++i)
+        {
+            kernel[i] /= sum;
+        }
+
+        qDebug() << "高斯核（Kernel）:";
+        for (int i = 0; i < kernelSize; ++i)
+        {
+            qDebug() << "kernel[" << i << "] = " << kernel[i];
+        }
+
+        // 输出点的数量
+        qDebug() << "点的数量: " << points.size();
+
+
+        // 创建一个用于存放平滑点的 QVector
+        QVector<QgsPointXY> smoothedPoints;
+
+        // 对每个点应用高斯平滑
+        for (int i = 0; i < points.size(); ++i)
+        {
+            double sumX = 0.0, sumY = 0.0;
+
+            // 处理边界点：确保首尾点有足够的邻域点
+            for (int j = i - radius; j <= i + radius; ++j)
+            {
+                // 检查 j 是否在有效范围内
+                if (j < 0) j = 0;  // 对第一个点进行外推处理
+                if (j >= points.size()) j = points.size() - 1;  // 对最后一个点进行外推处理
+
+                // 计算偏移量，确保索引正确
+                int offset = j - i + radius;
+
+                // 计算加权平均
+                sumX += points[j].x() * kernel[offset];  // X 坐标的加权平均
+                sumY += points[j].y() * kernel[offset];  // Y 坐标的加权平均
+            }
+			qDebug() << "count:" << i << "sumX:" << sumX << "sumY:" << sumY;
+            // 输出每个平滑点的坐标
+            qDebug() << "平滑后的点： x:" << sumX << "y:" << sumY;
+
+            // 记录平滑后的点
+            smoothedPoints.append(QgsPointXY(sumX, sumY));  // 将平滑后的点添加到列表中
+        }
+        // 替换几何体
+        QgsGeometry newGeometry = QgsGeometry::fromPolylineXY(smoothedPoints);
+        if (!layer->changeGeometry(feature.id(), newGeometry))
+        {
+            qDebug() << "无法更新要素 ID:" << feature.id();
         }
     }
+
+    // 刷新图层，应用更改
+    layer->triggerRepaint();
+    qDebug() << "高斯平滑成功应用。";
 }
-
-
 //抽稀线
 void thiningLines(QgsVectorLayer* lineLayer, const QList<QgsFeature>& selectedFeatures)
 {

@@ -14,6 +14,7 @@ QgsVectorLayer* polygonToLines(QgsVectorLayer* polygonLayer, const QString& outp
 void smoothLines(QgsVectorLayer* lineLayer, const QList<QgsFeature>& selectedFeatures);			// 平滑线
 void applyBezierSmoothing(QgsVectorLayer* layer, const QList<QgsFeature>& selectedFeatures, int subdivision = 20);						// 应用贝塞尔平滑
 void applySplineSmoothing(QgsVectorLayer* layer, const QList<QgsFeature>& selectedFeatures, double tension = 0.2, int interpolationPoints = 10);						// 应用样条平滑
+void applyGaussianSmoothing(QgsVectorLayer* layer, const QList<QgsFeature>& selectedFeatures, int kernelSize = 5, double sigma = 1.0);				// 应用高斯平滑
 
 //抽稀线
 void thiningLines(QgsVectorLayer* lineLayer, const QList<QgsFeature>& selectedFeatures);			// 抽稀线
