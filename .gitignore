@@ -6,6 +6,7 @@ thirdlib/
 *.propsthirdlib/
 *.props
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
+*.props
 CPPLIB/
 alglib-cpp/
 .vs/
@@ -388,3 +389,8 @@ FodyWeavers.xsd
 /SearchJourney/CalcuResult/NDVI3.tif.aux.xml
 /SearchJourney/CalcuResult/NDVI4.tif
 /SearchJourney/CalcuResult/NDVI4.tif.aux.xml
+/SearchJourney/QGIS二次开发.props
+/SearchJourney/CalcuResult/TEST1.tif
+/SearchJourney/CalcuResult/TEST1.tif.aux.xml
+/SearchJourney/CalcuResult/TEST2.tif
+/SearchJourney/CalcuResult/TEST2.tif.aux.xml

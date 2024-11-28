@@ -207,7 +207,7 @@ void AttributeViewWidget::changeEditMode()
 }
 
 void AttributeViewWidget::modifyAttribute() {
-	QgsVectorLayer* pLayer = mCurVecLayer;  // ��ȡ��ǰͼ��
+	QgsVectorLayer* pLayer = mCurVecLayer;
 	pLayer->startEditing();
 	if (!pLayer || !pLayer->isEditable()) {
 		QMessageBox::warning(this, QStringLiteral("错误"), QStringLiteral("请选择一个有效的图层"));

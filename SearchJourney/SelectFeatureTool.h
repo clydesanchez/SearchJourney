@@ -7,12 +7,14 @@
 #include <qgsmaptoolidentify.h>
 #include <qgsrubberband.h>
 #include <qgsmapmouseevent.h>
+#include <qgsvectorlayer.h>
+#include <qgsmaptoolidentify.h>
 
 class QgsMapToolSelectFeatures : public QgsMapToolIdentify
 {
     Q_OBJECT
 public:
-    QgsMapToolSelectFeatures(QgsMapCanvas* mapCanvas);
+    QgsMapToolSelectFeatures(QgsMapCanvas* mapCanvas, QgsVectorLayer* targetLayer);
     ~QgsMapToolSelectFeatures();
 protected:
     // 重写鼠标移动
@@ -38,4 +40,5 @@ private:
     QPoint mInitDragPos;
     // 选择的Geometry
     QgsGeometry mSelectGeometry;
+    QgsVectorLayer* mpTargetLayer;
 };

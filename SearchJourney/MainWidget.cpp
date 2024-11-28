@@ -25,10 +25,12 @@ Function Lists:
     16. void on_ctrlLayerListViewAction_triggered() 图层列表视图
     17. void on_ctrlStatisticsViewAction_triggered() 统计视图
     18. void on_ctrlToolViewAction_triggered() 工具视图
-    19. void on_ctrlChooseAction_triggered() 选中图元
-    20. void onTreeItemClicked(QTreeWidgetItem *item, int column) 点击工具栏事件
-    21. void updateLayerList() 更新图层列表
-    22. void onChangeLayerVisible(QgsLayerTreeNode *pltnNode) 改变图层可见性
+    19. void on_ctrlDeleteAction_triggered(); 删除图元
+    20. void on_ctrlEditAttriAction_triggered(); 编辑属性
+    21. void on_ctrlMoveAction_triggered(); 平移图元
+    22. void onTreeItemClicked(QTreeWidgetItem *item, int column) 点击工具栏事件
+    23. void updateLayerList() 更新图层列表
+    24. void onChangeLayerVisible(QgsLayerTreeNode *pltnNode) 改变图层可见性
 */
 
 #include "MainWidget.h"
@@ -43,17 +45,19 @@ Function Lists:
 #include "LayerItemMenu.h"
 #include <QGis.h>
 #include <qgsapplication.h>
+
 #include <QSqlDatabase>
 #include <qgsstylemanagerdialog.h>
 #include <QgsFeatureIterator.h>
 #include <Qgsvectorlayer.h>
-#include "SelectFeatureTool.h"
+
 MainWidget::MainWidget(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
     // 初始化工程项目
     mppjProject = new QgsProject();
+    this->resize(1940, 1230);
     // 初始化地图画布
     mcanMapCanvas = ui.graphicsView;
     mcanMapCanvas->setStatusBar(ui.statusBar);
@@ -75,7 +79,17 @@ MainWidget::MainWidget(QWidget *parent)
     //ui.ctrlLayerTreeView->setMenuProvider(new LayerItemMenu(ui.ctrlLayerTreeView,mcanMapCanvas));
     // listview禁用编辑
     ui.ctrlStatisticsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    
+    // 编辑工具栏禁用
+    ui.ctrlDeleteAction->setEnabled(false);
+    ui.ctrlEditAttriAction->setEnabled(false);
+    ui.ctrlMoveAction->setEnabled(false);
+    ui.ctrlCopyAction->setEnabled(false);
+    ui.ctrlAddPointAction->setEnabled(false);
+    ui.ctrlSmoothLineAction->setEnabled(false);
+    ui.ctrlThiningLineAction->setEnabled(false);
+    ui.ctrlPolygonToLineAction->setEnabled(false);
+    // 重命名窗口标题
+    this->setWindowTitle("OOP_GIS_System");
 }
 
 MainWidget::~MainWidget()
@@ -166,14 +180,6 @@ void MainWidget::on_ctrlToolViewAction_triggered()
 {
     ui.ctrlToolDock->setVisible(!ui.ctrlToolDock->isVisible());
 }
-// 选中图元
-void MainWidget::on_ctrlChooseAction_triggered() {
-    QgsMapToolSelectFeatures* pSelectTool = new QgsMapToolSelectFeatures(mcanMapCanvas);
-    
-    connect(pSelectTool, &QgsMapToolSelectFeatures::sigSelectFeatureChange,
-        this, &MainWidget::editAttribute);
-    mcanMapCanvas->setMapTool(pSelectTool);
-}
 // 点击工具栏
 void MainWidget::onTreeItemClicked(QTreeWidgetItem *item, int column)
 {
@@ -203,6 +209,18 @@ void MainWidget::onTreeItemClicked(QTreeWidgetItem *item, int column)
         saveAsSHP();
     }
 }
+void MainWidget::on_actionbuffer_triggered() {
+    mpBuffer = new Buffer(this, mcanMapCanvas, mppjProject);
+    mpBuffer->setMapLayers(mliLayersList);
+    mpBuffer->show();
+}
+
+void MainWidget::on_actionClip_triggered() {
+    mpClip = new Clip(this, mcanMapCanvas, mppjProject);
+    mpClip->setMapLayers(mliLayersList);
+    mpClip->show();
+}
+
 // 更新图层列表
 void MainWidget::updateLayerList()
 {
