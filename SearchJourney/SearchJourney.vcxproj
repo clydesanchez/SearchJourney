@@ -49,7 +49,7 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
-    <Import Project="QGIS二次开发.props" />
+    <Import Project="C:\Users\74665\Desktop\SearchJourney_jzh\SearchJourney\QGIS二次开发.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -101,6 +101,7 @@
     <ClCompile Include="MainWidget.cpp" />
     <ClCompile Include="ProjectFileIO.cpp" />
     <ClCompile Include="Projection.cpp" />
+    <ClCompile Include="RasterCalculatorTool.cpp" />
     <ClCompile Include="RasterStatisticsSelect.cpp" />
     <ClCompile Include="SelectFeatureTool.cpp" />
     <ClCompile Include="SvgLabel.cpp" />
@@ -110,6 +111,7 @@
   <ItemGroup>
     <QtUic Include="AttributeViewWidget.ui" />
     <QtUic Include="MainWidget.ui" />
+    <QtUic Include="RasterCalculatorTool.ui" />
     <QtUic Include="SymbolManger.ui" />
     <QtUic Include="TextSelect.ui" />
   </ItemGroup>
@@ -121,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LayerItemMenu.h" />
+    <QtMoc Include="RasterCalculatorTool.h" />
     <QtMoc Include="SelectFeatureTool.h" />
     <QtMoc Include="SvgLabel.h" />
     <QtMoc Include="SymbolManger.h" />

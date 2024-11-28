@@ -305,3 +305,24 @@ void MainWidget::on_ctrlActionCanvasFullScreen_triggered()
         mbCanvasFullScreen = false;
 	}
 }
+// 自定义栅格计算器V2
+void MainWidget::on_ctrlOpenRasterCalculatorActionV2_triggered()
+{
+    // 创建 RasterCalculatorTool 对话框实例
+    RasterCalculatorTool* rasterCalculatorDialog = new RasterCalculatorTool(this);
+
+    // 显示对话框并等待用户交互
+    if (rasterCalculatorDialog->exec() == QDialog::Accepted)
+    {
+        // 用户点击“确定”按钮后，可以在这里处理结果
+        qDebug() << "Raster Calculator executed successfully.";
+    }
+    else
+    {
+        // 用户点击“取消”按钮后，可以在这里处理逻辑
+        qDebug() << "Raster Calculator canceled.";
+    }
+
+    // 释放内存
+    delete rasterCalculatorDialog;
+}
