@@ -59,31 +59,31 @@ void CustomAttributeTableView::showLineEdit(QModelIndex index) {
 
 	rect.setLeft(rect.left() + this->verticalHeader()->width() -10);
 	rect.setRight(rect.right() + this->verticalHeader()->width() -10);
-	QLineEdit* lineEdit = new QLineEdit(this);
+	QLineEdit* ctrlInputEdit = new QLineEdit(this);
 	QString srcValue = index.data().toString();
-	lineEdit->setGeometry(rect);
-	lineEdit->setText(srcValue);
-	lineEdit->setFocus();
-	lineEdit->show();
-	connect(lineEdit, &QLineEdit::editingFinished, this,[this, lineEdit, index,srcValue]() {
+	ctrlInputEdit->setGeometry(rect);
+	ctrlInputEdit->setText(srcValue);
+	ctrlInputEdit->setFocus();
+	ctrlInputEdit->show();
+	connect(ctrlInputEdit, &QLineEdit::editingFinished, this,[this, ctrlInputEdit, index,srcValue]() {
 		// 避免失去焦点时触发多次信号
-		lineEdit->blockSignals(true);
+		ctrlInputEdit->blockSignals(true);
 		// 弹出确认框
 		QMessageBox::StandardButton ret;
 		ret = QMessageBox::question(this, "确认", "是否确认修改数据？", QMessageBox::Yes | QMessageBox::No);
 		// 如果输入框的值和原值相同则不写入数据
-		if(lineEdit->text() == srcValue||ret==QMessageBox::No)
+		if (ctrlInputEdit->text() == srcValue||ret==QMessageBox::No)
 		{
-			lineEdit->deleteLater();
+			ctrlInputEdit->deleteLater();
 			return;
 		}
 		// 确认框如果点击了取消则不写入数据
 		qDebug() << "确认修改数据";
-		QString str = lineEdit->text();
+		QString str = ctrlInputEdit->text();
 		//CustomAttributeFliterModel* filterModel = dynamic_cast<CustomAttributeFliterModel*>(this->model());
 		//filterModel->sourceModel()->setData(index, str, Qt::EditRole);
 		emit inputData(str);
-		lineEdit->deleteLater();
+		ctrlInputEdit->deleteLater();
 		this->update();
 		});
 }

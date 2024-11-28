@@ -1,78 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>qml;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>qrc;rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Form Files">
-      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
-      <Extensions>ui</Extensions>
-    </Filter>
-    <Filter Include="Translation Files">
-      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
-      <Extensions>ts</Extensions>
-    </Filter>
-    <Filter Include="Source Files\SelectDialog">
-      <UniqueIdentifier>{7b429dc4-f51b-4df4-81c7-3e8a7ba1b72c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Attribute">
-      <UniqueIdentifier>{b8d064fb-9706-413b-80b8-bc91598d767e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\LayerItem">
-      <UniqueIdentifier>{d29efa3b-4955-4e91-8013-0215834448a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\mapcanvas">
-      <UniqueIdentifier>{d10385a1-6f2d-4341-8615-b4ef5120fa90}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\MainWidget">
-      <UniqueIdentifier>{e7912ea6-49e2-40ce-966a-821ca94e7d22}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\SymbolManger">
-      <UniqueIdentifier>{89bc49a5-f76b-426a-b32a-2851f7141035}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\SpatialAnalysisTools">
-      <UniqueIdentifier>{01dcb0d4-a8aa-49a7-9be4-df4439d565e9}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ConnectSelect.cpp">
-      <Filter>Source Files\SelectDialog</Filter>
-    </ClCompile>
-    <ClCompile Include="FileSaveSelect.cpp">
-      <Filter>Source Files\SelectDialog</Filter>
-    </ClCompile>
-    <ClCompile Include="KMeansSelect.cpp">
-      <Filter>Source Files\SelectDialog</Filter>
-    </ClCompile>
-    <ClCompile Include="RasterStatisticsSelect.cpp">
-      <Filter>Source Files\SelectDialog</Filter>
-    </ClCompile>
-    <ClCompile Include="TextSelect.cpp">
-      <Filter>Source Files\SelectDialog</Filter>
-    </ClCompile>
     <ClCompile Include="AttributeViewWidget.cpp">
-      <Filter>Source Files\Attribute</Filter>
-    </ClCompile>
-    <ClCompile Include="CustomAttributeTableView.cpp">
       <Filter>Source Files\Attribute</Filter>
     </ClCompile>
     <ClCompile Include="LayerItemMenu.cpp">
       <Filter>Source Files\LayerItem</Filter>
-    </ClCompile>
-    <ClCompile Include="GISMapCanvas.cpp">
-      <Filter>Source Files\mapcanvas</Filter>
     </ClCompile>
     <ClCompile Include="AnalyticalFunction.cpp">
       <Filter>Source Files\MainWidget</Filter>
@@ -89,8 +22,50 @@
     <ClCompile Include="ProjectFileIO.cpp">
       <Filter>Source Files\MainWidget</Filter>
     </ClCompile>
+    <ClCompile Include="Projection.cpp">
+      <Filter>Source Files\MainWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="GISMapCanvas.cpp">
+      <Filter>Source Files\MapCanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectSelect.cpp">
+      <Filter>Source Files\SelectDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSaveSelect.cpp">
+      <Filter>Source Files\SelectDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="KMeansSelect.cpp">
+      <Filter>Source Files\SelectDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="RasterStatisticsSelect.cpp">
+      <Filter>Source Files\SelectDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="TextSelect.cpp">
+      <Filter>Source Files\SelectDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="EditFeature.cpp">
+      <Filter>Source Files\SelectFeature</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomAttributeTableView.cpp">
+      <Filter>Source Files\Attribute</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files\MainWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectFeatureTool.cpp">
+      <Filter>Source Files\SelectFeature</Filter>
+    </ClCompile>
+    <ClCompile Include="UseSelected.cpp">
+      <Filter>Source Files\SelectFeature</Filter>
+    </ClCompile>
+    <ClCompile Include="SvgLabel.cpp">
+      <Filter>Source Files\SymbolManager</Filter>
+    </ClCompile>
     <ClCompile Include="SymbolManger.cpp">
-      <Filter>Source Files\SymbolManger</Filter>
+      <Filter>Source Files\SymbolManager</Filter>
+    </ClCompile>
+    <ClCompile Include="RasterCalculatorTool.cpp">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
     </ClCompile>
     <ClCompile Include="Buffer.cpp">
       <Filter>Source Files\SpatialAnalysisTools</Filter>
@@ -103,48 +78,37 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="TextSelect.ui">
-      <Filter>Source Files\SelectDialog</Filter>
-    </QtUic>
-    <QtUic Include="AttributeViewWidget.ui">
-      <Filter>Source Files\Attribute</Filter>
-    </QtUic>
-    <QtUic Include="SymbolManger.ui">
-      <Filter>Source Files\SymbolManger</Filter>
-    </QtUic>
-    <QtUic Include="Buffer.ui">
-      <Filter>Source Files\SpatialAnalysisTools</Filter>
-    </QtUic>
-    <QtUic Include="MainWidget.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="Clip.ui">
-      <Filter>Source Files\SpatialAnalysisTools</Filter>
-    </QtUic>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="SelectDialog.h">
-      <Filter>Source Files\SelectDialog</Filter>
-    </QtMoc>
     <QtMoc Include="AttributeViewWidget.h">
       <Filter>Source Files\Attribute</Filter>
-    </QtMoc>
-    <QtMoc Include="CustomAttributeTableView.h">
-      <Filter>Source Files\Attribute</Filter>
-    </QtMoc>
-    <QtMoc Include="GISMapCanvas.h">
-      <Filter>Source Files\mapcanvas</Filter>
     </QtMoc>
     <QtMoc Include="MainWidget.h">
       <Filter>Source Files\MainWidget</Filter>
     </QtMoc>
-    <QtMoc Include="SymbolManger.h">
-      <Filter>Source Files\SymbolManger</Filter>
+    <QtMoc Include="GISMapCanvas.h">
+      <Filter>Source Files\MapCanvas</Filter>
     </QtMoc>
-    <QtMoc Include="Buffer.h">
+    <QtMoc Include="SelectDialog.h">
+      <Filter>Source Files\SelectDialog</Filter>
+    </QtMoc>
+    <QtMoc Include="CustomAttributeTableView.h">
+      <Filter>Source Files\Attribute</Filter>
+    </QtMoc>
+    <QtMoc Include="SelectFeatureTool.h">
+      <Filter>Source Files\SelectFeature</Filter>
+    </QtMoc>
+    <QtMoc Include="SvgLabel.h">
+      <Filter>Source Files\SymbolManager</Filter>
+    </QtMoc>
+    <QtMoc Include="SymbolManger.h">
+      <Filter>Source Files\SymbolManager</Filter>
+    </QtMoc>
+    <QtMoc Include="RasterCalculatorTool.h">
       <Filter>Source Files\SpatialAnalysisTools</Filter>
     </QtMoc>
     <QtMoc Include="ClipMapTool.h">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </QtMoc>
+    <QtMoc Include="Buffer.h">
       <Filter>Source Files\SpatialAnalysisTools</Filter>
     </QtMoc>
     <QtMoc Include="Clip.h">
@@ -152,13 +116,74 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LayerItemMenu.h">
-      <Filter>Source Files\LayerItem</Filter>
-    </ClInclude>
+    <QtUic Include="MainWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="AttributeViewWidget.ui">
+      <Filter>Source Files\Attribute</Filter>
+    </QtUic>
+    <QtUic Include="TextSelect.ui">
+      <Filter>Source Files\SelectDialog</Filter>
+    </QtUic>
+    <QtUic Include="SymbolManger.ui">
+      <Filter>Source Files\SymbolManager</Filter>
+    </QtUic>
+    <QtUic Include="RasterCalculatorTool.ui">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </QtUic>
+    <QtUic Include="Buffer.ui">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </QtUic>
+    <QtUic Include="Clip.ui">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{f0f737c2-67d6-4c8f-9aac-0ef9f81692f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{9a18ac3f-114f-4185-bcb8-5bd1d3dcfc7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{f13a0c44-febc-468b-9d64-17a15ab43c13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{c2c011b4-55d4-4bb9-aeb4-01647c05f696}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Attribute">
+      <UniqueIdentifier>{45ba95fb-2b95-45e7-a90e-c0417bd3a553}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\LayerItem">
+      <UniqueIdentifier>{e8eed958-6f29-4c81-a09c-62ecaf1bffe5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MainWidget">
+      <UniqueIdentifier>{b3a09915-8c29-484d-a235-94fb3bb9a1ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MapCanvas">
+      <UniqueIdentifier>{ee7200d4-1408-4c8b-8bc5-c464ac3a02e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SelectDialog">
+      <UniqueIdentifier>{f20d314d-d7b6-4195-be1a-c9f446eed1d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SelectFeature">
+      <UniqueIdentifier>{6cf24414-4578-4624-aaf8-8232477146d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SymbolManager">
+      <UniqueIdentifier>{f5865920-3142-4edf-a0dc-7ab0230e3b49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SpatialAnalysisTools">
+      <UniqueIdentifier>{2eaab9b7-3e62-4c2a-91ef-9cb3354c9268}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="MainWidget.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LayerItemMenu.h">
+      <Filter>Source Files\LayerItem</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

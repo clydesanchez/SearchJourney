@@ -38,6 +38,12 @@ Function Lists:
 #include <qprogressdialog.h>
 #include <QtConcurrent/QtConcurrent>
 #include <QFutureWatcher>
+#include <QToolButton>
+#include <QFileDialog>
+#include <gdal.h>
+#include <gdal_priv.h>
+#include <ogrsf_frmts.h>
+#include <gdal_alg.h>
 // #include "dataanalysis.h"
 
 // 计算两点之间的距离
@@ -610,4 +616,218 @@ void MainWidget::rasterStatistics()
 	qDebug() << "总和：" << stats.sum;
 	qDebug() << "标准差：" << stats.stdDev;
 	qDebug() << "平方和：" << stats.sumOfSquares;
+}
+
+void MainWidget::on_ctrlVecToRasAction_triggered() {
+	QDialog* pDl = new QDialog();
+	QVBoxLayout* pVbl = new QVBoxLayout();
+	QHBoxLayout* pHbl1 = new QHBoxLayout();
+	QHBoxLayout* pHbl2 = new QHBoxLayout();
+	QHBoxLayout* pHbl3 = new QHBoxLayout();
+	QHBoxLayout* pHbl4 = new QHBoxLayout();
+	QHBoxLayout* pHbl5 = new QHBoxLayout();
+	QHBoxLayout* pHbl6 = new QHBoxLayout();
+	QHBoxLayout* pHbl7 = new QHBoxLayout();
+	QLabel* pL1 = new QLabel();
+	QLabel* pL2 = new QLabel();
+	QLabel* pL3 = new QLabel();
+	QLabel* pL4 = new QLabel();
+	QLabel* pL5 = new QLabel();
+	QLabel* pL6 = new QLabel();
+	QLineEdit* pLe1 = new QLineEdit();
+	QLineEdit* pLe2 = new QLineEdit();
+	QLineEdit* pLe3 = new QLineEdit();
+	QLineEdit* pLe4 = new QLineEdit();
+	QSpinBox* pSb = new QSpinBox();
+	QComboBox* pCbb = new QComboBox();
+	QToolButton* pTb1 = new QToolButton();
+	QToolButton* pTb2 = new QToolButton();
+	QPushButton* pPb1 = new QPushButton();
+	QPushButton* pPb2 = new QPushButton();
+	
+	pL1->setText(QStringLiteral("输入矢量数据文件"));
+	pTb1->setText("...");
+	pHbl1->addWidget(pL1);
+	pHbl1->addWidget(pLe1);
+	pHbl1->addWidget(pTb1);
+	
+	pL2->setText(QStringLiteral("输入栅格数据输出路径"));
+	pTb2->setText("...");
+	pHbl2->addWidget(pL2);
+	pHbl2->addWidget(pLe2);
+	pHbl2->addWidget(pTb2);
+	
+	pL3->setText(QStringLiteral("输入栅格宽度"));
+	pHbl3->addWidget(pL3);
+	pHbl3->addWidget(pLe3);
+	
+	pL4->setText(QStringLiteral("输入栅格高度"));
+	pHbl4->addWidget(pL4);
+	pHbl4->addWidget(pLe4);
+
+	pL5->setText(QStringLiteral("输入块大小"));
+	pSb->setMinimum(1);
+	pHbl5->addWidget(pL5);
+	pHbl5->addWidget(pSb);
+
+	pL6->setText(QStringLiteral("指定属性字段"));
+	pHbl6->addWidget(pL6);
+	pHbl6->addWidget(pCbb);
+	
+	pPb1->setText(QStringLiteral("确定"));
+	pPb2->setText(QStringLiteral("取消"));
+	pHbl7->addWidget(pPb1);
+	pHbl7->addWidget(pPb2);
+	
+	pVbl->addLayout(pHbl1);
+	pVbl->addLayout(pHbl2);
+	pVbl->addLayout(pHbl3);
+	pVbl->addLayout(pHbl4);
+	pVbl->addLayout(pHbl5);
+	pVbl->addLayout(pHbl6);
+	pVbl->addLayout(pHbl7);
+	pDl->setLayout(pVbl);
+	pDl->resize(500, 400);
+
+	connect(pTb1, &QToolButton::clicked, this, [=]() {
+		QString filePath = QFileDialog::getOpenFileName(this, QStringLiteral("选择矢量数据文件"), "", "shapefile (*.shp)");
+		pLe1->setText(filePath);
+		QgsVectorLayer vectorLayer(filePath, "Vector Layer", "ogr");
+
+		// 检查图层是否有效
+		if (!vectorLayer.isValid()) {
+			return;
+		}
+
+		// 获取字段信息
+		const QgsFields& fields = vectorLayer.fields();
+		QStringList fieldNames;
+
+		// 遍历字段并提取名称
+		for (const QgsField& field : fields) {
+			fieldNames.append(field.name());
+		}
+
+		pCbb->addItems(fieldNames);
+		});
+
+	connect(pTb2, &QToolButton::clicked, this, [=]() {
+		QString filePath = QFileDialog::getSaveFileName(this, QStringLiteral("选择输出位置"), "", "GeoTiff (*.tif)");
+		pLe2->setText(filePath);
+		});
+
+	connect(pPb1, &QPushButton::clicked, this, [=]() {
+		QString ShpFile = pLe1->text();
+		QString TifFile = pLe2->text();
+
+		CPLSetConfigOption("GDAL_FILENAME_IS_UTF8", "NO"); // 支持中文路径
+		GDALAllRegister(); // 注册所有驱动
+		OGRRegisterAll();  // 注册OGR驱动
+
+		// 打开矢量文件
+		GDALDataset* shpData = (GDALDataset*)GDALOpenEx(ShpFile.toStdString().c_str(), GDAL_OF_READONLY, NULL, NULL, NULL);
+		if (shpData == NULL)
+		{
+			return;
+		}
+
+		OGRLayer* shpLayer = shpData->GetLayer(0); // 获取第一个图层
+		OGREnvelope env;
+		shpLayer->GetExtent(&env); // 获取矢量图层的坐标范围
+
+		// 设置栅格的大小
+		bool ok1, ok2;
+		int m_nImageWidth = pLe3->text().toInt(&ok1); // 宽度
+		int m_nImageHeight = pLe4->text().toInt(&ok2); // 高度
+		if (!ok1 || !ok2) {
+			QMessageBox::warning(this, QStringLiteral("错误"), QStringLiteral("宽度和高度必须为整数！"));
+		}
+
+		OGRSpatialReference* pOgrSRS = shpLayer->GetSpatialRef(); // 获取矢量图层的空间参考
+		char* pPrj = NULL;
+		if (pOgrSRS == NULL)
+		{
+			m_nImageHeight = (int)(env.MaxX - env.MinX);
+			m_nImageWidth = (int)(env.MinY - env.MaxY);
+		}
+		else
+		{
+			pOgrSRS->exportToWkt(&pPrj); // 导出投影信息
+		}
+
+		// 获取GTiff驱动并创建新的栅格数据集
+		GDALDriver* poDriver = GetGDALDriverManager()->GetDriverByName("GTiff");
+		GDALDataset* poNewDS = poDriver->Create(TifFile.toStdString().c_str(), m_nImageWidth, m_nImageHeight, 1, GDT_Float32, NULL);
+		if (poNewDS == NULL)
+		{
+			GDALClose(shpData);
+			return;
+		}
+
+		// 设置栅格的地理变换信息
+		double adfGeoTransform[6];
+		adfGeoTransform[0] = env.MinX; // 左上角X坐标
+		adfGeoTransform[1] = (env.MaxX - env.MinX) / m_nImageWidth; // 像元宽度
+		adfGeoTransform[2] = 0; // 影像旋转系数
+		adfGeoTransform[3] = env.MaxY; // 左上角Y坐标
+		adfGeoTransform[4] = 0; // 影像旋转系数
+		adfGeoTransform[5] = (env.MinY - env.MaxY) / m_nImageHeight; // 像元高度
+		GDALSetGeoTransform(poNewDS, adfGeoTransform); // 设置地理信息
+
+		// 如果有投影信息，设置栅格的投影
+		if (pOgrSRS != NULL)
+		{
+			poNewDS->SetProjection(pPrj);
+		}
+
+		// 设置矢量图层栅格化的选项
+		char** papszOptions = NULL;
+		papszOptions = CSLSetNameValue(papszOptions, "CHUNKSIZE", pSb->text().toStdString().c_str()); // 设置块大小
+		papszOptions = CSLSetNameValue(papszOptions, "ATTRIBUTE", pCbb->currentText().toStdString().c_str()); // 设置使用的字段名
+
+		// 使用GDAL栅格化函数将矢量数据栅格化到新建的栅格数据集中
+		int* pnbandlist = new int[1];
+		pnbandlist[0] = 1;
+		OGRLayerH* player = new OGRLayerH[1];
+		player[0] = (OGRLayerH)shpLayer;
+
+		CPLErr err = GDALRasterizeLayers((GDALDatasetH)poNewDS, 1, pnbandlist, 1, player,
+			NULL, NULL, NULL, papszOptions, NULL, NULL);
+
+		// 清理资源
+		GDALClose(shpData);  // 关闭矢量数据集
+		GDALClose(poNewDS);  // 关闭栅格数据集
+		delete[] player;     // 删除临时指针
+		delete[] pnbandlist; // 删除临时指针
+
+		// 如果栅格化出现错误，返回0
+		if (err != CE_None)
+		{
+			GDALDestroyDriverManager();
+			return;
+		}
+
+		// 返回成功
+		//GDALDestroyDriverManager(); // 不销毁驱动管理器
+
+		QStringList _qstrSplit = TifFile.split('/');
+		QString qstrBasename = _qstrSplit.at(_qstrSplit.size() - 1);
+		QgsRasterLayer* qvlRasterLayer = new QgsRasterLayer(TifFile, qstrBasename);
+		if (!qvlRasterLayer->isValid())
+		{
+			QMessageBox::critical(this, "error", QString("导入栅格图层失败： \n") + TifFile);
+			return;
+		}
+		// 添加到当前qgz工程
+		mppjProject->addMapLayer(qvlRasterLayer);
+		setLayerToMap(static_cast<QgsMapLayer*>(qvlRasterLayer));
+
+		pDl->accept();
+		});
+
+	connect(pPb2, &QPushButton::clicked, this, [=]() {
+		pDl->accept();
+		});
+
+	pDl->exec();
 }

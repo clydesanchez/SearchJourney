@@ -13,12 +13,14 @@ Description:
 #include <QWidget>
 #include <QPointF>
 #include <QStatusBar>
+#include <QMenu>
 class GISMapCanvas : public QgsMapCanvas
 {
 	Q_OBJECT
 
 public:
 	GISMapCanvas(QWidget *parent);
+	GISMapCanvas(GISMapCanvas* srcCanvas);
 	~GISMapCanvas();
 
 public:
@@ -29,6 +31,7 @@ public:
 	void dropEvent(QDropEvent *event) override;
 	void dragEnterEvent(QDragEnterEvent *event) override;
 	void dragMoveEvent(QDragMoveEvent *event) override;
+	
 private:
 	QStatusBar *qsbMainWin = nullptr; // 主窗口状态栏
 signals:

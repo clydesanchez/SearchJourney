@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A579AC81-CDEA-46B3-83C8-D515252F7E00}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
-    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0.22621.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0.22621.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
   </PropertyGroup>
@@ -34,6 +34,7 @@
     <QtInstall>5.14.2_msvc2017_64</QtInstall>
     <QtModules>core;xml;sql;gui;svg;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
+    <QtToolsDesignTime>true</QtToolsDesignTime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>5.15.2_msvc2019_64</QtInstall>
@@ -72,12 +73,12 @@
     <ClCompile>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <DebugInformationFormat>None</DebugInformationFormat>
-      <Optimization>MaxSpeed</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -100,6 +101,7 @@
     <ClCompile Include="ClipMapTool.cpp" />
     <ClCompile Include="ConnectSelect.cpp" />
     <ClCompile Include="CustomAttributeTableView.cpp" />
+    <ClCompile Include="EditFeature.cpp" />
     <ClCompile Include="EditVectorLayer.cpp" />
     <ClCompile Include="FileSaveSelect.cpp" />
     <ClCompile Include="GISMapCanvas.cpp" />
@@ -109,15 +111,21 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWidget.cpp" />
     <ClCompile Include="ProjectFileIO.cpp" />
+    <ClCompile Include="Projection.cpp" />
+    <ClCompile Include="RasterCalculatorTool.cpp" />
     <ClCompile Include="RasterStatisticsSelect.cpp" />
+    <ClCompile Include="SelectFeatureTool.cpp" />
+    <ClCompile Include="SvgLabel.cpp" />
     <ClCompile Include="SymbolManger.cpp" />
     <ClCompile Include="TextSelect.cpp" />
+    <ClCompile Include="UseSelected.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="AttributeViewWidget.ui" />
     <QtUic Include="Buffer.ui" />
     <QtUic Include="Clip.ui" />
     <QtUic Include="MainWidget.ui" />
+    <QtUic Include="RasterCalculatorTool.ui" />
     <QtUic Include="SymbolManger.ui" />
     <QtUic Include="TextSelect.ui" />
   </ItemGroup>
@@ -132,6 +140,9 @@
     <QtMoc Include="Clip.h" />
     <QtMoc Include="ClipMapTool.h" />
     <ClInclude Include="LayerItemMenu.h" />
+    <QtMoc Include="RasterCalculatorTool.h" />
+    <QtMoc Include="SelectFeatureTool.h" />
+    <QtMoc Include="SvgLabel.h" />
     <QtMoc Include="SymbolManger.h" />
     <QtMoc Include="SelectDialog.h" />
     <QtMoc Include="MainWidget.h" />

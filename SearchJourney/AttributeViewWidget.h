@@ -1,6 +1,9 @@
 #pragma once
 
 #include <QWidget>
+#include <QComboBox>
+#include <QLabel>
+#include <QSpinBox>
 #include "ui_AttributeViewWidget.h"
 #include "CustomAttributeTableView.h"
 #include <qgsvectorlayer.h>
@@ -21,6 +24,7 @@ public slots:
 	void addAttribute(); // 添加属性
 	void deleteAttribute(); // 删除属性
 	void changeEditMode();
+	void modifyAttribute(); // 修改属性
 private:
 	Ui::AttributeViewWidgetClass ui;
 

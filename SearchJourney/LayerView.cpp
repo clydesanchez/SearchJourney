@@ -26,7 +26,8 @@ Function Lists:
 #include <qgsfillsymbol.h>
 #include <qgsfillsymbollayer.h>
 #include <QgsSymbolLayerRegistry.h>
-
+#include <QInputDialog>
+#include <qgslabeling.h>
 // 添加矢量图层
 void MainWidget::addVectorLayer()
 {
@@ -137,7 +138,10 @@ void MainWidget::setLayerToMap(QgsMapLayer *pmlNewLayer)
     mcanMapCanvas->setExtent(pmlNewLayer->extent());
     mliLayersList.append(pmlNewLayer);
     mliVisibleLayers.append(pmlNewLayer);
-    mcanMapCanvas->setLayers(mliVisibleLayers);
+    //mcanMapCanvas->setLayers(mliVisibleLayers);
+    // 获取工程中所有图层
+    QList<QgsMapLayer *> layers = mppjProject->mapLayers().values();
+    mcanMapCanvas->setLayers(layers);
     mcanMapCanvas->refresh();
     mppjProject->addMapLayer(pmlNewLayer);
     updateLayerList();
@@ -174,4 +178,31 @@ void MainWidget::slotApplySymbol(QString strLayer, QgsSymbol *psSymbol)
 	QgsSingleSymbolRenderer *renderer = new QgsSingleSymbolRenderer(psSymbol);
 	pvlLayer->setRenderer(renderer);
 	pvlLayer->triggerRepaint();
+}
+
+// 设置图层标注
+void MainWidget::slotApplyMark(QString strLayer, QgsVectorLayerSimpleLabeling* pMark)
+{
+    // 根据名称获取图层
+    QgsVectorLayer* pvlLayer = nullptr;
+    QList<QgsMapLayer*> layers = mppjProject->mapLayersByName(strLayer);
+    if (layers.size() > 0)
+    {
+        pvlLayer = dynamic_cast<QgsVectorLayer*>(layers.at(0));
+    }
+    if (!pvlLayer)
+    {
+        QMessageBox::critical(this, "error", QString("图层不存在: \n") + strLayer);
+        return;
+    }
+    if (pMark == nullptr) {
+        pvlLayer->setLabelsEnabled(false);
+        pvlLayer->triggerRepaint();
+        return;
+    }
+    // 启用注记
+    pvlLayer->setLabelsEnabled(true);
+    pvlLayer->setLabeling(pMark);
+    pvlLayer->setLabelsEnabled(true);
+    pvlLayer->triggerRepaint();
 }
