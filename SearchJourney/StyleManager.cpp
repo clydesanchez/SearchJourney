@@ -17,8 +17,8 @@
 #include <qgssymbollayerutils.h>
 #include <qgsreadwritecontext.h>
 #include <qgsscreenproperties.h>
-#include "qgssymbol.h" // 符号类型
-#include "qgis_core.h" // 几何类型
+#include "qgssymbol.h" 
+#include "qgis_core.h"
 
 
 StyleManager::StyleManager(QString strLayerName, Qgis::GeometryType layerType, MainWidget* widMain, QWidget* parent)
@@ -121,6 +121,7 @@ StyleManager::StyleManager(QString strLayerName, Qgis::GeometryType layerType, M
     resize(800, 600);
 
     refreshStlView();
+    markerViewer(listView);
 }
 
 StyleManager::~StyleManager() {}
@@ -204,17 +205,14 @@ void StyleManager::refreshStlView() {
 
             // 根据符号类型分类存储
             if (QgsMarkerSymbol* markerSymbol = dynamic_cast<QgsMarkerSymbol*>(symbol)) {
-                /*mMarkerSymbols.append(markerSymbol);*/
                 CustomMarkerSymbol* customMarkerSymbol = new CustomMarkerSymbol(markerSymbol, symbolName);
                 mMarkerSymbols.append(customMarkerSymbol);
             }
             else if (QgsLineSymbol* lineSymbol = dynamic_cast<QgsLineSymbol*>(symbol)) {
-                /*mLineSymbols.append(lineSymbol);*/
                 CustomLineSymbol* customLineSymbol = new CustomLineSymbol(lineSymbol, symbolName);
                 mLineSymbols.append(customLineSymbol);
             }
             else if (QgsFillSymbol* fillSymbol = dynamic_cast<QgsFillSymbol*>(symbol)) {
-                /*mFillSymbols.append(fillSymbol);*/
                 CustomFillSymbol* customFillSymbol = new CustomFillSymbol(fillSymbol, symbolName);
                 mFillSymbols.append(customFillSymbol);
             }
@@ -236,8 +234,7 @@ void StyleManager::markerViewer(QListView* listView) {
     for (int i = 0; i < mMarkerSymbols.size(); ++i) {
         CustomMarkerSymbol* markerSymbol = mMarkerSymbols[i];
 
-        // 假设符号名称已经在 XML 中解析并存储
-        QString symbolName = markerSymbol->getName(); // 如果没有名称，可以设置默认名称
+        QString symbolName = markerSymbol->getName();
 
         // 创建符号预览图
         QImage image = markerSymbol->getSymbol()->bigSymbolPreviewImage(nullptr, Qgis::SymbolPreviewFlags(), QgsScreenProperties());
@@ -390,7 +387,7 @@ void StyleManager::onActionStlExport(QListView* listView) {
     QgsSymbol* symbol = nullptr;
     QString symbolName;
 
-    // 根据 listViewMode 判断符号类型
+    // 获取用户选择的符号
     if (listViewMode == "Marker" && row >= 0 && row < mMarkerSymbols.size()) {
         CustomMarkerSymbol* selectedSymbol = mMarkerSymbols[row];
         symbol = selectedSymbol->getSymbol();
@@ -429,44 +426,130 @@ void StyleManager::onActionStlExport(QListView* listView) {
         return;
     }
 
-    // 创建 QDomDocument 和根节点
+    // 创建 SLD 文档
     QDomDocument doc;
-    QDomElement root = doc.createElement("StyledLayerDescriptor");
+    QDomElement root = doc.createElement("sld:StyledLayerDescriptor");
     root.setAttribute("version", "1.0.0");
-    root.setAttribute("xmlns", "http://www.opengis.net/sld");
+    root.setAttribute("xsi:schemaLocation", "http://www.opengis.net/sld StyledLayerDescriptor.xsd");
+    root.setAttribute("xmlns:sld", "http://www.opengis.net/sld");
     root.setAttribute("xmlns:ogc", "http://www.opengis.net/ogc");
+    root.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+    root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
     doc.appendChild(root);
 
-    QDomElement namedLayer = doc.createElement("NamedLayer");
+    QDomElement namedLayer = doc.createElement("sld:NamedLayer");
     root.appendChild(namedLayer);
 
-    QDomElement nameElement = doc.createElement("Name");
+    QDomElement nameElement = doc.createElement("sld:Name");
     nameElement.appendChild(doc.createTextNode(symbolName));
     namedLayer.appendChild(nameElement);
 
-    QDomElement userStyle = doc.createElement("UserStyle");
+    QDomElement userStyle = doc.createElement("sld:UserStyle");
     namedLayer.appendChild(userStyle);
 
-    QDomElement featureTypeStyle = doc.createElement("FeatureTypeStyle");
+    QDomElement titleElement = doc.createElement("sld:Title");
+    titleElement.appendChild(doc.createTextNode(tr("Style for %1").arg(symbolName)));
+    userStyle.appendChild(titleElement);
+
+    QDomElement featureTypeStyle = doc.createElement("sld:FeatureTypeStyle");
     userStyle.appendChild(featureTypeStyle);
 
-    QDomElement rule = doc.createElement("Rule");
+    QDomElement rule = doc.createElement("sld:Rule");
     featureTypeStyle.appendChild(rule);
 
-    QDomElement symbolizerElement = doc.createElement("Symbolizer");
+    QDomElement ruleTitle = doc.createElement("sld:Title");
+    ruleTitle.appendChild(doc.createTextNode(tr("Rule for %1").arg(symbolName)));
+    rule.appendChild(ruleTitle);
 
-    // 调用 toSld 方法
-    QVariantMap props; // 如果有额外的属性，可以在此填充
-    symbol->toSld(doc, symbolizerElement, props);
+    // 根据符号类型动态生成 Symbolizer
+    if (QgsMarkerSymbol* markerSymbol = dynamic_cast<QgsMarkerSymbol*>(symbol)) {
+        // 点符号
+        QDomElement pointSymbolizer = doc.createElement("sld:PointSymbolizer");
+        QDomElement graphic = doc.createElement("sld:Graphic");
+        pointSymbolizer.appendChild(graphic);
 
-    if (symbolizerElement.isNull()) {
-        QMessageBox::warning(this, tr("Error"), tr("Failed to generate SLD symbolizer."));
-        return;
+        QDomElement mark = doc.createElement("sld:Mark");
+        graphic.appendChild(mark);
+
+        QDomElement wellKnownName = doc.createElement("sld:WellKnownName");
+        wellKnownName.appendChild(doc.createTextNode("circle")); // 示例：圆形
+        mark.appendChild(wellKnownName);
+
+        // 填充颜色
+        QDomElement fill = doc.createElement("sld:Fill");
+        QDomElement fillColor = doc.createElement("sld:CssParameter");
+        fillColor.setAttribute("name", "fill");
+        fillColor.appendChild(doc.createTextNode(markerSymbol->color().name())); // 动态填充颜色
+        fill.appendChild(fillColor);
+        mark.appendChild(fill);
+
+        // 大小
+        QDomElement size = doc.createElement("sld:Size");
+        size.appendChild(doc.createTextNode(QString::number(markerSymbol->size()))); // 动态获取大小
+        graphic.appendChild(size);
+
+        rule.appendChild(pointSymbolizer);
+
+    }
+    else if (QgsLineSymbol* lineSymbol = dynamic_cast<QgsLineSymbol*>(symbol)) {
+        // 线符号
+        QDomElement lineSymbolizer = doc.createElement("sld:LineSymbolizer");
+        QDomElement stroke = doc.createElement("sld:Stroke");
+
+        // 线颜色
+        QDomElement strokeColor = doc.createElement("sld:CssParameter");
+        strokeColor.setAttribute("name", "stroke");
+        strokeColor.appendChild(doc.createTextNode(lineSymbol->color().name())); // 动态线颜色
+        stroke.appendChild(strokeColor);
+
+        // 线宽
+        QDomElement strokeWidth = doc.createElement("sld:CssParameter");
+        strokeWidth.setAttribute("name", "stroke-width");
+        strokeWidth.appendChild(doc.createTextNode(QString::number(lineSymbol->width()))); // 动态线宽
+        stroke.appendChild(strokeWidth);
+
+        lineSymbolizer.appendChild(stroke);
+        rule.appendChild(lineSymbolizer);
+
+    }
+    else if (QgsFillSymbol* fillSymbol = dynamic_cast<QgsFillSymbol*>(symbol)) {
+        QDomElement polygonSymbolizer = doc.createElement("sld:PolygonSymbolizer");
+
+        // 获取填充颜色
+        QDomElement fill = doc.createElement("sld:Fill");
+        QDomElement fillColor = doc.createElement("sld:CssParameter");
+        fillColor.setAttribute("name", "fill");
+        fillColor.appendChild(doc.createTextNode(fillSymbol->color().name())); // 获取填充颜色
+        fill.appendChild(fillColor);
+        polygonSymbolizer.appendChild(fill);
+
+        // 获取边框颜色和宽度
+        QColor strokeColor = Qt::black; // 默认边框颜色
+        double strokeWidth = 1.0;       // 默认边框宽度
+
+        // 创建 Stroke
+        QDomElement stroke = doc.createElement("sld:Stroke");
+
+        // 设置边框颜色
+        QDomElement strokeColorElement = doc.createElement("sld:CssParameter");
+        strokeColorElement.setAttribute("name", "stroke");
+        strokeColorElement.appendChild(doc.createTextNode(strokeColor.name())); // 设置边框颜色
+        stroke.appendChild(strokeColorElement);
+
+        // 设置边框宽度
+        QDomElement strokeWidthElement = doc.createElement("sld:CssParameter");
+        strokeWidthElement.setAttribute("name", "stroke-width");
+        strokeWidthElement.appendChild(doc.createTextNode(QString::number(strokeWidth))); // 设置边框宽度
+        stroke.appendChild(strokeWidthElement);
+
+        polygonSymbolizer.appendChild(stroke);
+
+        // 将生成的符号器添加到规则中
+        rule.appendChild(polygonSymbolizer);
     }
 
-    rule.appendChild(symbolizerElement);
 
-    // 保存 SLD 文件
+    // 写入 SLD 文件
     QFile file(saveFilePath);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QMessageBox::warning(this, tr("Error"), tr("Failed to write file: %1").arg(saveFilePath));
@@ -474,11 +557,13 @@ void StyleManager::onActionStlExport(QListView* listView) {
     }
 
     QTextStream out(&file);
+    out.setCodec("UTF-8");
     out << doc.toString();
     file.close();
 
     QMessageBox::information(this, tr("Export Successful"), tr("Symbol exported successfully to %1").arg(saveFilePath));
 }
+
 
 void StyleManager::onActionStlApply(QListView* listView) {
     if (!listView) {
@@ -525,31 +610,8 @@ void StyleManager::onActionStlApply(QListView* listView) {
     // 将符号类型映射到几何类型
     Qgis::GeometryType expectedGeometryType;
 
-    /*switch (symbol->type()) {
-    case QgsSymbol::SymbolType::Marker:
-        expectedGeometryType = Qgis::GeometryType::Point;
-        break;
-    case QgsSymbol::SymbolType::Line:
-        expectedGeometryType = Qgis::GeometryType::Line;
-        break;
-    case QgsSymbol::SymbolType::Fill:
-        expectedGeometryType = Qgis::GeometryType::Polygon;
-        break;
-    default:
-        QMessageBox::warning(this, tr("Error"), tr("Unknown symbol type."));
-        return;
-    }*/
-
-    //// 检查符号类型是否与图层类型匹配
-    //if (expectedGeometryType != mStlLayerType) {
-    //    QMessageBox::warning(this, tr("Error"), tr("The symbol type does not match the layer type."));
-    //    return;
-    //}
-
     // 发出信号
     emit signalApplyStlSymbol(mStlLayerName, symbol);
 
     QMessageBox::information(this, tr("Success"), tr("Symbol successfully applied."));
 }
-
-//void StyleManager::colorRmapViewer() {}

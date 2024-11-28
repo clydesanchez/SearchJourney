@@ -15,11 +15,12 @@
 #include <qgscolorramp.h>
 #include <QColor>
 #include <QList>
+#include <QDockWidget>
 
 // 声明 QgsColorRamp* 类型
 Q_DECLARE_METATYPE(QgsColorRamp*)
 
-class RasterStyle : public QMainWindow {
+class RasterStyle : public QDockWidget {
     Q_OBJECT
 
 public:
@@ -34,7 +35,7 @@ public slots:
     void getMaxValue(double rasMaxValue);          // 获取分层设色的最大值
     void getNumClasses(int rasNumClasses);         // 获取分层设色的分级数
 
-    void createRasterSymbolDock();                 // 样式设置的 Dock 创建逻辑
+    void createRasterSymbolDock(MainWidget* widMain);                 // 样式设置的 Dock 创建逻辑
 
 private:
     Ui::RasterStyleClass ui;

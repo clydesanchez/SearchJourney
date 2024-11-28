@@ -17,9 +17,9 @@
 #include <QgsColorRampShader.h>
 
 RasterStyle::RasterStyle(QString strLayerName, QgsRasterLayer* rasLayer, MainWidget* widMain, QWidget* parent)
-    : QMainWindow(parent), mRasLayer(rasLayer), mrasColorRamp(nullptr) {
-    ui.setupUi(this);
-    createRasterSymbolDock();
+    : QDockWidget(parent), mRasLayer(rasLayer), mrasColorRamp(nullptr) {
+
+    createRasterSymbolDock(widMain);
 }
 
 RasterStyle::~RasterStyle() {
@@ -29,7 +29,11 @@ RasterStyle::~RasterStyle() {
     }
 }
 
-void RasterStyle::createRasterSymbolDock() {
+void RasterStyle::createRasterSymbolDock(MainWidget* widMain) {
+
+    // 设置窗口标题
+    setWindowTitle(tr("Raster Style"));
+
     // 创建容器控件
     QWidget* dockWidgetContent = new QWidget(this);
     QVBoxLayout* layout = new QVBoxLayout(dockWidgetContent);
@@ -165,6 +169,16 @@ void RasterStyle::createRasterSymbolDock() {
     buttonLayout->addWidget(btnCancel);
     layout->addLayout(buttonLayout);
 
+    // 设置内容布局
+    dockWidgetContent->setLayout(layout);
+    setWidget(dockWidgetContent);
+
+    // 添加到主窗口右侧
+    widMain->addDockWidget(Qt::RightDockWidgetArea, this);
+
+    // 显示 Dock
+    show();
+
     // 信号槽连接
     connect(cmbBand, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &RasterStyle::getSelectedBand);
 
@@ -219,9 +233,6 @@ void RasterStyle::createRasterSymbolDock() {
 
     connect(spinBoxClasses, QOverload<int>::of(&QSpinBox::valueChanged), this, &RasterStyle::getNumClasses);
 
-    // 设置布局
-    dockWidgetContent->setLayout(layout);
-    this->setCentralWidget(dockWidgetContent);
 }
 
 
