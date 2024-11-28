@@ -5,7 +5,7 @@
 QgsMapToolSelectFeatures::QgsMapToolSelectFeatures(QgsMapCanvas* mapCanvas, QgsVectorLayer* targetLayer)
     : QgsMapToolIdentify(mapCanvas), mpTargetLayer(targetLayer)
 {
-
+    
 }
 QgsMapToolSelectFeatures::~QgsMapToolSelectFeatures()
 {
@@ -97,3 +97,4 @@ void QgsMapToolSelectFeatures::identifyFromGeometry()
             emit sigSelectFeatureChange(selectFeatures);
     }
 }
+

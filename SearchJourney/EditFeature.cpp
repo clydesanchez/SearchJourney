@@ -7,6 +7,7 @@
 #include <qlineedit.h>
 #include <QDialogButtonBox>
 #include <QInputDialog>
+#include <QSpinBox>
 
 void MainWidget::deleteFeature(const QList<QgsFeature>& selectedFeatures) {
 	if (!selectedFeatures.isEmpty())
@@ -226,26 +227,123 @@ void MainWidget::copyFeature(const QList<QgsFeature>& selectedFeatures) {
 		}
 	}
 
-	// 遍历选中的要素并添加到目标图层
-	for (const QgsFeature& feature : selectedFeatures) {
-		QgsFeature newFeature(feature); // 创建一个副本
-		newFeature.setId(QgsFeatureId()); // 重置 ID，避免冲突
+	QDialog* pDl = new QDialog();
+	QVBoxLayout* pVbl = new QVBoxLayout();
+	QHBoxLayout* pHb1 = new QHBoxLayout();
+	QHBoxLayout* pHb2 = new QHBoxLayout();
+	QHBoxLayout* pHb3 = new QHBoxLayout();
+	QHBoxLayout* pHb4 = new QHBoxLayout();
+	QHBoxLayout* pHb5 = new QHBoxLayout();
+	QLabel* pL1 = new QLabel();
+	QLabel* pL2 = new QLabel();
+	QLabel* pL3 = new QLabel();
+	QLabel* pL4 = new QLabel();
+	QSpinBox* pSb1 = new QSpinBox();
+	QSpinBox* pSb2 = new QSpinBox();
+	QLineEdit* pLe1 = new QLineEdit();
+	QLineEdit* pLe2 = new QLineEdit();
+	QPushButton* pPb1 = new QPushButton();
+	QPushButton* pPb2 = new QPushButton();
+	pL1->setText(QStringLiteral("请输入阵列行数"));
+	pL2->setText(QStringLiteral("请输入阵列列数"));
+	pL3->setText(QStringLiteral("请输入横向复制间距"));
+	pL4->setText(QStringLiteral("请输入纵向复制间距"));
+	pSb1->setMinimum(1);
+	pSb2->setMinimum(1);
+	pPb1->setText(QStringLiteral("确定"));
+	pPb2->setText(QStringLiteral("取消"));
+	pHb1->addWidget(pL1);
+	pHb1->addWidget(pSb1);
+	pHb2->addWidget(pL2);
+	pHb2->addWidget(pSb2);
+	pHb3->addWidget(pL3);
+	pHb3->addWidget(pLe1);
+	pHb4->addWidget(pL4);
+	pHb4->addWidget(pLe2);
+	pHb5->addWidget(pPb1);
+	pHb5->addWidget(pPb2);
+	pVbl->addLayout(pHb1);
+	pVbl->addLayout(pHb2);
+	pVbl->addLayout(pHb3);
+	pVbl->addLayout(pHb4);
+	pVbl->addLayout(pHb5);
+	pDl->setLayout(pVbl);
 
-		// 将要素添加到目标图层
-		if (!vectorLayer->dataProvider()->addFeature(newFeature)) {
-			QMessageBox::warning(this, "错误", "添加要素失败！");
-			vectorLayer->rollBack();
+	connect(pPb1, &QPushButton::clicked, this, [=]() {
+		int nRows = pSb1->value();
+		int nCols = pSb2->value();
+		bool ok1, ok2;
+		double dX = pLe1->text().toDouble(&ok1);
+		double dY = pLe2->text().toDouble(&ok2);
+
+		if (!ok1 && &ok2) {
+			QMessageBox::warning(this, "错误", "请输入正确的复制间距");
 			return;
 		}
-	}
+		// 遍历选中的要素并执行阵列复制
+		for (const QgsFeature& feature : selectedFeatures) {
+			for (int row = 0; row < nRows; ++row) {
+				for (int col = 0; col < nCols; ++col) {
+					if (row == 0 && col == 0) {
+						continue; // 跳过原始要素
+					}
 
-	//// 提交事务并刷新目标图层
-	//if (!vectorLayer->commitChanges()) {
-	//	QMessageBox::warning(this, "错误", "提交事务失败！");
-	//	vectorLayer->rollBack();
+					QgsFeature newFeature(feature); // 创建一个副本
+					newFeature.setId(QgsFeatureId()); // 重置 ID，避免冲突
+
+					// 偏移几何位置
+					QgsGeometry geom = newFeature.geometry();
+					if (geom.isNull()) {
+						continue;
+					}
+
+					// 计算偏移量
+					double offsetX = dX * col;
+					double offsetY = dY * row;
+
+					// 应用偏移
+					geom.translate(offsetX, offsetY);
+					newFeature.setGeometry(geom);
+
+					// 将要素添加到目标图层
+					if (!vectorLayer->addFeature(newFeature)) {
+						QMessageBox::warning(this, "错误", "添加要素失败！");
+						vectorLayer->rollBack();
+						return;
+					}
+				}
+			}
+		}
+		
+		pDl->accept();
+		});
+
+	connect(pPb2, &QPushButton::clicked, this, [=]() {
+		pDl->accept();
+		});
+
+	pDl->exec();
+
+	//// 遍历选中的要素并添加到目标图层
+	//for (const QgsFeature& feature : selectedFeatures) {
+	//	QgsFeature newFeature(feature); // 创建一个副本
+	//	newFeature.setId(QgsFeatureId()); // 重置 ID，避免冲突
+
+	//	// 将要素添加到目标图层
+	//	if (!vectorLayer->dataProvider()->addFeature(newFeature)) {
+	//		QMessageBox::warning(this, "错误", "添加要素失败！");
+	//		vectorLayer->rollBack();
+	//		return;
+	//	}
 	//}
-	//else {
-	//	vectorLayer->triggerRepaint();
-	//	QMessageBox::information(this, "成功", "要素复制完成！");
-	//}
+
+	// 提交事务并刷新目标图层
+	if (!vectorLayer->commitChanges()) {
+		QMessageBox::warning(this, "错误", "提交事务失败！");
+		vectorLayer->rollBack();
+	}
+	else {
+		vectorLayer->triggerRepaint();
+		QMessageBox::information(this, "成功", "要素复制完成！");
+	}
 }

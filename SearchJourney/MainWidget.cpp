@@ -83,17 +83,17 @@ MainWidget::MainWidget(QWidget *parent)
     ui.ctrlDeleteAction->setEnabled(false);
     ui.ctrlEditAttriAction->setEnabled(false);
     ui.ctrlMoveAction->setEnabled(false);
+    ui.ctrlCopyAction->setEnabled(false);
+    ui.ctrlAddPointAction->setEnabled(false);
+    ui.ctrlSmoothLineAction->setEnabled(false);
+    ui.ctrlThiningLineAction->setEnabled(false);
+    ui.ctrlPolygonToLineAction->setEnabled(false);
     // 重命名窗口标题
     this->setWindowTitle("OOP_GIS_System");
 }
 
 MainWidget::~MainWidget()
 {
-    if (mpBuffer)
-    {
-        delete mpBuffer;
-        mpBuffer = nullptr;
-    }
 }
 // 绘制地图
 void MainWidget::paintEvent(QPaintEvent *event)
