@@ -64,8 +64,6 @@ void MainWidget::addRasterLayer()
         QMessageBox::critical(this, "error", QString("导入栅格图层失败： \n") + qstrFileName);
         return;
     }
-    // 添加图层透明度
-    //qvlRasterLayer->setOpacity(0.5);
     // 添加到当前qgz工程
     mppjProject->addMapLayer(qvlRasterLayer);
     setLayerToMap(static_cast<QgsMapLayer *>(qvlRasterLayer));
