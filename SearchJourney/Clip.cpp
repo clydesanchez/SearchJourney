@@ -27,11 +27,6 @@ void Clip::populateLayers() {
     ui.comboBox_Type->addItem("圆形");
     ui.comboBox_Type->addItem("自定义多边形");
 
-    /*for (QgsMapLayer* layer : QgsProject::instance()->mapLayers().values())
-    {
-        ui.comboBox_Input->addItem(layer->name(), layer->id());
-    }*/
-
     for (int nIndex = 0; nIndex < mliMapLayers.count(); nIndex++)
     {
         // 判断是否为矢量图层
@@ -119,7 +114,6 @@ void Clip::clipVectorLayers() {
     QgsVectorLayer* clippedLayer = nullptr;
 
     QgsFeature targetFeature;
-
     if (targetLayer->geometryType() == Qgis::GeometryType::Polygon) {
         clippedLayer = new QgsVectorLayer("Polygon?crs=" + crs.authid(), "Clipped Layer", "memory");
     }

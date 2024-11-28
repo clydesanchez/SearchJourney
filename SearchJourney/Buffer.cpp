@@ -5,9 +5,6 @@ Buffer::Buffer(QWidget *parent, GISMapCanvas* mapCanvas, QgsProject* project)
 {
 	ui.setupUi(this);
 
-    
-    //populateLayers();
-
 	ui.doubleSpinBox_radius->setValue(10);
 	ui.spinBox_segments->setValue(36);
 	ui.checkBox_output->setChecked(true);
@@ -55,17 +52,6 @@ void Buffer::addLayerItems()
 	}
 }
 
-/*void Buffer::populateLayers()
-{
-    ui.comboBox_input->clear();
-
-
-    for (QgsMapLayer* layer : QgsProject::instance()->mapLayers().values())
-    {
-        ui.comboBox_input->addItem(layer->name(), layer->id());
-    }
-}*/
-
 void Buffer::runBuffer() {
     QString sourceLayerId = ui.comboBox_input->currentText();
 	qDebug() << sourceLayerId;
@@ -86,8 +72,6 @@ void Buffer::runBuffer() {
 		qDebug() << "not found layer";
 	}
 
-    //QgsVectorLayer* sourceLayer = qobject_cast<QgsVectorLayer*>(QgsProject::instance()->mapLayer(sourceLayerId));
-
     QgsVectorDataProvider* dataProvider = sourceLayer->dataProvider();
 
     QgsFields fields = dataProvider->fields();
@@ -101,7 +85,6 @@ void Buffer::runBuffer() {
 
 	
 	bufferLayer->startEditing();
-
 	
 	QgsFeatureIterator featureIterator = sourceLayer->getFeatures();
 	QgsFeatureList bufferFeatures;
@@ -153,22 +136,6 @@ QgsGeometry Buffer::bufferByMeter(QgsGeometry geo, float trans, int segments, Qg
 {
 	if (!sourceLayer)return geo;
 	if (trans <= 0)return geo;
-
-	/*// 获取图层的 CRS
-	QgsCoordinateReferenceSystem layerCRS = sourceLayer->crs();
-
-	// 获取图层的单位
-	Qgis::DistanceUnit unit = layerCRS.mapUnits();
-	double factor = QgsUnitTypes::fromUnitToUnitFactor(Qgis::DistanceUnit::Meters, unit);
-
-	qDebug()<< "factor: " << factor;
-
-	double distance = trans / factor;
-	
-	qDebug()<< "distance: " << distance;
-
-	return geo.buffer(distance, segments);*/
-
 	
 	// 获取图层的 CRS
 	QgsCoordinateReferenceSystem layerCRS = sourceLayer->crs();
