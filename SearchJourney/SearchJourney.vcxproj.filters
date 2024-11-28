@@ -42,6 +42,9 @@
     <Filter Include="Source Files\SelectFeatureTool">
       <UniqueIdentifier>{e52fd97b-9ef1-4d3b-b50b-3bd9bc722eb7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\SpatialAnalysisTools">
+      <UniqueIdentifier>{7ac60475-8b5f-46d0-bfee-a208d2607845}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -107,11 +110,11 @@
     <ClCompile Include="SelectFeatureTool.cpp">
       <Filter>Source Files\SelectFeatureTool</Filter>
     </ClCompile>
+    <ClCompile Include="RasterCalculatorTool.cpp">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="MainWidget.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="TextSelect.ui">
       <Filter>Source Files\SelectDialog</Filter>
     </QtUic>
@@ -120,6 +123,12 @@
     </QtUic>
     <QtUic Include="SymbolManger.ui">
       <Filter>Source Files\SymbolManger</Filter>
+    </QtUic>
+    <QtUic Include="RasterCalculatorTool.ui">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </QtUic>
+    <QtUic Include="MainWidget.ui">
+      <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +155,9 @@
     </QtMoc>
     <QtMoc Include="SelectFeatureTool.h">
       <Filter>Source Files\SelectFeatureTool</Filter>
+    </QtMoc>
+    <QtMoc Include="RasterCalculatorTool.h">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

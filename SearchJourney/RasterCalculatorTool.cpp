@@ -1,32 +1,60 @@
-#include "RasterCalculatorTool.h"
-#include <QMessageBox>
-#include <QTemporaryFile>
-#include <QFileInfo>
-#include <QDebug>
-#include <QStandardItemModel>
-#include <QStandardItem>
-#include <QFileDialog>
-#include <QDir>
-#include <QList>
-#include <QTimer>
-#include <QDateTime>
+/*
+FileName: RasterCalculatorTool.cpp
+Author:JZH
+Date:2024.11.28
+Description: 实现自定义栅格计算器，包括加载栅格图层、构建计算表达式、执行波段运算和保存计算结果等功能。
+Function Lists:
+构造函数
+    - RasterCalculatorTool(QWidget* parent): 初始化对话框，设置交互逻辑。
 
-#include <QgsRasterCalculator.h>
-#include <QgsRasterLayer.h>
-#include <QgsMapLayer.h>
-#include <QgsRasterFileWriter.h>
-#include <QgsRasterPipe.h>
+析构函数
+    - ~RasterCalculatorTool(): 释放资源。
+
+功能函数
+    - addRasterLayer(): 加载栅格图层并更新树形视图。
+    - saveRasterResult(): 保存栅格计算结果到指定路径。
+    - performRasterCalculation(): 执行栅格波段计算。
+    - analysisNDVI(): 分析归一化差值植被指数（NDVI）。
+    - analysisMNDWI(): 分析修正水体指数（MNDWI）。
+    - analysisNDBI(): 分析非植被指数（NDBI）。
+    - analysisLST(): 地表温度反演分析（LST）。
+    - setCalculationExpression(const QString& expression): 修改计算表达式。
+
+槽函数
+    - on_ctrlOpenRasterPushButton_clicked(): 打开栅格文件。
+    - on_ctrlSetSavePathPushButton_clicked(): 选择结果保存路径。
+    - on_ctrlRunPushButton_clicked(): 执行栅格计算。
+    - on_ctrlPlussPushButton_clicked(): 插入加法运算符。
+    - on_ctrlMinusPushButton_clicked(): 插入减法运算符。
+    - on_ctrlMultiplyPushButton_clicked(): 插入乘法运算符。
+    - on_ctrlDividePushButton_clicked(): 插入除法运算符。
+    - on_ctrlExpPushButton_clicked(): 插入指数运算符。
+    - on_ctrlLnPushButton_clicked(): 插入自然对数函数。
+    - on_ctrlLog10PushButton_clicked(): 插入以10为底的对数函数。
+    - on_ctrlLeftParenPushButton_clicked(): 插入左括号。
+    - on_ctrlRightParenPushButton_clicked(): 插入右括号。
+    - onTreeViewDoubleClicked(const QModelIndex& index): 树形视图双击事件，添加波段引用。
+    - on_ctrlToolTreeWidget_doubleClicked(const QModelIndex& index): 工具树双击事件，执行相关分析功能。
+*/
+
+#include "RasterCalculatorTool.h"
 
 RasterCalculatorTool::RasterCalculatorTool(QWidget* parent)
-    : QDialog(parent)// 初始化父类 QDialog
+    : QDialog(parent),// 初始化父类 QDialog
+    mqrlSelectedRasterLayer(nullptr), // 初始化指针成员变量为 nullptr
+    mnSelectedBandNumber(0)           // 初始化整型变量为 0
 {
     ui.setupUi(this);
 
     // 初始化默认表达式
-    m_calculationExpression = QStringLiteral("\"band%1\"+\"band%1\"");
+    mqstrCalculationExpression = QStringLiteral("\"band%1\"+\"band%1\"");
+
+    //// 初始化工具树
+    //initializeToolTree();
 
     // 禁用双击节点重命名功能
     ui.ctrlBandsTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui.ctrlToolTreeWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     // 连接双击信号到槽函数
     connect(ui.ctrlBandsTreeView, &QTreeView::doubleClicked, this, &RasterCalculatorTool::onTreeViewDoubleClicked);
@@ -78,7 +106,7 @@ int RasterCalculatorTool::addRasterLayer()
                 model->appendRow(layerItem);
                 
                 // 建立图层和节点的映射
-                m_itemToLayerMap.insert(layerItem, rasterLayer);
+                mqmItemToLayerMap.insert(layerItem, rasterLayer);
 
                 // 遍历波段并添加为子节点
                 int bandCount = rasterLayer->bandCount();
@@ -89,7 +117,7 @@ int RasterCalculatorTool::addRasterLayer()
                 // 输出映射内容到 ctrlDebugTextBrowser
                 QString debugMessage = tr("成功加载栅格图层 '%1'，建立节点映射。\n").arg(rasterLayer->name());
                 debugMessage += tr("当前映射内容：\n");
-                for (auto it = m_itemToLayerMap.constBegin(); it != m_itemToLayerMap.constEnd(); ++it) {
+                for (auto it = mqmItemToLayerMap.constBegin(); it != mqmItemToLayerMap.constEnd(); ++it) {
                     debugMessage += tr("Item: %1 -> Layer: %2 (%3)\n")
                         .arg(reinterpret_cast<quintptr>(it.key())) // 输出指针地址
                         .arg(it.value() ? it.value()->name() : tr("null")) // 图层名称
@@ -329,8 +357,6 @@ int RasterCalculatorTool::performRasterCalculation()
     return 0;
 }
 
-
-
 // 树形视图双击添加波段
 void RasterCalculatorTool::onTreeViewDoubleClicked(const QModelIndex& index)
 {
@@ -348,25 +374,48 @@ void RasterCalculatorTool::onTreeViewDoubleClicked(const QModelIndex& index)
         return;
     }
 
-    // 检查是否是波段节点（叶节点）
-    if (item->parent() == nullptr) {
-        QMessageBox::information(this, tr("提示"), tr("请选择波段节点"));
-        return; // 如果是根节点，则返回
+    //// 检查是否是波段节点（叶节点）
+    //if (item->parent() == nullptr) {
+    //    QMessageBox::information(this, tr("提示"), tr("请选择波段节点"));
+    //    return; // 如果是根节点，则返回
+    //}
+
+    //// 获取父节点（图层节点）
+    //QStandardItem* parentItem = item->parent();
+    //if (!parentItem) {
+    //    ui.ctrlDebugTextBrowser->append(tr("错误：未找到图层节点。\n"));
+    //    return;
+    //}
+
+    //// 从映射中找到对应的栅格图层
+    //QgsRasterLayer* layer = mqmItemToLayerMap.value(parentItem, nullptr);
+
+    //// 输出调试信息到 ctrlDebugTextBrowser
+    //if (!layer || !layer->isValid()) {
+    //    QMessageBox::warning(this, tr("错误"), tr("无效的栅格图层"));
+    //    return;
+    //}
+
+    // 检查是否是根节点（图层节点）
+    if (item->parent() == nullptr) { // 根节点没有父节点
+        QgsRasterLayer* layer = mqmItemToLayerMap.value(item, nullptr);
+        if (layer && layer->isValid()) {
+            // 设置当前选中的栅格图层
+            mqrlSelectedRasterLayer = layer;
+
+            // 输出调试信息到 DebugTextBrowser
+            ui.ctrlDebugTextBrowser->append(tr("已选择图层 '%1'，可用于后续分析。\n").arg(layer->name()));
+        }
+        else {
+            ui.ctrlDebugTextBrowser->append(tr("错误：选中的图层无效。\n"));
+        }
+        return; // 双击根节点仅记录图层，不继续处理
     }
 
-    // 获取父节点（图层节点）
-    QStandardItem* parentItem = item->parent();
-    if (!parentItem) {
-        ui.ctrlDebugTextBrowser->append(tr("错误：未找到图层节点。\n"));
-        return;
-    }
-
-    // 从映射中找到对应的栅格图层
-    QgsRasterLayer* layer = m_itemToLayerMap.value(parentItem, nullptr);
-
-    // 输出调试信息到 ctrlDebugTextBrowser
+    // 处理叶节点（波段节点）
+    QgsRasterLayer* layer = mqmItemToLayerMap.value(item->parent(), nullptr);
     if (!layer || !layer->isValid()) {
-        QMessageBox::warning(this, tr("错误"), tr("无效的栅格图层"));
+        ui.ctrlDebugTextBrowser->append(tr("错误：无法找到有效的父图层。\n"));
         return;
     }
 
@@ -388,6 +437,341 @@ void RasterCalculatorTool::onTreeViewDoubleClicked(const QModelIndex& index)
     ui.ctrlDebugTextBrowser->append(message);
 }
 
+// 分析归一化差值植被指数NDVI
+/*
+公式：NDVI = (NIR - Red) / (NIR + Red)
+参数设置（ctrlSiteTypeComboBox）：
+Landsat5: NIR为Band 4，Red为Band 3 
+Landsat8/9: NIR为Band 5，Red为Band 4 
+*/
+int RasterCalculatorTool::analysisNDVI()
+{
+    // 获取当前站点类型
+    QString siteType = ui.ctrlSiteTypeComboBox->currentText();
+
+    // 如果 mqrlSelectedRasterLayer 是 nullptr 或无效，直接输出通用公式
+    if (!mqrlSelectedRasterLayer || !mqrlSelectedRasterLayer->isValid()) {
+        QString ndviExpression;
+        QString debugMessage;
+
+        if (siteType == "Landsat5") {
+            ndviExpression = QString("((band4 - band3) / (band4 + band3))");
+            debugMessage = tr("未检测到有效的栅格图层。已输出通用NDVI公式：%1\n").arg(ndviExpression);
+            debugMessage += tr("请手动修改公式中的 band4 和 band3 为具体波段信息。");
+        }
+        else if (siteType == "Landsat8/9") {
+            ndviExpression = QString("((band5 - band4) / (band5 + band4))");
+            debugMessage = tr("未检测到有效的栅格图层。已输出通用NDVI公式：%1\n").arg(ndviExpression);
+            debugMessage += tr("请手动修改公式中的 band5 和 band4 为具体波段信息。");
+        }
+        else {
+            debugMessage = tr("未检测到有效的栅格图层，且站点类型无效：%1").arg(siteType);
+            ui.ctrlDebugTextBrowser->append(debugMessage);
+            return -1; // 返回错误
+        }
+
+        // 设置公式到界面
+        ui.ctrlCalcExpressionTextEdit->setText(ndviExpression);
+        // 输出调试信息
+        ui.ctrlDebugTextBrowser->append(debugMessage);
+        return 0; // 返回，等待用户手动修改
+    }
+
+    // 如果图层有效，获取图层名称
+    QString layerName = mqrlSelectedRasterLayer->name();
+
+    // 根据站点类型确定NIR和Red波段编号
+    int nirBand = 0;
+    int redBand = 0;
+
+    if (siteType == "Landsat5") {
+        nirBand = 4; // NIR为Band 4
+        redBand = 3; // Red为Band 3
+    }
+    else if (siteType == "Landsat8/9") {
+        nirBand = 5; // NIR为Band 5
+        redBand = 4; // Red为Band 4
+    }
+    else {
+        QString debugMessage = tr("不支持的站点类型：%1\n").arg(siteType);
+        ui.ctrlDebugTextBrowser->append(debugMessage);
+        return -1;
+    }
+
+    // 构造NDVI表达式
+    QString ndviExpression = QString("((\"%1_band%2\" - \"%1_band%3\") / (\"%1_band%2\" + \"%1_band%3\"))")
+        .arg(layerName)
+        .arg(nirBand)
+        .arg(redBand);
+
+    // 更新到控件中显示
+    ui.ctrlCalcExpressionTextEdit->setText(ndviExpression);
+
+    // 输出调试信息到 ctrlDebugTextBrowser
+    QString debugMessage = tr("已生成NDVI表达式：%1\n").arg(ndviExpression);
+    debugMessage += tr("图层名称：%1，NIR波段：Band %2，Red波段：Band %3\n")
+        .arg(layerName)
+        .arg(nirBand)
+        .arg(redBand);
+    ui.ctrlDebugTextBrowser->append(debugMessage);
+
+    return 0;
+}
+
+
+// 分析修正水体指数MNDWI
+/*
+
+*/
+int RasterCalculatorTool::analysisMNDWI()
+{
+    // 获取当前站点类型
+    QString siteType = ui.ctrlSiteTypeComboBox->currentText();
+
+    // 如果 mqrlSelectedRasterLayer 是 nullptr 或无效，直接输出通用公式
+    if (!mqrlSelectedRasterLayer || !mqrlSelectedRasterLayer->isValid()) {
+        QString mndwiExpression;
+        QString debugMessage;
+
+        if (siteType == "Landsat5") {
+            mndwiExpression = QString("((band2 - band5) / (band2 + band5))");
+            debugMessage = tr("未检测到有效的栅格图层。已输出通用MNDWI公式：%1\n").arg(mndwiExpression);
+            debugMessage += tr("请手动修改公式中的 band2 和 band5 为具体波段信息。");
+        }
+        else if (siteType == "Landsat8/9") {
+            mndwiExpression = QString("((band3 - band6) / (band3 + band6))");
+            debugMessage = tr("未检测到有效的栅格图层。已输出通用MNDWI公式：%1\n").arg(mndwiExpression);
+            debugMessage += tr("请手动修改公式中的 band3 和 band6 为具体波段信息。");
+        }
+        else {
+            debugMessage = tr("未检测到有效的栅格图层，且站点类型无效：%1").arg(siteType);
+            ui.ctrlDebugTextBrowser->append(debugMessage);
+            return -1; // 返回错误
+        }
+
+        // 设置公式到界面
+        ui.ctrlCalcExpressionTextEdit->setText(mndwiExpression);
+        // 输出调试信息
+        ui.ctrlDebugTextBrowser->append(debugMessage);
+        return 0; // 返回，等待用户手动修改
+    }
+
+    // 如果图层有效，获取图层名称
+    QString layerName = mqrlSelectedRasterLayer->name();
+
+    // 根据站点类型确定 Green 和 SWIR 波段编号
+    int greenBand = 0;
+    int swirBand = 0;
+
+    if (siteType == "Landsat5") {
+        greenBand = 2; // Green为Band 2
+        swirBand = 5;  // SWIR为Band 5
+    }
+    else if (siteType == "Landsat8/9") {
+        greenBand = 3; // Green为Band 3
+        swirBand = 6;  // SWIR为Band 6
+    }
+    else {
+        QString debugMessage = tr("不支持的站点类型：%1\n").arg(siteType);
+        ui.ctrlDebugTextBrowser->append(debugMessage);
+        return -1;
+    }
+
+    // 构造MNDWI表达式
+    QString mndwiExpression = QString("((\"%1_band%2\" - \"%1_band%3\") / (\"%1_band%2\" + \"%1_band%3\"))")
+        .arg(layerName)
+        .arg(greenBand)
+        .arg(swirBand);
+
+    // 更新到控件中显示
+    ui.ctrlCalcExpressionTextEdit->setText(mndwiExpression);
+
+    // 输出调试信息到 ctrlDebugTextBrowser
+    QString debugMessage = tr("已生成MNDWI表达式：%1\n").arg(mndwiExpression);
+    debugMessage += tr("图层名称：%1，Green波段：Band %2，SWIR波段：Band %3\n")
+        .arg(layerName)
+        .arg(greenBand)
+        .arg(swirBand);
+    ui.ctrlDebugTextBrowser->append(debugMessage);
+
+    return 0;
+}
+
+
+// 分析非植被指数NDBI
+/*
+
+*/
+int RasterCalculatorTool::analysisNDBI()
+{
+    // 获取当前站点类型
+    QString siteType = ui.ctrlSiteTypeComboBox->currentText();
+
+    // 如果 mqrlSelectedRasterLayer 是 nullptr 或无效，直接输出通用公式
+    if (!mqrlSelectedRasterLayer || !mqrlSelectedRasterLayer->isValid()) {
+        QString ndbiExpression;
+        QString debugMessage;
+
+        if (siteType == "Landsat5") {
+            ndbiExpression = QString("((band5 - band4) / (band5 + band4))");
+            debugMessage = tr("未检测到有效的栅格图层。已输出通用NDBI公式：%1\n").arg(ndbiExpression);
+            debugMessage += tr("请手动修改公式中的 band5 和 band4 为具体波段信息。");
+        }
+        else if (siteType == "Landsat8/9") {
+            ndbiExpression = QString("((band6 - band5) / (band6 + band5))");
+            debugMessage = tr("未检测到有效的栅格图层。已输出通用NDBI公式：%1\n").arg(ndbiExpression);
+            debugMessage += tr("请手动修改公式中的 band6 和 band5 为具体波段信息。");
+        }
+        else {
+            debugMessage = tr("未检测到有效的栅格图层，且站点类型无效：%1").arg(siteType);
+            ui.ctrlDebugTextBrowser->append(debugMessage);
+            return -1; // 返回错误
+        }
+
+        // 设置公式到界面
+        ui.ctrlCalcExpressionTextEdit->setText(ndbiExpression);
+        // 输出调试信息
+        ui.ctrlDebugTextBrowser->append(debugMessage);
+        return 0; // 返回，等待用户手动修改
+    }
+
+    // 如果图层有效，获取图层名称
+    QString layerName = mqrlSelectedRasterLayer->name();
+
+    // 根据站点类型确定 SWIR 和 NIR 波段编号
+    int swirBand = 0;
+    int nirBand = 0;
+
+    if (siteType == "Landsat5") {
+        swirBand = 5; // SWIR为Band 5
+        nirBand = 4;  // NIR为Band 4
+    }
+    else if (siteType == "Landsat8/9") {
+        swirBand = 6; // SWIR为Band 6
+        nirBand = 5;  // NIR为Band 5
+    }
+    else {
+        QString debugMessage = tr("不支持的站点类型：%1\n").arg(siteType);
+        ui.ctrlDebugTextBrowser->append(debugMessage);
+        return -1;
+    }
+
+    // 构造NDBI表达式
+    QString ndbiExpression = QString("((\"%1_band%2\" - \"%1_band%3\") / (\"%1_band%2\" + \"%1_band%3\"))")
+        .arg(layerName)
+        .arg(swirBand)
+        .arg(nirBand);
+
+    // 更新到控件中显示
+    ui.ctrlCalcExpressionTextEdit->setText(ndbiExpression);
+
+    // 输出调试信息到 ctrlDebugTextBrowser
+    QString debugMessage = tr("已生成NDBI表达式：%1\n").arg(ndbiExpression);
+    debugMessage += tr("图层名称：%1，SWIR波段：Band %2，NIR波段：Band %3\n")
+        .arg(layerName)
+        .arg(swirBand)
+        .arg(nirBand);
+    ui.ctrlDebugTextBrowser->append(debugMessage);
+
+    return 0;
+}
+
+
+// 地表温度反演
+/*
+
+*/
+int RasterCalculatorTool::analysisLST()
+{
+    // 获取当前站点类型
+    QString siteType = ui.ctrlSiteTypeComboBox->currentText();
+
+    // 检查是否有有效的栅格图层
+    if (!mqrlSelectedRasterLayer || !mqrlSelectedRasterLayer->isValid()) {
+        QString lstExpression;
+        QString debugMessage;
+
+        if (siteType == "Landsat5") {
+            // 通用公式示例（假设亮度温度和地表温度之间的公式）
+            lstExpression = QString("BT / (1 + (0.00115 * BT / 1.4388) * log(e))");
+            debugMessage = tr("未检测到有效的栅格图层。已输出通用LST公式：%1\n").arg(lstExpression);
+            debugMessage += tr("请手动修改公式中的 BT 和 e（发射率）为具体波段信息和参数值。");
+        }
+        else if (siteType == "Landsat8/9") {
+            // 通用公式示例
+            lstExpression = QString("BT / (1 + (0.00115 * BT / 1.4388) * log(e))");
+            debugMessage = tr("未检测到有效的栅格图层。已输出通用LST公式：%1\n").arg(lstExpression);
+            debugMessage += tr("请手动修改公式中的 BT 和 e（发射率）为具体波段信息和参数值。");
+        }
+        else {
+            debugMessage = tr("未检测到有效的栅格图层，且站点类型无效：%1").arg(siteType);
+            ui.ctrlDebugTextBrowser->append(debugMessage);
+            return -1; // 返回错误
+        }
+
+        // 设置公式到界面
+        ui.ctrlCalcExpressionTextEdit->setText(lstExpression);
+        // 输出调试信息
+        ui.ctrlDebugTextBrowser->append(debugMessage);
+        return 0; // 返回，等待用户手动修改
+    }
+
+    // 如果图层有效，获取图层名称
+    QString layerName = mqrlSelectedRasterLayer->name();
+
+    // 根据站点类型确定亮度温度（BT）和发射率（e）的公式
+    QString btBand = "";
+    QString emissivity = "0.95"; // 假设默认发射率为0.95
+
+    if (siteType == "Landsat5") {
+        btBand = QString("%1_band6").arg(layerName); // 假设亮度温度为Band 6
+    }
+    else if (siteType == "Landsat8/9") {
+        btBand = QString("%1_band10").arg(layerName); // 假设亮度温度为Band 10
+    }
+    else {
+        QString debugMessage = tr("不支持的站点类型：%1\n").arg(siteType);
+        ui.ctrlDebugTextBrowser->append(debugMessage);
+        return -1;
+    }
+
+    // 构造LST表达式
+    QString lstExpression = QString("(%1 / (1 + (0.00115 * %1 / 1.4388) * log(%2)))")
+        .arg(btBand)
+        .arg(emissivity);
+
+    // 更新到控件中显示
+    ui.ctrlCalcExpressionTextEdit->setText(lstExpression);
+
+    // 输出调试信息到 ctrlDebugTextBrowser
+    QString debugMessage = tr("已生成LST表达式：%1\n").arg(lstExpression);
+    debugMessage += tr("图层名称：%1，亮度温度波段：%2，假设发射率：%3\n")
+        .arg(layerName)
+        .arg(btBand)
+        .arg(emissivity);
+    ui.ctrlDebugTextBrowser->append(debugMessage);
+
+    return 0;
+}
+
+//// 初始化工具树
+//void RasterCalculatorTool::initializeToolTree()
+//{
+//    // 清空已有内容
+//    ui.ctrlToolTreeWidget->clear();
+//
+//    // 创建根节点
+//    QTreeWidgetItem* rootItem = new QTreeWidgetItem(ui.ctrlToolTreeWidget);
+//    rootItem->setText(0, "分析工具");
+//
+//    // 创建子节点
+//    QTreeWidgetItem* ndviTool = new QTreeWidgetItem(rootItem);
+//    ndviTool->setText(0, "NDVI");
+//
+//    // 展开根节点
+//    ui.ctrlToolTreeWidget->expandItem(rootItem);
+//}
+
 
 //槽函数
 // 打开栅格文件
@@ -396,7 +780,6 @@ void RasterCalculatorTool::on_ctrlOpenRasterPushButton_clicked()
     // 调用 addRasterLayer 函数，打开栅格文件并存储路径
     addRasterLayer();
 }
-
 
 // 加法
 void RasterCalculatorTool::on_ctrlPlussPushButton_clicked()
@@ -427,6 +810,7 @@ void RasterCalculatorTool::on_ctrlExpPushButton_clicked()
 {
     ui.ctrlCalcExpressionTextEdit->insertPlainText(" ^ ");
 }
+
 // 自然对数
 void RasterCalculatorTool::on_ctrlLnPushButton_clicked()
 {
@@ -435,6 +819,7 @@ void RasterCalculatorTool::on_ctrlLnPushButton_clicked()
     cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 1);
     ui.ctrlCalcExpressionTextEdit->setTextCursor(cursor);
 }
+
 // 10的对数
 void RasterCalculatorTool::on_ctrlLog10PushButton_clicked()
 {
@@ -443,11 +828,13 @@ void RasterCalculatorTool::on_ctrlLog10PushButton_clicked()
     cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 1);
     ui.ctrlCalcExpressionTextEdit->setTextCursor(cursor);
 }
+
 // 左括号
 void RasterCalculatorTool::on_ctrlLeftParenPushButton_clicked()
 {
     ui.ctrlCalcExpressionTextEdit->insertPlainText(" ( ");
 }
+
 // 右括号
 void RasterCalculatorTool::on_ctrlRightParenPushButton_clicked()
 {
@@ -467,16 +854,87 @@ void RasterCalculatorTool::on_ctrlRunPushButton_clicked()
 }
 
 // 修改计算表达式
-/*
-在需要修改表达式的地方，可以调用 setCalculationExpression
-RasterCalculatorTool tool;
-tool.setCalculationExpression("\"band%1\" + \"band%2\"");  // 修改为自定义表达式
-或者
-从界面控件中获取用户输入：
-QString userExpression = ui.ctrlCalcExpressionTextEdit->toPlainText();
-tool.setCalculationExpression(userExpression);
-*/
 void RasterCalculatorTool::setCalculationExpression(const QString& expression)
 {
-    m_calculationExpression = expression;
+    mqstrCalculationExpression = expression;
+}
+
+// 双击ctrlToolTreeWidget子节点
+void RasterCalculatorTool::on_ctrlToolTreeWidget_doubleClicked(const QModelIndex& index)
+{
+    // 获取双击的节点
+    QTreeWidgetItem* item = ui.ctrlToolTreeWidget->currentItem();
+    if (!item) {
+        ui.ctrlDebugTextBrowser->append(tr("未能获取双击的工具节点。\n"));
+        return;
+    }
+
+    // 检查是否是叶节点（避免父节点也被触发）
+    if (item->childCount() > 0) {
+        // 如果当前节点有子节点，说明是父节点，直接返回
+        ui.ctrlDebugTextBrowser->append(tr("双击的是父节点，未执行任何操作。\n"));
+        return;
+    }
+
+    // 获取节点文本
+    QString toolName = item->text(0); // 获取节点的文本
+
+    // 根据节点文本调用相应功能
+    if (toolName == "+") {
+        ui.ctrlCalcExpressionTextEdit->insertPlainText(" + ");
+        ui.ctrlDebugTextBrowser->append(tr("已插入操作符：加号（+）。\n"));
+    }
+    else if (toolName == "-") {
+        ui.ctrlCalcExpressionTextEdit->insertPlainText(" - ");
+        ui.ctrlDebugTextBrowser->append(tr("已插入操作符：减号（-）。\n"));
+    }
+    else if (toolName == "*") {
+        ui.ctrlCalcExpressionTextEdit->insertPlainText(" * ");
+        ui.ctrlDebugTextBrowser->append(tr("已插入操作符：乘号（*）。\n"));
+    }
+    else if (toolName == "/") {
+        ui.ctrlCalcExpressionTextEdit->insertPlainText(" / ");
+        ui.ctrlDebugTextBrowser->append(tr("已插入操作符：除号（/）。\n"));
+    }
+    else if (toolName == "(") {
+        ui.ctrlCalcExpressionTextEdit->insertPlainText(" ( ");
+        ui.ctrlDebugTextBrowser->append(tr("已插入符号：左括号（(）。\n"));
+    }
+    else if (toolName == ")") {
+        ui.ctrlCalcExpressionTextEdit->insertPlainText(" ) ");
+        ui.ctrlDebugTextBrowser->append(tr("已插入符号：右括号（)）。\n"));
+    }
+    else if (toolName == "ln") {
+        ui.ctrlCalcExpressionTextEdit->insertPlainText(" ln( )");
+        QTextCursor cursor = ui.ctrlCalcExpressionTextEdit->textCursor();
+        cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 1); // 将光标移动到括号内
+        ui.ctrlCalcExpressionTextEdit->setTextCursor(cursor);
+        ui.ctrlDebugTextBrowser->append(tr("已插入函数：自然对数（ln）。\n"));
+    }
+    else if (toolName == "log10") {
+        ui.ctrlCalcExpressionTextEdit->insertPlainText(" log10( )");
+        QTextCursor cursor = ui.ctrlCalcExpressionTextEdit->textCursor();
+        cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 1); // 将光标移动到括号内
+        ui.ctrlCalcExpressionTextEdit->setTextCursor(cursor);
+        ui.ctrlDebugTextBrowser->append(tr("已插入函数：以 10 为底的对数（log10）。\n"));
+    }
+    else if (toolName == "NDVI") {
+        ui.ctrlDebugTextBrowser->append(tr("双击工具：%1，开始执行NDVI分析。\n").arg(toolName));
+        analysisNDVI();
+    }
+    else if (toolName == "MNDWI") {
+        ui.ctrlDebugTextBrowser->append(tr("双击工具：%1，开始执行MNDWI分析。\n").arg(toolName));
+        analysisMNDWI();
+    }
+    else if (toolName == "NDBI") {
+        ui.ctrlDebugTextBrowser->append(tr("双击工具：%1，开始执行NDBI分析。\n").arg(toolName));
+        analysisNDBI();
+    }
+    else if (toolName == "LST") {
+        ui.ctrlDebugTextBrowser->append(tr("双击工具：%1，开始执行LST分析。\n").arg(toolName));
+        analysisLST();
+    }
+    else {
+        ui.ctrlDebugTextBrowser->append(tr("双击工具：%1，未定义的功能。\n").arg(toolName));
+    }
 }
