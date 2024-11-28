@@ -43,8 +43,6 @@ QgsVectorLayer* MainWidget::TransformCRS_Vec(QgsVectorLayer* veclayer, int newCR
 	QgsCoordinateReferenceSystem srcCRS = veclayer->crs();
 	QString SrcCRScode = srcCRS.authid();
 	// 获取当前工程坐标系
-	//int SrcCRScode = veclayer->crs().postgisSrid();
-	//QgsCoordinateReferenceSystem srcCRS = QgsCoordinateReferenceSystem::fromEpsgId(SrcCRScode);
 	QgsCoordinateReferenceSystem newCRS = QgsCoordinateReferenceSystem::fromEpsgId(newCRScode);
 	QgsCoordinateTransform transform(srcCRS, newCRS, QgsProject::instance());
 	qDebug() << transform.destinationCrs().authid();

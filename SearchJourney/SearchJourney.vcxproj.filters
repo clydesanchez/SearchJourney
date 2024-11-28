@@ -92,6 +92,9 @@
     <ClCompile Include="SvgLabel.cpp">
       <Filter>Source Files\SymbolManger</Filter>
     </ClCompile>
+    <ClCompile Include="Projection.cpp">
+      <Filter>Source Files\MainWidget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="MainWidget.ui">

@@ -137,7 +137,11 @@ SymbolManger::SymbolManger(QgsVectorLayer* pvLayer, MainWidget* widMain , QgsSym
 
 SymbolManger::~SymbolManger()
 {
-
+    delete mfsmModel;
+    delete mctrlFillColorBtn;
+    delete mctrlStrokeColorBtn;
+    delete mctrlStrokeColorBtn_svg;
+    delete mctrlFontColor;
 }
 
 void SymbolManger::resizeEvent(QResizeEvent* event) {
