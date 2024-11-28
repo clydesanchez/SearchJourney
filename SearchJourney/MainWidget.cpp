@@ -25,10 +25,12 @@ Function Lists:
     16. void on_ctrlLayerListViewAction_triggered() 图层列表视图
     17. void on_ctrlStatisticsViewAction_triggered() 统计视图
     18. void on_ctrlToolViewAction_triggered() 工具视图
-    19. void on_ctrlChooseAction_triggered() 选中图元
-    20. void onTreeItemClicked(QTreeWidgetItem *item, int column) 点击工具栏事件
-    21. void updateLayerList() 更新图层列表
-    22. void onChangeLayerVisible(QgsLayerTreeNode *pltnNode) 改变图层可见性
+    19. void on_ctrlDeleteAction_triggered(); 删除图元
+    20. void on_ctrlEditAttriAction_triggered(); 编辑属性
+    21. void on_ctrlMoveAction_triggered(); 平移图元
+    22. void onTreeItemClicked(QTreeWidgetItem *item, int column) 点击工具栏事件
+    23. void updateLayerList() 更新图层列表
+    24. void onChangeLayerVisible(QgsLayerTreeNode *pltnNode) 改变图层可见性
 */
 
 #include "MainWidget.h"
@@ -47,7 +49,7 @@ Function Lists:
 #include <qgsstylemanagerdialog.h>
 #include <QgsFeatureIterator.h>
 #include <Qgsvectorlayer.h>
-#include "SelectFeatureTool.h"
+
 MainWidget::MainWidget(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -75,7 +77,12 @@ MainWidget::MainWidget(QWidget *parent)
     //ui.ctrlLayerTreeView->setMenuProvider(new LayerItemMenu(ui.ctrlLayerTreeView,mcanMapCanvas));
     // listview禁用编辑
     ui.ctrlStatisticsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    
+    // 编辑工具栏禁用
+    ui.ctrlDeleteAction->setEnabled(false);
+    ui.ctrlEditAttriAction->setEnabled(false);
+    ui.ctrlMoveAction->setEnabled(false);
+    // 重命名窗口标题
+    this->setWindowTitle("OOP_GIS_System");
 }
 
 MainWidget::~MainWidget()
@@ -166,13 +173,27 @@ void MainWidget::on_ctrlToolViewAction_triggered()
 {
     ui.ctrlToolDock->setVisible(!ui.ctrlToolDock->isVisible());
 }
-// 选中图元
-void MainWidget::on_ctrlChooseAction_triggered() {
-    QgsMapToolSelectFeatures* pSelectTool = new QgsMapToolSelectFeatures(mcanMapCanvas);
-    
-    connect(pSelectTool, &QgsMapToolSelectFeatures::sigSelectFeatureChange,
-        this, &MainWidget::editAttribute);
-    mcanMapCanvas->setMapTool(pSelectTool);
+// 自定义栅格计算器V2
+void MainWidget::on_ctrlOpenRasterCalculatorActionV2_triggered()
+{
+    // 创建 RasterCalculatorTool 对话框实例
+    /*RasterCalculatorTool* rasterCalculatorDialog = new RasterCalculatorTool(this);
+    rasterCalculatorDialog->show();*/
+    //// 显示对话框并等待用户交互
+    //if ()
+    //{
+    //    // 用户点击“确定”按钮后，可以在这里处理结果
+    //    qDebug() << "Raster Calculator executed successfully.";
+    //}
+    //else
+    //{
+    //    // 用户点击“取消”按钮后，可以在这里处理逻辑
+    //    qDebug() << "Raster Calculator canceled.";
+    //}
+
+    //// 释放内存
+    //delete rasterCalculatorDialog;
+    return;
 }
 // 点击工具栏
 void MainWidget::onTreeItemClicked(QTreeWidgetItem *item, int column)

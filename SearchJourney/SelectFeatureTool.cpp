@@ -2,8 +2,8 @@
 #include "qgsapplication.h"
 #include "qgsvectorlayer.h"
 
-QgsMapToolSelectFeatures::QgsMapToolSelectFeatures(QgsMapCanvas* mapCanvas)
-    : QgsMapToolIdentify(mapCanvas)
+QgsMapToolSelectFeatures::QgsMapToolSelectFeatures(QgsMapCanvas* mapCanvas, QgsVectorLayer* targetLayer)
+    : QgsMapToolIdentify(mapCanvas), mpTargetLayer(targetLayer)
 {
 
 }
@@ -67,36 +67,33 @@ void QgsMapToolSelectFeatures::initRubberBand()
 
 void QgsMapToolSelectFeatures::identifyFromGeometry()
 {
-    if (mCanvas)
+    if (mCanvas && mpTargetLayer)
     {
         mCanvas->setSelectionColor(Qt::red);
-        QList< QgsMapLayer* > 	layers = mCanvas->layers();
-        foreach(QgsMapLayer * l, layers)
-        {
-            QgsVectorLayer* l1 = qobject_cast<QgsVectorLayer*>(l);
-            l1->removeSelection();
-        }
-    }
-    // 返回选中的结果
-    QList<IdentifyResult> results = QgsMapToolIdentify::identify(mSelectGeometry, IdentifyMode::TopDownAll, AllLayers);
-    // 选择的Features集合
-    QList<QgsFeature> selectFeatures;
-    // 显示
-    for (int i = 0; i < results.count(); ++i)
-    {
-        QgsVectorLayer* layer = qobject_cast<QgsVectorLayer*>(results.at(i).mLayer);
+        mpTargetLayer->removeSelection();
+
+        // 使用目标图层构建图层列表
+        QList<QgsMapLayer*> layerList = { mpTargetLayer };
+
+        // 执行 identify 操作，仅在指定图层中查找符合选择几何体的图元
+        QList<IdentifyResult> results = QgsMapToolIdentify::identify(
+            mSelectGeometry, IdentifyMode::TopDownAll, layerList, AllLayers);
+
+        QList<QgsFeature> selectFeatures;
         QgsFeatureIds ids;
-        for (IdentifyResult var : results)
+
+        for (const IdentifyResult& var : results)
         {
             QgsFeature _Feature = var.mFeature;
             ids.insert(_Feature.id());
+            selectFeatures.append(_Feature);
         }
+
         if (ids.count() > 0)
-            layer->selectByIds(ids);
-        QgsFeature feature = results.at(i).mFeature;
-        selectFeatures.append(feature);
+            mpTargetLayer->selectByIds(ids);
+
+        // 发出选中的 Feature 信息信号
+        if (selectFeatures.count() > 0)
+            emit sigSelectFeatureChange(selectFeatures);
     }
-    // 发出选中的Feature信息信号
-    if (selectFeatures.count() > 0)
-        emit sigSelectFeatureChange(selectFeatures);
 }
