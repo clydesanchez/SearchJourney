@@ -66,51 +66,6 @@ CircleDrawingTool::CircleDrawingTool(QgsMapCanvas* mapCanvas, QgsVectorLayer* ta
 {
 }
 
-/*void CircleDrawingTool::canvasMoveEvent(QgsMapMouseEvent* e)
-{
-    if (e->buttons() != Qt::LeftButton)
-        return;
-    QgsGeometry clipGeometry;
-    if (mDrawActive)
-    {
-        // 如果正在绘制，动态更新半径并绘制圆形
-        QgsPointXY edge = toMapCoordinates(e->pos());
-        double radius = mCenterPoint.distance(edge); // 动态计算半径
-        QPoint centerP = QPoint(mCenterPoint.x(), mCenterPoint.y());
-        clipGeometry = createCircleGeometry(centerP, radius); // 更新圆形几何
-
-        // 动态更新 RubberBand 显示当前圆形
-        if (mSelectionRubberBand)
-            mSelectionRubberBand->setToGeometry(clipGeometry, nullptr);
-    }
-}
-
-void CircleDrawingTool::canvasPressEvent(QgsMapMouseEvent* e)
-{
-    if (e->buttons() != Qt::LeftButton)
-        return;
-
-    if (!mDrawActive)
-    {
-        // 第一次点击，记录圆心
-        mCenterPoint = toMapCoordinates(e->pos());
-        mDrawActive = true;
-
-        if (!mSelectionRubberBand)
-            initRubberBand();
-
-    }
-    else
-    {
-        // 第二次点击，计算半径并绘制圆形
-        QgsPointXY edge = toMapCoordinates(e->pos());
-        double radius = mCenterPoint.distance(edge); // 计算圆的半径
-        QPoint centerP = QPoint(mCenterPoint.x(), mCenterPoint.y());
-        mClipGeometry = createCircleGeometry(centerP, radius); // 创建圆形几何
-        mDrawActive = false; // 完成绘制
-    }
-}*/
-
 void CircleDrawingTool::canvasMoveEvent(QgsMapMouseEvent* e)
 {
     if (e->buttons() != Qt::LeftButton)
@@ -168,19 +123,7 @@ QgsGeometry CircleDrawingTool::createCircleGeometry(const QPointF& center, doubl
     QgsPolygonXY polygon = { polyline };
     return QgsGeometry::fromPolygonXY(polygon);
 
-    //return QgsGeometry::fromPolygonXY(QList<QList<QgsPointXY>>() << points);
 }
-
-/*void CircleDrawingTool::canvasReleaseEvent(QgsMapMouseEvent* e)
-{
-    QPoint point = e->pos() - mInitDragPos;
-    if (mSelectionRubberBand && mDrawActive)
-    {
-        mClipGeometry = mSelectionRubberBand->asGeometry();
-        mSelectionRubberBand.reset();
-    }
-    mDrawActive = false;
-}*/
 
 void CircleDrawingTool::initRubberBand()
 {
@@ -207,6 +150,7 @@ PolygonDrawingTool::PolygonDrawingTool(QgsMapCanvas* mapCanvas, QgsVectorLayer* 
 
 void PolygonDrawingTool::canvasPressEvent(QgsMapMouseEvent* e)
 {
+    QgsGeometry clipGeometry;
     if (e->button() == Qt::LeftButton)  // 左键点击添加顶点
     {
         QgsPointXY point = toMapCoordinates(e->pos());  // 获取点击位置的地图坐标
@@ -215,8 +159,8 @@ void PolygonDrawingTool::canvasPressEvent(QgsMapMouseEvent* e)
         if (mVertices.size() > 1)
         {
             // 创建多边形的线段
-            mClipGeometry = QgsGeometry::fromPolygonXY({ mVertices });
-            mSelectionRubberBand->setToGeometry(mClipGeometry, nullptr);  // 更新RubberBand
+            clipGeometry = QgsGeometry::fromPolygonXY({ mVertices });
+            mSelectionRubberBand->setToGeometry(clipGeometry, nullptr);  // 更新RubberBand
         }
     }
     else if (e->button() == Qt::RightButton)  // 右键点击结束绘制
@@ -225,8 +169,9 @@ void PolygonDrawingTool::canvasPressEvent(QgsMapMouseEvent* e)
         if (mVertices.size() > 2)
         {
             // 完成多边形绘制，发出信号
-            mClipGeometry = QgsGeometry::fromPolygonXY({ mVertices });
-            emit sigPolygonDrawn(mClipGeometry);
+            clipGeometry = QgsGeometry::fromPolygonXY({ mVertices });
+            mClipGeometry = clipGeometry;
+            emit sigPolygonDrawn(clipGeometry);
         }
         mVertices.clear();  // 清空顶点
         mSelectionRubberBand.reset();  // 清空RubberBand
