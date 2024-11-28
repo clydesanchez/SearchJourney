@@ -6,6 +6,7 @@
 #include <QgsSingleSymbolRenderer.h>
 #include <qgsvertexid.h>
 #include <qgsvertexmarker.h>
+#include <QFileDialog>
 // 获取点击图层要素
 void MainWidget::onMapCanvasClicked(const QPoint& point)
 {
@@ -132,10 +133,13 @@ void MainWidget::on_ctrlEditableAction_triggered() {
     
     }
 	else if (mvlEditableLayer->geometryType() == Qgis::GeometryType::Line) {
+		ui.ctrlCutLineAction->setEnabled(true);
+		ui.ctrlSmoothLineAction->setEnabled(true);
+        mpLineEdit = new LineEdit(mcanMapCanvas, mvlEditableLayer);
 
 	}
 	else if (mvlEditableLayer->geometryType() == Qgis::GeometryType::Polygon) {
-
+        ui.ctrlSmoothLineAction->setEnabled(true);
 	}
 	else {
 		QMessageBox::information(this, "提示", "不支持的图层类型");
@@ -302,4 +306,59 @@ void MainWidget::on_ctrlSaveAction_triggered()
 	mvlEditableLayer->commitChanges();
 	//刷新地图
 	mcanMapCanvas->refresh();
+}
+
+//选择要素
+void MainWidget::on_ctralChooseAction_triggered() {
+    QgsMapToolSelectFeatures* pSelectTool = new QgsMapToolSelectFeatures(mcanMapCanvas, mvlEditableLayer);
+    connect(pSelectTool, &QgsMapToolSelectFeatures::sigSelectFeatureChange,
+        this, &MainWidget::cutLine);
+    mcanMapCanvas->setMapTool(pSelectTool);
+}
+
+//剪断线
+void MainWidget::on_ctrlCutLineAction_triggered() {
+    // 禁用选择工具（防止冲突）
+    mcanMapCanvas->unsetMapTool(mcanMapCanvas->mapTool());
+    // 创建裁剪线工具
+    // 连接信号，绘制完成后执行裁剪操作
+    connect(mpLineEdit, &LineEdit::lineCutSignal, this, &MainWidget::onLineCutFinished);
+    // 启用绘制裁剪线工具
+    mcanMapCanvas->setMapTool(mpLineEdit);
+    
+}
+
+//光滑线
+void MainWidget::on_ctrlSmoothLineAction_triggered() {
+    //判断激活图层类型，如果为面图层，则执行面转线
+	if (mvlEditableLayer->geometryType() == Qgis::GeometryType::Polygon)
+	{
+		//面转线,弹出对话框，选择保存路径
+		QString qstrSavePath = QFileDialog::getSaveFileName(this, tr("保存shp文件"), "", "*.shp");
+		if (qstrSavePath.isEmpty())
+		{
+			return;
+		}
+		QgsVectorLayer* qvlLineLayer = polygonToLines(mvlEditableLayer, qstrSavePath);
+        if (qvlLineLayer)
+        {
+            mppjProject->addMapLayer(qvlLineLayer);
+            setLayerToMap(static_cast<QgsMapLayer*>(qvlLineLayer));
+        }
+	}
+}
+
+void MainWidget::cutLine(const QList<QgsFeature>& selectedFeatures) {
+    mSelectedFeatures = selectedFeatures;
+    
+}
+void MainWidget::smoothLine(const QList<QgsFeature>& selectedFeatures) {
+
+}
+void MainWidget::onLineCutFinished(const QgsPointXY& startPoint, const QgsPointXY& endPoint)
+{
+    // 使用已选中的要素进行裁剪
+    mpLineEdit->cutLine(mSelectedFeatures, startPoint, endPoint);  // 执行裁剪操作
+    // 刷新图层显示裁剪结果
+    mvlEditableLayer->triggerRepaint();
 }

@@ -81,6 +81,8 @@ MainWidget::MainWidget(QWidget *parent)
 	ui.ctrlAddPointAction->setEnabled(false);
 	ui.ctrlUndoAction->setEnabled(false);
 	ui.ctrlRedoAction->setEnabled(false);
+    ui.ctrlCutLineAction->setEnabled(false);
+    ui.ctrlSmoothLineAction->setEnabled(false);
 }
 
 MainWidget::~MainWidget()

@@ -16,12 +16,15 @@ Description:
 #include <QgsVertexMarker.h>
 #include "PointEdit.h"
 #include"GeometryEditTool.h"
+#include "SelectFeatureTool.h"
+#include "LineEdit.h"
 
 //模式枚举
 enum class Mode
 {
 	Select,     //Default,选择模式
 	NonSelect,  //非选择模式
+	MoveMode,   //移动模式
 };
 
 class MainWidget : public QMainWindow
@@ -49,14 +52,6 @@ private:
 
     QTimer* mTimer; // 定时器
     int mnProgressValue = 0; // 进度值
-
-    //图层编辑部分
-private:
-	Mode meMode = Mode::Select; // 设置默认模式
-	QgsVectorLayer* mvlEditableLayer = nullptr; // 可编辑图层
-	PointEdit* mpePointEdit = nullptr; // 点编辑工具
-	void showBreakPoint(const QPoint& point); // 显示断点
-	GeometryEditTool* mGeometryEditTool; // 撤回/重做
 
 	//图层显示部分
 public:
@@ -100,6 +95,9 @@ public slots:
 	void on_ctrlUndoAction_triggered();                             // 撤销
 	void on_ctrlRedoAction_triggered();                             // 重做
 	void on_ctrlSaveAction_triggered();                             // 保存编辑
+    void on_ctralChooseAction_triggered();           // 选中图元
+	void on_ctrlCutLineAction_triggered();          // 切割线
+	void on_ctrlSmoothLineAction_triggered();           // 光滑线
 
     // 分析工具
 public:
@@ -129,5 +127,19 @@ public:
     void openProjectFromQGZ(); // 从QGZ打开工程
     void saveAsSHP();          // 将矢量图层保存为shp文件
     void saveAsTxt();          // 将栅格统计结果保存为txt文件
+
+    //图层编辑部分
+private:
+    Mode meMode = Mode::Select; // 设置默认模式
+    QgsVectorLayer* mvlEditableLayer = nullptr; // 可编辑图层
+    PointEdit* mpePointEdit = nullptr; // 点编辑工具
+    void showBreakPoint(const QPoint& point); // 显示断点
+    GeometryEditTool* mGeometryEditTool; // 撤回/重做
+    QList<QgsFeature> mSelectedFeatures;  // 用于存储选中的要素
+	LineEdit* mpLineEdit; // 线编辑工具
+	void onLineCutFinished(const QgsPointXY& startPoint, const QgsPointXY& endPoint); // 切割线完成
+public:
+	void cutLine(const QList<QgsFeature>& selectedFeatures); // 切割线
+	void smoothLine(const QList<QgsFeature>& selectedFeatures); // 光滑线
 };
 #endif

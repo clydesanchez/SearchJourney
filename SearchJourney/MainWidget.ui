@@ -355,7 +355,7 @@ background-color:#F0F0F0;</string>
    </attribute>
    <addaction name="ctrlEditableAction"/>
    <addaction name="ctrlAddPointAction"/>
-   <addaction name="ctralSelectAction"/>
+   <addaction name="ctralChooseAction"/>
    <addaction name="ctrlCutLineAction"/>
    <addaction name="ctrlSmoothLineAction"/>
   </widget>
@@ -530,7 +530,7 @@ background-color:#F0F0F0;</string>
     <enum>QAction::NoRole</enum>
    </property>
   </action>
-  <action name="ctralSelectAction">
+  <action name="ctralChooseAction">
    <property name="text">
     <string>选择</string>
    </property>
