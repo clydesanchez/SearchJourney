@@ -5,6 +5,9 @@
 #include <qgslayertreeview.h>
 #include <qgsmapcanvas.h>
 #include "MainWidget.h"
+
+#include <qgsrasterlayer.h>
+#include "RasterStyle.h"
 class LayerItemMenu :
     public QgsLayerTreeViewMenuProvider
 {
@@ -21,11 +24,18 @@ public:
     QAction* actionRasterOpacity( QgsRasterLayer* rasLayer);//栅格图层透明度
     QAction* actionCrsTransform_vec( QgsVectorLayer* veclayer);//坐标转换 矢量
     QAction* actionCrsTransform_ras( QgsRasterLayer* rasLayer);// 坐标转换 栅格
+
+
+    QAction* actionSymbolManger_ras(QString strLayerName, QgsRasterLayer* rasLayer);
+    QAction* actionStyleManager(QString strLayerName, Qgis::GeometryType layerType);
+
 private:
     QgsMapCanvas* mcanMapCanvas;
     QgsLayerTreeView* mctrlLayerItem;
     MainWidget* mwidMain;
     QgsProject* mprjProject;
+
+    QgsRasterLayer* mCurrentRasterLayer; // 当前选中的栅格图层
 };
 
 #endif

@@ -23,6 +23,7 @@
 #include <vector>
 
 //区边界转线
+//区边界转线
 QgsVectorLayer* polygonToLines(QgsVectorLayer* polygonLayer, const QString& outputLineLayerPath)
 {
     if (!polygonLayer || polygonLayer->geometryType() != Qgis::GeometryType::Polygon)
@@ -32,10 +33,15 @@ QgsVectorLayer* polygonToLines(QgsVectorLayer* polygonLayer, const QString& outp
     }
 
     // 创建输出图层
+    //获取输出文件名称outputLineLayerPath
+    // 获取输出图层的文件名称（不包含路径）
+    QFileInfo fileInfo(outputLineLayerPath);
+    QString layerName = fileInfo.completeBaseName(); // 获取文件名（不包括扩展名）
+
     QgsFields fields = polygonLayer->fields();
     QString crsWkt = polygonLayer->crs().toWkt();
     QgsVectorLayer* lineLayer = new QgsVectorLayer(QString("LineString?crs=%1").arg(crsWkt),
-        "ConvertedLines", "memory");
+        layerName, "memory");
     QgsVectorDataProvider* lineProvider = lineLayer->dataProvider();
     lineProvider->addAttributes(fields.toList());
     lineLayer->updateFields();
@@ -95,18 +101,19 @@ QgsVectorLayer* polygonToLines(QgsVectorLayer* polygonLayer, const QString& outp
     lineProvider->addFeatures(lineFeatures);
 
     // 保存到文件
-    QgsVectorFileWriter::writeAsVectorFormatV2(
+    // 保存图层
+    QgsVectorFileWriter::WriterError error = QgsVectorFileWriter::writeAsVectorFormat(
         lineLayer,
         outputLineLayerPath,
-        QgsCoordinateTransformContext(),
-        QgsVectorFileWriter::SaveVectorOptions()
-    );
+        "UTF-8",
+        lineLayer->crs(),
+        "ESRI Shapefile");
 
     // 将线图层添加到地图工程
     //QgsProject::instance()->addMapLayer(lineLayer);
 
     qDebug() << "Polygon boundaries successfully converted to lines.";
-	return lineLayer;
+    return lineLayer;
 }
 
 

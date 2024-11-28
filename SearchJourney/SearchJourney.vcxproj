@@ -49,7 +49,7 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
-    <Import Project="QGIS二次开发.props" />
+    <Import Project="..\QGIS二次开发.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -118,6 +118,8 @@
     <ClCompile Include="RasterStatisticsSelect.cpp" />
     <ClCompile Include="SelectFeatureTool.cpp" />
     <ClCompile Include="SvgLabel.cpp" />
+    <ClCompile Include="RasterStyle.cpp" />
+    <ClCompile Include="StyleManager.cpp" />
     <ClCompile Include="SymbolManger.cpp" />
     <ClCompile Include="TextSelect.cpp" />
     <ClCompile Include="UseSelected.cpp" />
@@ -128,6 +130,8 @@
     <QtUic Include="Clip.ui" />
     <QtUic Include="MainWidget.ui" />
     <QtUic Include="RasterCalculatorTool.ui" />
+    <QtUic Include="RasterStyle.ui" />
+    <QtUic Include="StyleManager.ui" />
     <QtUic Include="SymbolManger.ui" />
     <QtUic Include="TextSelect.ui" />
   </ItemGroup>
@@ -141,12 +145,15 @@
     <QtMoc Include="Buffer.h" />
     <QtMoc Include="Clip.h" />
     <QtMoc Include="ClipMapTool.h" />
+    <ClInclude Include="CustomSymbol.h" />
     <ClInclude Include="LayerItemMenu.h" />
     <ClInclude Include="LineEdit.h" />
     <QtMoc Include="PointEdit.h" />
     <QtMoc Include="RasterCalculatorTool.h" />
     <QtMoc Include="SelectFeatureTool.h" />
     <QtMoc Include="SvgLabel.h" />
+    <QtMoc Include="StyleManager.h" />
+    <QtMoc Include="RasterStyle.h" />
     <QtMoc Include="SymbolManger.h" />
     <QtMoc Include="SelectDialog.h" />
     <QtMoc Include="MainWidget.h" />

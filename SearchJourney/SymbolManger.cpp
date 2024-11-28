@@ -20,6 +20,7 @@
 #include <qgscolordialog.h>
 #include <QPainter>
 #include <QCombobox>
+
 //#include <qgsstylemanagerdialog.h>
 //#include <qgssymbolselectordialog.h>
 SymbolManger::SymbolManger(QgsVectorLayer* pvLayer, MainWidget* widMain , QgsSymbolList Srcsymbol,QWidget *parent)

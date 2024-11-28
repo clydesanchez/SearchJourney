@@ -20,6 +20,13 @@
 #include <qgsattributedialog.h>
 #include <qgsattributeeditorcontext.h>
 #include <QInputDialog>
+// 栅格样式新增
+#include"RasterStyle.h"
+#include "StyleManager.h"
+#include <qgsrasterdataprovider.h>
+#include <QMessageBox>
+#include <qgssinglebandpseudocolorrenderer.h>
+
 #include <QgsSingleSymbolRenderer.h>
 #include <QgsTextFormat.h>
 LayerItemMenu::LayerItemMenu(QgsLayerTreeView*view, QgsMapCanvas *canvas, MainWidget* widMain,QgsProject* prjSrc)
@@ -65,15 +72,16 @@ QMenu* LayerItemMenu::createContextMenu()
 			menu->addAction(actionLabelManger(layer->name()));	//标注管理
 			menu->addAction(actionShowProperties(layer->name(),vectorLayer));	//属性表
 			menu->addAction(actionCrsTransform_vec( vectorLayer));	//坐标转换
+            menu->addAction(actionStyleManager(layer->name(), layerType));		//符号库
 		}
 		// 栅格图层菜单
 		else if (layer) {
 			QgsRasterLayer* rasterLayer = qobject_cast<QgsRasterLayer*>(layer);
 			menu->addAction(actionZoomToLayer(mcanMapCanvas, menu));//缩放到图层
 			menu->addAction(actionRemoveLayer(layer->name()));	//移除图层
+			menu->addAction(actionSymbolManger_ras(layer->name(), rasterLayer));	//符号管理
+			menu->addAction(actionRasterOpacity(rasterLayer));	// 不透明度
 			menu->addAction(actionCrsTransform_ras( rasterLayer));	//坐标转换
-			menu->addAction(actionRasterOpacity(rasterLayer));	//不透明度
-			//menu->addAction(actionCrsTransform(layer->name(), vectorLayer));
 		}
 	}
 	return menu;
@@ -143,7 +151,21 @@ QAction* LayerItemMenu::actionSymbolManger(QString strLayerName, QgsSymbolList S
 		});
 	return action;
 }
+// 连接栅格图层符号管理
+QAction* LayerItemMenu::actionSymbolManger_ras(QString strLayerName, QgsRasterLayer* rasLayer) {
+	QAction* action = new QAction("符号管理");
+	MainWidget* widMain = mwidMain;
+	QObject::connect(action, &QAction::triggered, [strLayerName, rasLayer, widMain]() {
+		// 弹出新的符号管理窗口
+		RasterStyle* rasterSymbolManager = new RasterStyle(strLayerName, rasLayer, widMain);
+		rasterSymbolManager->show();
+		//QgsStyleManagerDialog* styleManager = new QgsStyleManagerDialog();
+		//styleManager->show();
+		});
+	return action;
+}
 // 属性表右键菜单
+
 QAction* LayerItemMenu::actionShowProperties(QString strLayerName, QgsVectorLayer* vectorlayer)
 {
 	QAction* action = new QAction("属性表");
@@ -293,3 +315,15 @@ QAction* LayerItemMenu::actionCrsTransform_ras( QgsRasterLayer* rasLayer)
 		});
 	return action;
 }
+
+QAction* LayerItemMenu::actionStyleManager(QString strLayerName, Qgis::GeometryType layerType) {
+	QAction* action = new QAction("符号库");
+	MainWidget* widMain = mwidMain;
+	QObject::connect(action, &QAction::triggered, [strLayerName, layerType, widMain]() {
+		// 弹出新的符号库窗口
+		StyleManager* styleManager = new StyleManager(strLayerName, layerType, widMain);
+		styleManager->show();
+		});
+	return action;
+}
+

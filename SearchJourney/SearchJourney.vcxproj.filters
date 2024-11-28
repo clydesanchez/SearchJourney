@@ -82,6 +82,12 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RasterStyle.cpp">
+      <Filter>Source Files\StyleManger</Filter>
+    </ClCompile>
+    <ClCompile Include="StyleManager.cpp">
+      <Filter>Source Files\StyleManger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AttributeViewWidget.h">
@@ -123,6 +129,12 @@
     <QtMoc Include="PointEdit.h">
       <Filter>Source Files\FeaturesEdit</Filter>
     </QtMoc>
+    <QtMoc Include="RasterStyle.h">
+      <Filter>Source Files\StyleManger</Filter>
+    </QtMoc>
+    <QtMoc Include="StyleManager.h">
+      <Filter>Source Files\StyleManger</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="MainWidget.ui">
@@ -145,6 +157,12 @@
     </QtUic>
     <QtUic Include="Clip.ui">
       <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </QtUic>
+    <QtUic Include="RasterStyle.ui">
+      <Filter>Source Files\StyleManger</Filter>
+    </QtUic>
+    <QtUic Include="StyleManager.ui">
+      <Filter>Source Files\StyleManger</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +205,9 @@
     <Filter Include="Source Files\FeaturesEdit">
       <UniqueIdentifier>{7b2defde-cc87-47dd-9e33-c232557cdbfc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\StyleManger">
+      <UniqueIdentifier>{aedb3c54-4687-4c1b-8ab1-80327d10f80c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="MainWidget.qrc">
@@ -199,6 +220,9 @@
     </ClInclude>
     <ClInclude Include="LineEdit.h">
       <Filter>Source Files\FeaturesEdit</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomSymbol.h">
+      <Filter>Source Files\StyleManger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
