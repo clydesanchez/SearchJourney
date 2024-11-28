@@ -11,17 +11,27 @@
 void MainWidget::deleteFeature(const QList<QgsFeature>& selectedFeatures) {
 	if (!selectedFeatures.isEmpty())
 	{
-		// 删除选中的图元
 		QList<QgsMapLayer*> selectedLayers = mcanMapCanvas->layers();
-
 		if (selectedLayers.isEmpty())
 		{
 			return;
 		}
-
 		QgsMapLayer* currentLayer = selectedLayers[mnActiveLayerIndex];
-
 		QgsVectorLayer* vectorLayer = dynamic_cast<QgsVectorLayer*>(currentLayer);
+
+		// 弹出对话框提示用户确认操作
+		int ret = QMessageBox::question(
+			this,
+			"确认删除",
+			QString("当前有 %1 个要素被选中，是否确定删除？").arg(selectedFeatures.size()),
+			QMessageBox::Yes | QMessageBox::No
+		);
+
+		// 如果用户选择 No，则取消操作
+		if (ret != QMessageBox::Yes) {
+			return;
+		}
+
 		vectorLayer->startEditing();
 		vectorLayer->deleteSelectedFeatures();  // 删除当前选中的图元
 		//vectorLayer->commitChanges();  // 提交更改
