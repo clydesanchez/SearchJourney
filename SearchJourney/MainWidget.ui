@@ -356,8 +356,10 @@ background-color:#F0F0F0;</string>
    <addaction name="ctrlEditableAction"/>
    <addaction name="ctrlAddPointAction"/>
    <addaction name="ctralChooseAction"/>
-   <addaction name="ctrlCutLineAction"/>
+   <addaction name="ctrlSmoothLineAction_2"/>
    <addaction name="ctrlSmoothLineAction"/>
+   <addaction name="ctrlThiningLineAction"/>
+   <addaction name="ctrlPolygonToLineAction"/>
   </widget>
   <widget class="QToolBar" name="toolBar_3">
    <property name="windowTitle">
@@ -542,6 +544,9 @@ background-color:#F0F0F0;</string>
    <property name="text">
     <string>撤销</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
    </property>
@@ -549,6 +554,9 @@ background-color:#F0F0F0;</string>
   <action name="ctrlRedoAction">
    <property name="text">
     <string>重做</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
@@ -562,7 +570,7 @@ background-color:#F0F0F0;</string>
     <enum>QAction::NoRole</enum>
    </property>
   </action>
-  <action name="ctrlCutLineAction">
+  <action name="ctrlSmoothLineAction_2">
    <property name="text">
     <string>剪断线</string>
    </property>
@@ -573,6 +581,22 @@ background-color:#F0F0F0;</string>
   <action name="ctrlSmoothLineAction">
    <property name="text">
     <string>光滑线</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="ctrlThiningLineAction">
+   <property name="text">
+    <string>抽稀线</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="ctrlPolygonToLineAction">
+   <property name="text">
+    <string>面边界转线</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>

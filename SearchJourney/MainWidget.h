@@ -96,8 +96,9 @@ public slots:
 	void on_ctrlRedoAction_triggered();                             // 重做
 	void on_ctrlSaveAction_triggered();                             // 保存编辑
     void on_ctralChooseAction_triggered();           // 选中图元
-	void on_ctrlCutLineAction_triggered();          // 切割线
 	void on_ctrlSmoothLineAction_triggered();           // 光滑线
+	void on_ctrlThiningLineAction_triggered();          // 线抽稀
+	void on_ctrlPolygonToLineAction_triggered();           // 面转线
 
     // 分析工具
 public:
@@ -136,10 +137,7 @@ private:
     void showBreakPoint(const QPoint& point); // 显示断点
     GeometryEditTool* mGeometryEditTool; // 撤回/重做
     QList<QgsFeature> mSelectedFeatures;  // 用于存储选中的要素
-	LineEdit* mpLineEdit; // 线编辑工具
-	void onLineCutFinished(const QgsPointXY& startPoint, const QgsPointXY& endPoint); // 切割线完成
 public:
-	void cutLine(const QList<QgsFeature>& selectedFeatures); // 切割线
-	void smoothLine(const QList<QgsFeature>& selectedFeatures); // 光滑线
+	void selectFeatures(const QList<QgsFeature>& selectedFeatures); // 切割线
 };
 #endif

@@ -147,13 +147,13 @@
     <QtMoc Include="SelectFeatureTool.h">
       <Filter>Source Files\Edit</Filter>
     </QtMoc>
-    <QtMoc Include="LineEdit.h">
-      <Filter>Source Files\Edit</Filter>
-    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LayerItemMenu.h">
       <Filter>Source Files\LayerItem</Filter>
+    </ClInclude>
+    <ClInclude Include="LineEdit.h">
+      <Filter>Source Files\Edit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

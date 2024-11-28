@@ -131,7 +131,7 @@
     <QtMoc Include="CustomAttributeTableView.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="LineEdit.h" />
+    <ClInclude Include="LineEdit.h" />
     <QtMoc Include="SelectFeatureTool.h" />
     <QtMoc Include="GeometryEditTool.h" />
     <ClInclude Include="LayerItemMenu.h" />

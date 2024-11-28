@@ -133,9 +133,7 @@ void MainWidget::on_ctrlEditableAction_triggered() {
     
     }
 	else if (mvlEditableLayer->geometryType() == Qgis::GeometryType::Line) {
-		ui.ctrlCutLineAction->setEnabled(true);
 		ui.ctrlSmoothLineAction->setEnabled(true);
-        mpLineEdit = new LineEdit(mcanMapCanvas, mvlEditableLayer);
 
 	}
 	else if (mvlEditableLayer->geometryType() == Qgis::GeometryType::Polygon) {
@@ -312,24 +310,28 @@ void MainWidget::on_ctrlSaveAction_triggered()
 void MainWidget::on_ctralChooseAction_triggered() {
     QgsMapToolSelectFeatures* pSelectTool = new QgsMapToolSelectFeatures(mcanMapCanvas, mvlEditableLayer);
     connect(pSelectTool, &QgsMapToolSelectFeatures::sigSelectFeatureChange,
-        this, &MainWidget::cutLine);
+        this, &MainWidget::selectFeatures);
     mcanMapCanvas->setMapTool(pSelectTool);
 }
 
 //剪断线
-void MainWidget::on_ctrlCutLineAction_triggered() {
-    // 禁用选择工具（防止冲突）
-    mcanMapCanvas->unsetMapTool(mcanMapCanvas->mapTool());
-    // 创建裁剪线工具
-    // 连接信号，绘制完成后执行裁剪操作
-    connect(mpLineEdit, &LineEdit::lineCutSignal, this, &MainWidget::onLineCutFinished);
-    // 启用绘制裁剪线工具
-    mcanMapCanvas->setMapTool(mpLineEdit);
-    
+void MainWidget::on_ctrlSmoothLineAction_triggered() {
+    //实现光滑线,判断已经选中的是否为空
+	if (mSelectedFeatures.size() == 0)
+	{
+		//弹出提示框
+		QMessageBox::information(this, "提示", "未选中要素");
+        return;
+	}
+	//判断激活图层类型，如果为线图层，则执行线光滑
+	if (mvlEditableLayer->geometryType() == Qgis::GeometryType::Line)
+	{
+        smoothLines(mvlEditableLayer, mSelectedFeatures);
+	}
 }
 
 //光滑线
-void MainWidget::on_ctrlSmoothLineAction_triggered() {
+void MainWidget::on_ctrlPolygonToLineAction_triggered() {
     //判断激活图层类型，如果为面图层，则执行面转线
 	if (mvlEditableLayer->geometryType() == Qgis::GeometryType::Polygon)
 	{
@@ -348,17 +350,21 @@ void MainWidget::on_ctrlSmoothLineAction_triggered() {
 	}
 }
 
-void MainWidget::cutLine(const QList<QgsFeature>& selectedFeatures) {
+void MainWidget::selectFeatures(const QList<QgsFeature>& selectedFeatures) {
     mSelectedFeatures = selectedFeatures;
     
 }
-void MainWidget::smoothLine(const QList<QgsFeature>& selectedFeatures) {
-
-}
-void MainWidget::onLineCutFinished(const QgsPointXY& startPoint, const QgsPointXY& endPoint)
-{
-    // 使用已选中的要素进行裁剪
-    mpLineEdit->cutLine(mSelectedFeatures, startPoint, endPoint);  // 执行裁剪操作
-    // 刷新图层显示裁剪结果
-    mvlEditableLayer->triggerRepaint();
+void MainWidget::on_ctrlThiningLineAction_triggered() {
+    //实现抽稀线,判断已经选中的是否为空
+    if (mSelectedFeatures.size() == 0)
+    {
+        //弹出提示框
+        QMessageBox::information(this, "提示", "未选中要素");
+        return;
+    }
+    //判断激活图层类型，如果为线图层，则执行线抽稀
+    if (mvlEditableLayer->geometryType() == Qgis::GeometryType::Line)
+    {
+        thiningLines(mvlEditableLayer, mSelectedFeatures);
+    }
 }

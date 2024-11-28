@@ -9,45 +9,21 @@
 #include <QgsRubberBand.h>
 #include <QList>
 
-class LineEdit : public QgsMapToolEdit
-{
-    Q_OBJECT
-public:
-    LineEdit(QgsMapCanvas* canvas, QgsVectorLayer* layer);
-    ~LineEdit();
 
-    // 剪断线功能
-    void cutLine(const QList<QgsFeature>& selectedFeatures, const QgsPointXY& startPoint, const QgsPointXY& endPoint);
-    // 光滑线功能
-    void smoothLine(const QList<QgsFeature>& selectedFeatures);
+QgsVectorLayer* polygonToLines(QgsVectorLayer* polygonLayer, const QString& outputLineLayerPath);				// 区边界转线
+void smoothLines(QgsVectorLayer* lineLayer, const QList<QgsFeature>& selectedFeatures);			// 平滑线
+void applyBezierSmoothing(QgsVectorLayer* layer, const QList<QgsFeature>& selectedFeatures, int subdivision = 20);						// 应用贝塞尔平滑
+void applySplineSmoothing(QgsVectorLayer* layer, const QList<QgsFeature>& selectedFeatures, double tension = 0.2, int interpolationPoints = 10);						// 应用样条平滑
 
-signals:
-    /**
-     * @brief 分割线绘制完成信号
-     * @param startPoint 分割线起点
-     * @param endPoint 分割线终点
-     */
-    void lineCutSignal(const QgsPointXY& startPoint, const QgsPointXY& endPoint);
-
-protected:
-    void canvasPressEvent(QgsMapMouseEvent* e) override;
-    void canvasMoveEvent(QgsMapMouseEvent* e) override;
-    //void canvasReleaseEvent(QgsMapMouseEvent* e) override;
-
-private:
-    QgsVectorLayer* mLayer;                 // 当前操作的图层
-    QgsRubberBand* mTempRubberBand;         // 用于动态绘制分割线
-    QList<QgsFeature> mSelectedFeatures;   // 当前选中的要素
-    bool mIsDrawing;                        // 是否正在绘制
-    QgsPointXY mStartPoint;                 // 分割线起点
-    QgsPointXY mEndPoint;                   // 分割线终点
-
-    // 光滑算法函数
-    void applyBezierSmoothing(const QList<QgsFeature>& selectedFeatures);
-    void applySplineSmoothing(const QList<QgsFeature>& selectedFeatures);
-};
+//抽稀线
+void thiningLines(QgsVectorLayer* lineLayer, const QList<QgsFeature>& selectedFeatures);			// 抽稀线
+void applyBezierDownsampling(QgsVectorLayer* layer, const QList<QgsFeature>& selectedFeatures, int subdivisionFactor);						// 应用贝塞尔抽稀
+void applyIntervalDownsampling(QgsVectorLayer* layer, const QList<QgsFeature>& selectedFeatures, int interval);		//固定间隔抽稀
+void applyDouglasPeuckerSimplification(QgsVectorLayer* layer, const QList<QgsFeature>& selectedFeatures, double epsilon);		// 应用道格拉斯-普克抽稀
+QVector<QgsPointXY> douglasPeuckerSimplify(const QVector<QgsPointXY>& points, double epsilon);		// 道格拉斯-普克抽稀算法
+double pointToSegmentDistance(const QgsPointXY& point, const QgsPointXY& segmentStart, const QgsPointXY& segmentEnd);		// 点到线段的距离
 
 
-QgsVectorLayer* polygonToLines(QgsVectorLayer* polygonLayer, const QString& outputLineLayerPath);
+
 
 #endif // LINEEDIT_H
