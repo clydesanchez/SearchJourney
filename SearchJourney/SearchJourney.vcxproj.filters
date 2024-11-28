@@ -67,6 +67,15 @@
     <ClCompile Include="RasterCalculatorTool.cpp">
       <Filter>Source Files\SpatialAnalysisTools</Filter>
     </ClCompile>
+    <ClCompile Include="Buffer.cpp">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </ClCompile>
+    <ClCompile Include="Clip.cpp">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </ClCompile>
+    <ClCompile Include="ClipMapTool.cpp">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AttributeViewWidget.h">
@@ -96,6 +105,15 @@
     <QtMoc Include="RasterCalculatorTool.h">
       <Filter>Source Files\SpatialAnalysisTools</Filter>
     </QtMoc>
+    <QtMoc Include="ClipMapTool.h">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </QtMoc>
+    <QtMoc Include="Buffer.h">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </QtMoc>
+    <QtMoc Include="Clip.h">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="MainWidget.ui">
@@ -111,6 +129,12 @@
       <Filter>Source Files\SymbolManager</Filter>
     </QtUic>
     <QtUic Include="RasterCalculatorTool.ui">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </QtUic>
+    <QtUic Include="Buffer.ui">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </QtUic>
+    <QtUic Include="Clip.ui">
       <Filter>Source Files\SpatialAnalysisTools</Filter>
     </QtUic>
   </ItemGroup>

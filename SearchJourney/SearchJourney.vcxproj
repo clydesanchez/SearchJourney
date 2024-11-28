@@ -31,8 +31,8 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>5.15.2_msvc2019_64</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtInstall>5.14.2_msvc2017_64</QtInstall>
+    <QtModules>core;xml;sql;gui;svg;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
     <QtToolsDesignTime>true</QtToolsDesignTime>
   </PropertyGroup>
@@ -49,7 +49,7 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
-    <Import Project="..\QGIS.props" />
+    <Import Project="QGIS二次开发.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -60,6 +60,15 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\CPPlibrary\SQLite\include;D:\VS2022+gdal3.9\deps\proj\include;D:\VS2022+gdal3.9\deps\gdal\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>D:\CPPlibrary\SQLite\lib;D:\VS2022+gdal3.9\deps\proj\lib;D:\VS2022+gdal3.9\deps\gdal\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gdal.lib;proj.lib;SQLite-TEST.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ClCompile>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -87,6 +96,9 @@
   <ItemGroup>
     <ClCompile Include="AnalyticalFunction.cpp" />
     <ClCompile Include="AttributeViewWidget.cpp" />
+    <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="Clip.cpp" />
+    <ClCompile Include="ClipMapTool.cpp" />
     <ClCompile Include="ConnectSelect.cpp" />
     <ClCompile Include="CustomAttributeTableView.cpp" />
     <ClCompile Include="EditFeature.cpp" />
@@ -110,6 +122,8 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="AttributeViewWidget.ui" />
+    <QtUic Include="Buffer.ui" />
+    <QtUic Include="Clip.ui" />
     <QtUic Include="MainWidget.ui" />
     <QtUic Include="RasterCalculatorTool.ui" />
     <QtUic Include="SymbolManger.ui" />
@@ -122,6 +136,9 @@
     <QtMoc Include="CustomAttributeTableView.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="Buffer.h" />
+    <QtMoc Include="Clip.h" />
+    <QtMoc Include="ClipMapTool.h" />
     <ClInclude Include="LayerItemMenu.h" />
     <QtMoc Include="RasterCalculatorTool.h" />
     <QtMoc Include="SelectFeatureTool.h" />

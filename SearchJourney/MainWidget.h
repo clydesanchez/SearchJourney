@@ -15,7 +15,8 @@ Description:
 #include <QgsMultiPolygon.h>
 #include <QgsLayerTreeView.h>
 #include <QgsVertexMarker.h>
-
+#include "Buffer.h"
+#include "Clip.h"
 class MainWidget : public QMainWindow
 {
     Q_OBJECT
@@ -44,6 +45,10 @@ private:
     bool mbCanvasFullScreen = false; // 画布是否全屏
     QTimer* mTimer; // 定时器
     int mnProgressValue = 0; // 进度值
+
+    Buffer* mpBuffer; // 缓冲区分析
+    Clip* mpClip; // 裁剪分析
+
 public:
     void updateLayerList(); // 更新图层列表
 public:
@@ -86,8 +91,11 @@ public slots:
     void onChangeLayerVisible(QgsLayerTreeNode *pltnNode);          // 改变图层可见性
 
     void slotApplySymbol(QString strLayerName, QgsSymbol* psSymbol); // 设置图层样式
-    //void slotApplyMark(QString strLayerName, QgsPalLayerSettings settings); // 设置标注
-    void slotApplyMark(QString strLayerName, QgsVectorLayerSimpleLabeling* pMark); // 设置标注
+    void slotApplyMark(QString strLayer, QgsVectorLayerSimpleLabeling* pMark);
+
+    void on_actionbuffer_triggered(); // 缓冲区分析
+    void on_actionClip_triggered(); // 裁剪分析
+
     // 分析工具
 public:
     void createKMeans();                                                                 // 构建聚类分析图层
