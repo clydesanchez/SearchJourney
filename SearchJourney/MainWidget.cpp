@@ -232,7 +232,7 @@ void MainWidget::updateLayerList()
     QgsLayerTreeModel* pqltLayerTreeModel = new QgsLayerTreeModel(pqltLayerTreeRoot, this);
     connect(pqltLayerTreeRoot, &QgsLayerTree::visibilityChanged, this, &MainWidget::onChangeLayerVisible);
     pqltLayerTreeModel->setFlag(QgsLayerTreeModel::AllowNodeRename);
-    //pqltLayerTreeModel->setFlag(QgsLayerTreeModel::AllowNodeReorder);  // TODO: 活动改变图层顺序
+    pqltLayerTreeModel->setFlag(QgsLayerTreeModel::AllowNodeReorder);  // TODO: 活动改变图层顺序
     pqltLayerTreeModel->setFlag(QgsLayerTreeModel::AllowNodeChangeVisibility);
     pqltLayerTreeModel->setFlag(QgsLayerTreeModel::ShowLegendAsTree);
     pqltLayerTreeModel->setFlag(QgsLayerTreeModel::UseEmbeddedWidgets);
@@ -240,6 +240,16 @@ void MainWidget::updateLayerList()
     pqltLayerTreeModel->setAutoCollapseLegendNodes(10);
     ui.ctrlLayerTreeView->setModel(pqltLayerTreeModel); // 更新列表
     ui.ctrlLayerTreeView->setMenuProvider(new LayerItemMenu(ui.ctrlLayerTreeView, mcanMapCanvas,this,mppjProject));// 连接右键菜单
+    // 重置图层顺序
+    ui.ctrlLayerTreeView->setDragDropMode(QAbstractItemView::InternalMove);
+    ui.ctrlLayerTreeView->setDefaultDropAction(Qt::MoveAction);
+    ui.ctrlLayerTreeView->setAcceptDrops(true);
+    ui.ctrlLayerTreeView->setDropIndicatorShown(true);
+    ui.ctrlLayerTreeView->setDragEnabled(true);
+    mppjProject->layerTreeRoot()->reorderGroupLayers(pqltLayerTreeRoot->layerOrder());
+    mcanMapCanvas->setLayers(pqltLayerTreeRoot->layerOrder());
+    // 查看
+    mcanMapCanvas->refresh();
 }
 // 改变图层可见性
 void MainWidget::onChangeLayerVisible(QgsLayerTreeNode *pltnNode)
@@ -271,4 +281,69 @@ void MainWidget::onChangeLayerVisible(QgsLayerTreeNode *pltnNode)
     mcanMapCanvas->destroyed();
     mcanMapCanvas->setLayers(mliVisibleLayers);
     mcanMapCanvas->refresh();
+}
+// 返回工具栏
+QDockWidget *MainWidget::getToolDock() const
+{
+	return ui.ctrlToolDock;
+}
+// 全屏显示
+void MainWidget::on_ctrlActionCanvasFullScreen_triggered()
+{
+    QGridLayout* layout = new QGridLayout;
+    GISMapCanvas* Canvas = new GISMapCanvas(mcanMapCanvas);
+    qDebug() << Canvas->extent().center().toQPointF() <<mcanMapCanvas->extent().center().toQPointF();
+    if(mFullWidget==nullptr)
+	{
+		mFullWidget = new QWidget();
+	}
+    else {
+        delete mFullWidget;
+        mFullWidget = new QWidget();
+    }
+	if (!mbCanvasFullScreen)
+    {
+        // 将画布复制到新窗口
+        layout->setSpacing(0);
+        layout->setMargin(0);
+        layout->addWidget(Canvas);
+        mFullWidget->setLayout(layout);
+        mFullWidget->showFullScreen();
+        // 设置焦点
+        Canvas->setFocus();
+        QAction *action = ui.ctrlActionCanvasFullScreen;
+        mFullWidget->addAction(action);
+
+        mbCanvasFullScreen = true;
+	}
+	else
+	{
+        mFullWidget->close();
+        layout->removeWidget(Canvas);
+        delete Canvas;
+        delete layout;
+        mFullWidget->close();
+        mbCanvasFullScreen = false;
+	}
+}
+// 自定义栅格计算器V2
+void MainWidget::on_ctrlOpenRasterCalculatorActionV2_triggered()
+{
+    // 创建 RasterCalculatorTool 对话框实例
+    RasterCalculatorTool* rasterCalculatorDialog = new RasterCalculatorTool(this);
+
+    // 显示对话框并等待用户交互
+    if (rasterCalculatorDialog->exec() == QDialog::Accepted)
+    {
+        // 用户点击“确定”按钮后，可以在这里处理结果
+        qDebug() << "Raster Calculator executed successfully.";
+    }
+    else
+    {
+        // 用户点击“取消”按钮后，可以在这里处理逻辑
+        qDebug() << "Raster Calculator canceled.";
+    }
+
+    // 释放内存
+    delete rasterCalculatorDialog;
 }

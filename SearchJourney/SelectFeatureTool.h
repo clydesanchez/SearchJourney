@@ -15,6 +15,7 @@ class QgsMapToolSelectFeatures : public QgsMapToolIdentify
     Q_OBJECT
 public:
     QgsMapToolSelectFeatures(QgsMapCanvas* mapCanvas, QgsVectorLayer* targetLayer);
+    ~QgsMapToolSelectFeatures();
 protected:
     // 重写鼠标移动
     void canvasMoveEvent(QgsMapMouseEvent* e) override;

@@ -34,6 +34,7 @@
     <QtInstall>5.15.2_msvc2019_64</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
+    <QtToolsDesignTime>true</QtToolsDesignTime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>5.15.2_msvc2019_64</QtInstall>
@@ -61,7 +62,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
@@ -93,7 +99,8 @@
     <ClCompile Include="AttributeViewWidget.cpp" />
     <ClCompile Include="ConnectSelect.cpp" />
     <ClCompile Include="CustomAttributeTableView.cpp" />
-    <ClCompile Include="EditFeature.cpp" />
+    <ClCompile Include="DeleteFeature.cpp" />
+    <ClCompile Include="EditFeatureAttri.cpp" />
     <ClCompile Include="EditVectorLayer.cpp" />
     <ClCompile Include="FileSaveSelect.cpp" />
     <ClCompile Include="GISMapCanvas.cpp" />
@@ -103,15 +110,18 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWidget.cpp" />
     <ClCompile Include="ProjectFileIO.cpp" />
+    <ClCompile Include="Projection.cpp" />
+    <ClCompile Include="RasterCalculatorTool.cpp" />
     <ClCompile Include="RasterStatisticsSelect.cpp" />
     <ClCompile Include="SelectFeatureTool.cpp" />
+    <ClCompile Include="SvgLabel.cpp" />
     <ClCompile Include="SymbolManger.cpp" />
     <ClCompile Include="TextSelect.cpp" />
-    <ClCompile Include="UseSelected.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="AttributeViewWidget.ui" />
     <QtUic Include="MainWidget.ui" />
+    <QtUic Include="RasterCalculatorTool.ui" />
     <QtUic Include="SymbolManger.ui" />
     <QtUic Include="TextSelect.ui" />
   </ItemGroup>
@@ -123,8 +133,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LayerItemMenu.h" />
-    <ClInclude Include="MoveFeatureTool.h" />
+    <QtMoc Include="RasterCalculatorTool.h" />
     <QtMoc Include="SelectFeatureTool.h" />
+    <QtMoc Include="SvgLabel.h" />
     <QtMoc Include="SymbolManger.h" />
     <QtMoc Include="SelectDialog.h" />
     <QtMoc Include="MainWidget.h" />

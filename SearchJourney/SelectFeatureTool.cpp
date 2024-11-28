@@ -7,6 +7,11 @@ QgsMapToolSelectFeatures::QgsMapToolSelectFeatures(QgsMapCanvas* mapCanvas, QgsV
 {
 
 }
+QgsMapToolSelectFeatures::~QgsMapToolSelectFeatures()
+{
+	if (mSelectionRubberBand)
+		mSelectionRubberBand.reset();
+}
 
 void QgsMapToolSelectFeatures::canvasMoveEvent(QgsMapMouseEvent* e)
 {

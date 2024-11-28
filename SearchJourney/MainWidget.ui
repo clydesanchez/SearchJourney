@@ -48,7 +48,7 @@
      <x>0</x>
      <y>0</y>
      <width>981</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -70,6 +70,7 @@ color:black</string>
     <addaction name="ctrlStatisticsViewAction"/>
     <addaction name="ctrlToolViewAction"/>
     <addaction name="ctrlLayerListViewAction"/>
+    <addaction name="ctrlActionCanvasFullScreen"/>
    </widget>
    <widget class="QMenu" name="menu_4">
     <property name="title">
@@ -121,9 +122,6 @@ background-color:#CCCCCC;</string>
    </property>
    <property name="floating">
     <bool>false</bool>
-   </property>
-   <property name="features">
-    <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
    <property name="windowTitle">
     <string>图层</string>
@@ -207,8 +205,8 @@ background-color:#F0F0F0;</string>
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>157</width>
-          <height>568</height>
+          <width>163</width>
+          <height>586</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_5">
@@ -333,7 +331,7 @@ background-color:#F0F0F0;</string>
           <x>0</x>
           <y>0</y>
           <width>174</width>
-          <height>268</height>
+          <height>280</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_6">
@@ -599,6 +597,20 @@ background-color:#F0F0F0;</string>
   <action name="ctrlCopyAction">
    <property name="text">
     <string>复制图元</string>
+   </property>
+  </action>
+  <action name="ctrlOpenRasterCalculatorActionV2">
+  <action name="ctrlActionCanvasFullScreen">
+   <property name="text">
+    <string>地图全屏</string>
+   </property>
+   <property name="shortcut">
+    <string>F11</string>
+   </property>
+  </action>
+  <action name="ctrlChooseAction">
+   <property name="text">
+    <string>栅格计算器...</string>
    </property>
   </action>
   <action name="ctrlOpenRasterCalculatorActionV2">

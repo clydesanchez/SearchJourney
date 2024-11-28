@@ -11,6 +11,7 @@ Description:
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWidget.h"
 #include "GISMapCanvas.h"
+#include "RasterCalculatorTool.h"
 #include <QgsMultiPolygon.h>
 #include <QgsLayerTreeView.h>
 #include <QgsVertexMarker.h>
@@ -39,6 +40,8 @@ private:
     QVector<QgsVertexMarker*> mvVertices ; // 顶点集合
     QgsPointXY mLastMousePos; // 上一次鼠标地图坐标
 
+    QWidget* mFullWidget=nullptr; // 全屏窗口
+    bool mbCanvasFullScreen = false; // 画布是否全屏
     QTimer* mTimer; // 定时器
     int mnProgressValue = 0; // 进度值
 public:
@@ -82,7 +85,8 @@ public slots:
     void onChangeLayerVisible(QgsLayerTreeNode *pltnNode);          // 改变图层可见性
 
     void slotApplySymbol(QString strLayerName, QgsSymbol* psSymbol); // 设置图层样式
-
+    //void slotApplyMark(QString strLayerName, QgsPalLayerSettings settings); // 设置标注
+    void slotApplyMark(QString strLayerName, QgsVectorLayerSimpleLabeling* pMark); // 设置标注
     // 分析工具
 public:
     void createKMeans();                                                                 // 构建聚类分析图层
@@ -105,12 +109,18 @@ public:
     void setLayerToMap(QgsMapLayer *pmlNewLayer);                   // 设置图层到地图
     void setLayerColor(QgsVectorLayer *pvlChoose, QColor qcChoose); // 改变图层颜色
 
+    static QgsVectorLayer* TransformCRS_Vec(QgsVectorLayer* veclayer, int newCRScode); // 坐标转换 矢量
+    static QgsRasterLayer* TransformCRS_Ras(QgsRasterLayer* raslayer, int newCRScode); // 坐标转换 栅格
+
     // 文件操作
 public:
     void saveProjectAsQGZ();   // 保存工程为QGZ
     void openProjectFromQGZ(); // 从QGZ打开工程
     void saveAsSHP();          // 将矢量图层保存为shp文件
     void saveAsTxt();          // 将栅格统计结果保存为txt文件
+    // ui控制
+public:
+    QDockWidget* getToolDock() const; // 获取工具栏
 
     // 图层操作
 public:
