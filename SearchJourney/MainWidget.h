@@ -80,6 +80,7 @@ public slots:
     void on_ctrlCopyAction_triggered();                   // 复制图元
     void on_ctrlVecToRasAction_triggered();               // 矢量转栅格
     void on_ctrlOpenRasterCalculatorActionV2_triggered(); // 栅格计算器
+    void on_ctrlActionCanvasFullScreen_triggered();
 
     void onTreeItemClicked(QTreeWidgetItem *ptwiItem, int nColumn); // 点击工具栏事件
     void onChangeLayerVisible(QgsLayerTreeNode *pltnNode);          // 改变图层可见性

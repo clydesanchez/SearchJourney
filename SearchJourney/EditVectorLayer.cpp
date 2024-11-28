@@ -252,5 +252,4 @@ void MainWidget::on_ctrlEditableAction_triggered() {
 	}
 
     qDebug() << chooseLayer;
-
 }

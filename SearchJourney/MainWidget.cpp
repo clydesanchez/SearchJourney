@@ -173,28 +173,6 @@ void MainWidget::on_ctrlToolViewAction_triggered()
 {
     ui.ctrlToolDock->setVisible(!ui.ctrlToolDock->isVisible());
 }
-// 自定义栅格计算器V2
-void MainWidget::on_ctrlOpenRasterCalculatorActionV2_triggered()
-{
-    // 创建 RasterCalculatorTool 对话框实例
-    /*RasterCalculatorTool* rasterCalculatorDialog = new RasterCalculatorTool(this);
-    rasterCalculatorDialog->show();*/
-    //// 显示对话框并等待用户交互
-    //if ()
-    //{
-    //    // 用户点击“确定”按钮后，可以在这里处理结果
-    //    qDebug() << "Raster Calculator executed successfully.";
-    //}
-    //else
-    //{
-    //    // 用户点击“取消”按钮后，可以在这里处理逻辑
-    //    qDebug() << "Raster Calculator canceled.";
-    //}
-
-    //// 释放内存
-    //delete rasterCalculatorDialog;
-    return;
-}
 // 点击工具栏
 void MainWidget::onTreeItemClicked(QTreeWidgetItem *item, int column)
 {
