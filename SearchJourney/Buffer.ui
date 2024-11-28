@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>567</width>
+    <width>516</width>
     <height>424</height>
    </rect>
   </property>
@@ -30,7 +30,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>260</y>
+     <y>250</y>
      <width>101</width>
      <height>31</height>
     </rect>
@@ -81,9 +81,9 @@
   <widget class="QTextEdit" name="textEdit_output">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>260</y>
-     <width>271</width>
+     <x>50</x>
+     <y>280</y>
+     <width>321</width>
      <height>31</height>
     </rect>
    </property>
@@ -91,8 +91,8 @@
   <widget class="QPushButton" name="pushButton_output">
    <property name="geometry">
     <rect>
-     <x>470</x>
-     <y>260</y>
+     <x>400</x>
+     <y>280</y>
      <width>51</width>
      <height>31</height>
     </rect>
@@ -104,7 +104,7 @@
   <widget class="QPushButton" name="pushButton_ok">
    <property name="geometry">
     <rect>
-     <x>320</x>
+     <x>280</x>
      <y>350</y>
      <width>81</width>
      <height>31</height>
@@ -117,7 +117,7 @@
   <widget class="QPushButton" name="pushButton_cancel">
    <property name="geometry">
     <rect>
-     <x>410</x>
+     <x>370</x>
      <y>350</y>
      <width>81</width>
      <height>31</height>
@@ -148,6 +148,19 @@
      <width>271</width>
      <height>31</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_output">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>250</y>
+     <width>91</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>输出为文件</string>
    </property>
   </widget>
  </widget>

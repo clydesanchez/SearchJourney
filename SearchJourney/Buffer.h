@@ -4,6 +4,7 @@
 #include <qfiledialog>
 #include <qgsmapcanvas.h>
 #include <QString>
+#include <qdebug.h>
 #include <QMessageBox>
 #include <QgsProject.h>
 #include <QgsVectorLayer.h>
@@ -25,7 +26,7 @@ public:
 	void setMapLayers(QList<QgsMapLayer*> liMapLayers);
 	void addLayerItems();
 	void runBuffer();
-	QgsGeometry bufferByMeter(QgsGeometry geo, float off, GISMapCanvas* mapCanvas, int segments);
+	QgsGeometry bufferByMeter(QgsGeometry geo, float off, int segments , QgsVectorLayer* sourceLayer);
 
 private slots:
 	void onButtonOutputClicked();

@@ -8,8 +8,9 @@ Buffer::Buffer(QWidget *parent, GISMapCanvas* mapCanvas, QgsProject* project)
     
     //populateLayers();
 
-	ui.doubleSpinBox_radius->setValue(1);
+	ui.doubleSpinBox_radius->setValue(10);
 	ui.spinBox_segments->setValue(36);
+	ui.checkBox_output->setChecked(true);
 
 	connect(ui.pushButton_output, &QPushButton::clicked, this, &Buffer::onButtonOutputClicked);
 	connect(ui.pushButton_ok, &QPushButton::clicked, this, &Buffer::onButtonOKClicked);
@@ -105,12 +106,14 @@ void Buffer::runBuffer() {
 	QgsFeatureIterator featureIterator = sourceLayer->getFeatures();
 	QgsFeatureList bufferFeatures;
 
+	qDebug() << distance;
+
 	QgsFeature feature;
 	while (featureIterator.nextFeature(feature))
 	{
 		QgsGeometry geom = feature.geometry();   
-		//QgsGeometry bufferedGeometry = bufferByMeter(geom, distance, mpMapCanvas, segments); 
-		QgsGeometry bufferedGeometry = geom.buffer(distance, segments);
+		QgsGeometry bufferedGeometry = bufferByMeter(geom, distance, segments, sourceLayer);
+		//QgsGeometry bufferedGeometry = geom.buffer(distance, segments);
 
 		QgsFeature bufferFeature;
 		bufferFeature.setGeometry(bufferedGeometry);
@@ -128,25 +131,59 @@ void Buffer::runBuffer() {
 
 	bufferLayer->setName(QString("%1_buffer").arg(sourceLayer->name()));
 
+	if (ui.checkBox_output->isChecked()) {
+		QString newFileName = ui.textEdit_output->toPlainText();
+
+		if (newFileName.isEmpty()) {
+			QMessageBox::warning(this, tr("Error"), tr("Please specify a file name for the output layer."));
+			return;
+		}
+
+		QgsVectorFileWriter::writeAsVectorFormat(bufferLayer, newFileName, "UTF-8", bufferLayer->crs(), "ESRI Shapefile");
+		QMessageBox::information(this, tr("Success"), tr("New layer saved to file: %1").arg(newFileName));
+	}
 
 	mppjProject->addMapLayer(bufferLayer);
 
-	QString newFileName = ui.textEdit_output->toPlainText();
-
-	QgsVectorFileWriter::writeAsVectorFormat(bufferLayer, newFileName, "UTF-8", bufferLayer->crs(), "ESRI Shapefile");
-	QMessageBox::information(this, tr("Success"), tr("New layer saved to file: %1").arg(newFileName));
-
 	mpMapCanvas->refresh();
+	QMessageBox::information(this, "Success", "Buffer completed and layer added to project.");
 }
 
-QgsGeometry Buffer::bufferByMeter(QgsGeometry geo, float trans, GISMapCanvas* mapCanvas, int segments)
+QgsGeometry Buffer::bufferByMeter(QgsGeometry geo, float trans, int segments, QgsVectorLayer* sourceLayer)
 {
-	if (!mapCanvas)return geo;
+	if (!sourceLayer)return geo;
 	if (trans <= 0)return geo;
 
-	Qgis::DistanceUnit unit = mapCanvas->mapUnits(); 
+	/*// 获取图层的 CRS
+	QgsCoordinateReferenceSystem layerCRS = sourceLayer->crs();
+
+	// 获取图层的单位
+	Qgis::DistanceUnit unit = layerCRS.mapUnits();
 	double factor = QgsUnitTypes::fromUnitToUnitFactor(Qgis::DistanceUnit::Meters, unit);
 
+	qDebug()<< "factor: " << factor;
+
+	double distance = trans / factor;
+	
+	qDebug()<< "distance: " << distance;
+
+	return geo.buffer(distance, segments);*/
+
+	
+	// 获取图层的 CRS
+	QgsCoordinateReferenceSystem layerCRS = sourceLayer->crs();
+
+	// 获取图层的单位
+	Qgis::DistanceUnit unit = layerCRS.mapUnits();
+	double factor = 1.0;
+
+	// 检查单位类型并手动处理转换因子
+	if (unit == Qgis::DistanceUnit::Meters) {
+		factor = 1.0; // 米到米
+	}
+	else if (unit == Qgis::DistanceUnit::Degrees) {
+		factor = 1.0 / 111000.0; // 大约每度 111 公里
+	}
 	double distance = factor * trans;
-	return geo.buffer(distance, segments);
+	return geo.buffer(distance, 36);
 }
