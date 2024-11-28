@@ -15,6 +15,7 @@ Description:
 #include <QgsLayerTreeView.h>
 #include <QgsVertexMarker.h>
 #include "Buffer.h"
+#include "Clip.h"
 class MainWidget : public QMainWindow
 {
     Q_OBJECT
@@ -42,6 +43,8 @@ private:
     int mnProgressValue = 0; // 进度值
 
     Buffer* mpBuffer; // 缓冲区分析
+    Clip* mpClip; // 裁剪分析
+
 public:
     void updateLayerList(); // 更新图层列表
 public:
@@ -79,6 +82,7 @@ public slots:
     void slotApplySymbol(QString strLayerName, QgsSymbol* psSymbol); // 设置图层样式
 
     void on_actionbuffer_triggered(); // 缓冲区分析
+    void on_actionClip_triggered(); // 裁剪分析
 
     // 分析工具
 public:

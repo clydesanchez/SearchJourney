@@ -96,6 +96,8 @@
     <ClCompile Include="AnalyticalFunction.cpp" />
     <ClCompile Include="AttributeViewWidget.cpp" />
     <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="Clip.cpp" />
+    <ClCompile Include="ClipMapTool.cpp" />
     <ClCompile Include="ConnectSelect.cpp" />
     <ClCompile Include="CustomAttributeTableView.cpp" />
     <ClCompile Include="EditVectorLayer.cpp" />
@@ -114,6 +116,7 @@
   <ItemGroup>
     <QtUic Include="AttributeViewWidget.ui" />
     <QtUic Include="Buffer.ui" />
+    <QtUic Include="Clip.ui" />
     <QtUic Include="MainWidget.ui" />
     <QtUic Include="SymbolManger.ui" />
     <QtUic Include="TextSelect.ui" />
@@ -126,6 +129,8 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Buffer.h" />
+    <ClInclude Include="Clip.h" />
+    <ClInclude Include="ClipMapTool.h" />
     <ClInclude Include="LayerItemMenu.h" />
     <QtMoc Include="SymbolManger.h" />
     <QtMoc Include="SelectDialog.h" />

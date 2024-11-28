@@ -206,6 +206,13 @@ void MainWidget::on_actionbuffer_triggered() {
     mpBuffer->setMapLayers(mliLayersList);
     mpBuffer->show();
 }
+
+void MainWidget::on_actionClip_triggered() {
+    mpClip = new Clip(this, mcanMapCanvas, mppjProject);
+    mpClip->setMapLayers(mliLayersList);
+    mpClip->show();
+}
+
 // 更新图层列表
 void MainWidget::updateLayerList()
 {

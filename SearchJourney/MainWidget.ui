@@ -98,6 +98,7 @@ color:black</string>
     <addaction name="ctrlConnectAction"/>
     <addaction name="ctrlKMeansAction"/>
     <addaction name="actionbuffer"/>
+    <addaction name="actionClip"/>
    </widget>
    <widget class="QMenu" name="menu_6">
     <property name="title">
@@ -534,6 +535,11 @@ background-color:#F0F0F0;</string>
   <action name="actionbuffer">
    <property name="text">
     <string>缓冲区</string>
+   </property>
+  </action>
+  <action name="actionClip">
+   <property name="text">
+    <string>裁剪</string>
    </property>
   </action>
  </widget>
