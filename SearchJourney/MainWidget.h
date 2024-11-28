@@ -11,6 +11,7 @@ Description:
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWidget.h"
 #include "GISMapCanvas.h"
+#include "RasterCalculatorTool.h"
 #include <QgsMultiPolygon.h>
 #include <QgsLayerTreeView.h>
 #include <QgsVertexMarker.h>
@@ -73,6 +74,7 @@ public slots:
     void on_ctrlCRSAction_triggered();              // 设置坐标系
     void on_ctrlActionCanvasFullScreen_triggered(); // 画布全屏
     void on_ctrlChooseAction_triggered();           // 选中图元
+    void on_ctrlOpenRasterCalculatorActionV2_triggered();// 栅格计算器
 
     void onTreeItemClicked(QTreeWidgetItem *ptwiItem, int nColumn); // 点击工具栏事件
     void onChangeLayerVisible(QgsLayerTreeNode *pltnNode);          // 改变图层可见性
