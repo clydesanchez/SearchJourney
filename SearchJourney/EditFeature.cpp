@@ -174,3 +174,68 @@ void MainWidget::editAttribute(const QList<QgsFeature>& selectedFeatures) {
 		vectorLayer->rollBack();
 	}
 }
+
+void MainWidget::copyFeature(const QList<QgsFeature>& selectedFeatures) {
+	// 如果没有选中的要素，直接返回
+	if (selectedFeatures.isEmpty()) {
+		QMessageBox::information(this, "提示", "没有选中的要素，无法进行复制操作！");
+		return;
+	}
+
+	// 弹出对话框提示用户确认操作
+	int ret = QMessageBox::question(
+		this,
+		"确认复制",
+		QString("当前有 %1 个要素被选中，是否确定复制？").arg(selectedFeatures.size()),
+		QMessageBox::Yes | QMessageBox::No
+	);
+
+	// 如果用户选择 No，则取消操作
+	if (ret != QMessageBox::Yes) {
+		return;
+	}
+
+	// 获取目标图层（假设已经在某处设置了目标图层）
+	QList<QgsMapLayer*> selectedLayers = mcanMapCanvas->layers();
+	if (selectedLayers.isEmpty())
+	{
+		return;
+	}
+	QgsMapLayer* currentLayer = selectedLayers[mnActiveLayerIndex];
+	QgsVectorLayer* vectorLayer = dynamic_cast<QgsVectorLayer*>(currentLayer);
+	if (!vectorLayer) {
+		QMessageBox::warning(this, "错误", "目标图层不存在！");
+		return;
+	}
+
+	// 检查目标图层是否可编辑
+	if (!vectorLayer->isEditable()) {
+		if (!vectorLayer->startEditing()) {
+			QMessageBox::warning(this, "错误", "无法进入编辑模式！");
+			return;
+		}
+	}
+
+	// 遍历选中的要素并添加到目标图层
+	for (const QgsFeature& feature : selectedFeatures) {
+		QgsFeature newFeature(feature); // 创建一个副本
+		newFeature.setId(QgsFeatureId()); // 重置 ID，避免冲突
+
+		// 将要素添加到目标图层
+		if (!vectorLayer->dataProvider()->addFeature(newFeature)) {
+			QMessageBox::warning(this, "错误", "添加要素失败！");
+			vectorLayer->rollBack();
+			return;
+		}
+	}
+
+	//// 提交事务并刷新目标图层
+	//if (!vectorLayer->commitChanges()) {
+	//	QMessageBox::warning(this, "错误", "提交事务失败！");
+	//	vectorLayer->rollBack();
+	//}
+	//else {
+	//	vectorLayer->triggerRepaint();
+	//	QMessageBox::information(this, "成功", "要素复制完成！");
+	//}
+}

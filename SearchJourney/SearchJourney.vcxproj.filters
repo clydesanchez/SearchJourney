@@ -42,6 +42,9 @@
     <Filter Include="Source Files\SelectFeatureTool">
       <UniqueIdentifier>{e52fd97b-9ef1-4d3b-b50b-3bd9bc722eb7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RasterCalculator">
+      <UniqueIdentifier>{4fc34812-6b01-455d-a12a-aab68642edd5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

@@ -14,6 +14,7 @@ Description:
 #include <QgsMultiPolygon.h>
 #include <QgsLayerTreeView.h>
 #include <QgsVertexMarker.h>
+
 class MainWidget : public QMainWindow
 {
     Q_OBJECT
@@ -55,25 +56,27 @@ signals:
 
     // 控件交互
 public slots:
-    void on_ctrlOpenVectorAction_triggered();       // 添加矢量图层
-    void on_ctrlOpenRasterAction_triggered();       // 添加栅格图层
-    void on_ctrlOpenTextAction_triggered();         // 读取CSV文件转点
-    void on_ctrlEditableAction_triggered();         // 编辑图层
-    void on_ctrlKMeansAction_triggered();           // KMeans聚类
-    void on_ctrlConnectAction_triggered();          // 空间连接
-    void on_ctrlRasterStatisticsAction_triggered(); // 栅格统计
-    void on_ctrlSaveProjectAction_triggered();      // 保存工程
-    void on_ctrlOpenProjectAction_triggered();      // 打开工程
-    void on_ctrlSaveAsSHPAction_triggered();        // 保存为SHP
-    void on_ctrlSaveAsTxtAction_triggered();        // 保存为TXT
-    void on_ctrlLayerListViewAction_triggered();    // 图层列表视图
-    void on_ctrlStatisticsViewAction_triggered();   // 统计视图
-    void on_ctrlToolViewAction_triggered();         // 工具视图
-    void on_ctrlCRSAction_triggered();              // 设置坐标系
-    void on_ctrlDeleteAction_triggered();           // 删除图元
-    void on_ctrlEditAttriAction_triggered();        // 编辑属性
-    void on_ctrlMoveAction_triggered();             // 平移图元
-    void on_ctrlVecToRasAction_triggered();         // 矢量转栅格
+    void on_ctrlOpenVectorAction_triggered();             // 添加矢量图层
+    void on_ctrlOpenRasterAction_triggered();             // 添加栅格图层
+    void on_ctrlOpenTextAction_triggered();               // 读取CSV文件转点
+    void on_ctrlEditableAction_triggered();               // 编辑图层
+    void on_ctrlKMeansAction_triggered();                 // KMeans聚类
+    void on_ctrlConnectAction_triggered();                // 空间连接
+    void on_ctrlRasterStatisticsAction_triggered();       // 栅格统计
+    void on_ctrlSaveProjectAction_triggered();            // 保存工程
+    void on_ctrlOpenProjectAction_triggered();            // 打开工程
+    void on_ctrlSaveAsSHPAction_triggered();              // 保存为SHP
+    void on_ctrlSaveAsTxtAction_triggered();              // 保存为TXT
+    void on_ctrlLayerListViewAction_triggered();          // 图层列表视图
+    void on_ctrlStatisticsViewAction_triggered();         // 统计视图
+    void on_ctrlToolViewAction_triggered();               // 工具视图
+    void on_ctrlCRSAction_triggered();                    // 设置坐标系
+    void on_ctrlDeleteAction_triggered();                 // 删除图元
+    void on_ctrlEditAttriAction_triggered();              // 编辑属性
+    void on_ctrlMoveAction_triggered();                   // 平移图元
+    void on_ctrlCopyAction_triggered();                   // 复制图元
+    void on_ctrlVecToRasAction_triggered();               // 矢量转栅格
+    void on_ctrlOpenRasterCalculatorActionV2_triggered(); // 栅格计算器
 
     void onTreeItemClicked(QTreeWidgetItem *ptwiItem, int nColumn); // 点击工具栏事件
     void onChangeLayerVisible(QgsLayerTreeNode *pltnNode);          // 改变图层可见性
@@ -114,5 +117,6 @@ public:
     void deleteFeature(const QList<QgsFeature>& selectedFeatures);
     void editAttribute(const QList<QgsFeature>& selectedFeatures);
     void moveFeature(const QList<QgsFeature>& selectedFeatures);
+    void copyFeature(const QList<QgsFeature>& selectedFeatures);
 };
 #endif

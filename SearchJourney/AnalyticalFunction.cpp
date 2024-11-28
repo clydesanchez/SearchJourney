@@ -638,19 +638,21 @@ void MainWidget::on_ctrlVecToRasAction_triggered() {
 	QLineEdit* pLe2 = new QLineEdit();
 	QLineEdit* pLe3 = new QLineEdit();
 	QLineEdit* pLe4 = new QLineEdit();
-	QLineEdit* pLe5 = new QLineEdit();
-	QLineEdit* pLe6 = new QLineEdit();
+	QSpinBox* pSb = new QSpinBox();
+	QComboBox* pCbb = new QComboBox();
 	QToolButton* pTb1 = new QToolButton();
 	QToolButton* pTb2 = new QToolButton();
 	QPushButton* pPb1 = new QPushButton();
 	QPushButton* pPb2 = new QPushButton();
 	
 	pL1->setText(QStringLiteral("输入矢量数据文件"));
+	pTb1->setText("...");
 	pHbl1->addWidget(pL1);
 	pHbl1->addWidget(pLe1);
 	pHbl1->addWidget(pTb1);
 	
 	pL2->setText(QStringLiteral("输入栅格数据输出路径"));
+	pTb2->setText("...");
 	pHbl2->addWidget(pL2);
 	pHbl2->addWidget(pLe2);
 	pHbl2->addWidget(pTb2);
@@ -664,12 +666,13 @@ void MainWidget::on_ctrlVecToRasAction_triggered() {
 	pHbl4->addWidget(pLe4);
 
 	pL5->setText(QStringLiteral("输入块大小"));
+	pSb->setMinimum(1);
 	pHbl5->addWidget(pL5);
-	pHbl5->addWidget(pLe5);
+	pHbl5->addWidget(pSb);
 
 	pL6->setText(QStringLiteral("指定属性字段"));
 	pHbl6->addWidget(pL6);
-	pHbl6->addWidget(pLe6);
+	pHbl6->addWidget(pCbb);
 	
 	pPb1->setText(QStringLiteral("确定"));
 	pPb2->setText(QStringLiteral("取消"));
@@ -684,11 +687,28 @@ void MainWidget::on_ctrlVecToRasAction_triggered() {
 	pVbl->addLayout(pHbl6);
 	pVbl->addLayout(pHbl7);
 	pDl->setLayout(pVbl);
-	pDl->resize(800, 600);
+	pDl->resize(500, 400);
 
 	connect(pTb1, &QToolButton::clicked, this, [=]() {
 		QString filePath = QFileDialog::getOpenFileName(this, QStringLiteral("选择矢量数据文件"), "", "shapefile (*.shp)");
 		pLe1->setText(filePath);
+		QgsVectorLayer vectorLayer(filePath, "Vector Layer", "ogr");
+
+		// 检查图层是否有效
+		if (!vectorLayer.isValid()) {
+			return;
+		}
+
+		// 获取字段信息
+		const QgsFields& fields = vectorLayer.fields();
+		QStringList fieldNames;
+
+		// 遍历字段并提取名称
+		for (const QgsField& field : fields) {
+			fieldNames.append(field.name());
+		}
+
+		pCbb->addItems(fieldNames);
 		});
 
 	connect(pTb2, &QToolButton::clicked, this, [=]() {
@@ -762,8 +782,8 @@ void MainWidget::on_ctrlVecToRasAction_triggered() {
 
 		// 设置矢量图层栅格化的选项
 		char** papszOptions = NULL;
-		papszOptions = CSLSetNameValue(papszOptions, "CHUNKSIZE", pLe5->text().toStdString().c_str()); // 设置块大小
-		papszOptions = CSLSetNameValue(papszOptions, "ATTRIBUTE", pLe6->text().toStdString().c_str()); // 设置使用的字段名
+		papszOptions = CSLSetNameValue(papszOptions, "CHUNKSIZE", pSb->text().toStdString().c_str()); // 设置块大小
+		papszOptions = CSLSetNameValue(papszOptions, "ATTRIBUTE", pCbb->currentText().toStdString().c_str()); // 设置使用的字段名
 
 		// 使用GDAL栅格化函数将矢量数据栅格化到新建的栅格数据集中
 		int* pnbandlist = new int[1];
@@ -788,7 +808,20 @@ void MainWidget::on_ctrlVecToRasAction_triggered() {
 		}
 
 		// 返回成功
-		GDALDestroyDriverManager(); // 销毁驱动管理器
+		//GDALDestroyDriverManager(); // 不销毁驱动管理器
+
+		QStringList _qstrSplit = TifFile.split('/');
+		QString qstrBasename = _qstrSplit.at(_qstrSplit.size() - 1);
+		QgsRasterLayer* qvlRasterLayer = new QgsRasterLayer(TifFile, qstrBasename);
+		if (!qvlRasterLayer->isValid())
+		{
+			QMessageBox::critical(this, "error", QString("导入栅格图层失败： \n") + TifFile);
+			return;
+		}
+		// 添加到当前qgz工程
+		mppjProject->addMapLayer(qvlRasterLayer);
+		setLayerToMap(static_cast<QgsMapLayer*>(qvlRasterLayer));
+
 		pDl->accept();
 		});
 

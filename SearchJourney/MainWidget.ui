@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>981</width>
-    <height>687</height>
+    <height>765</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -92,6 +92,7 @@ color:black</string>
     </property>
     <addaction name="ctrlRasterStatisticsAction"/>
     <addaction name="ctrlSaveAsTxtAction"/>
+    <addaction name="ctrlOpenRasterCalculatorActionV2"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_3"/>
@@ -207,7 +208,7 @@ background-color:#F0F0F0;</string>
           <x>0</x>
           <y>0</y>
           <width>157</width>
-          <height>490</height>
+          <height>568</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_5">
@@ -332,7 +333,7 @@ background-color:#F0F0F0;</string>
           <x>0</x>
           <y>0</y>
           <width>174</width>
-          <height>229</height>
+          <height>268</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_6">
@@ -392,6 +393,7 @@ background-color:#F0F0F0;</string>
    <addaction name="ctrlMoveAction"/>
    <addaction name="ctrlDeleteAction"/>
    <addaction name="ctrlEditAttriAction"/>
+   <addaction name="ctrlCopyAction"/>
   </widget>
   <widget class="QToolBar" name="toolBar_3">
    <property name="windowTitle">
@@ -592,6 +594,16 @@ background-color:#F0F0F0;</string>
   <action name="ctrlVecToRasAction">
    <property name="text">
     <string>矢量转栅格</string>
+   </property>
+  </action>
+  <action name="ctrlCopyAction">
+   <property name="text">
+    <string>复制图元</string>
+   </property>
+  </action>
+  <action name="ctrlOpenRasterCalculatorActionV2">
+   <property name="text">
+    <string>栅格计算器...</string>
    </property>
   </action>
  </widget>

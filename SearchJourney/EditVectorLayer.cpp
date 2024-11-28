@@ -116,6 +116,13 @@ void MainWidget::onMapCanvasClicked(const QPoint& point)
         // 刷新地图
         mcanMapCanvas->refresh();
     }
+    else {
+        // 删除原有符号
+        for (int i = 0; i < mvVertices.size() && !mvVertices.isEmpty(); i++) {
+            delete mvVertices[i];
+        }
+        mvVertices.clear();
+    }
 }
 
 void MainWidget::onMapCanvasReleased(const QPoint& point)
