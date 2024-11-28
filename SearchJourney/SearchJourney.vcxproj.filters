@@ -170,4 +170,12 @@
       <Filter>Resource Files</Filter>
     </QtRcc>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="qss\Ubuntu.qss">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\MacOS.qss">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

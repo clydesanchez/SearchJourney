@@ -46,6 +46,8 @@ RasterCalculatorTool::RasterCalculatorTool(QWidget* parent)
 {
     ui.setupUi(this);
 
+
+
     // 初始化默认表达式
     mqstrCalculationExpression = QStringLiteral("\"band%1\"+\"band%1\"");
 
