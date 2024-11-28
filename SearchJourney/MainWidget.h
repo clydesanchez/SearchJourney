@@ -77,7 +77,8 @@ public slots:
     void onChangeLayerVisible(QgsLayerTreeNode *pltnNode);          // 改变图层可见性
 
     void slotApplySymbol(QString strLayerName, QgsSymbol* psSymbol); // 设置图层样式
-    void slotApplyMark(QString strLayerName, QgsPalLayerSettings settings); // 设置标注
+    //void slotApplyMark(QString strLayerName, QgsPalLayerSettings settings); // 设置标注
+    void slotApplyMark(QString strLayerName, QgsVectorLayerSimpleLabeling* pMark); // 设置标注
     // 分析工具
 public:
     void createKMeans();                                                                 // 构建聚类分析图层

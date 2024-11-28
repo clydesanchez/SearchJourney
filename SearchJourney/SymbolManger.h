@@ -41,8 +41,7 @@ private:
 	void resizeEvent(QResizeEvent* event) override;
 signals:
 	void signalApplySymbol(QString strLayerName,QgsSymbol* psSymbol);
-	//void signalApplyMark(QString strLayerName,QgsVectorLayerSimpleLabeling* pMark);
-	void signalApplyMark(QString strLayerName, QgsPalLayerSettings settings);
+	void signalApplyMark(QString strLayerName,QgsVectorLayerSimpleLabeling* pMark);
 private slots:
 	void onDirectoryClicked(const QModelIndex& index);// 点击文件夹时的槽函数
 public slots:

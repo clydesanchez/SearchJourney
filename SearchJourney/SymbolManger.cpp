@@ -72,6 +72,8 @@ SymbolManger::SymbolManger(QgsVectorLayer* pvLayer, MainWidget* widMain , QgsSym
 	//ui.ctrlTreeView->setColumnWidth(0, 200);
     // 获取图层所有字段名
     QgsFields fields = pvLayer->fields();
+    ui.ctrlField->clear();
+    ui.ctrlField->addItem("关闭标注");
     for (int i = 0; i < fields.count(); i++) {
 		ui.ctrlField->addItem(fields.at(i).name());
 	}
@@ -370,13 +372,13 @@ void SymbolManger::setSymbolByLayerType(Qgis::GeometryType layerType, QgsSymbol*
      QFont font = ui.fontComboBox->currentFont();
      double fontSize = ui.ctrlFontSize->value();
      int fieldIdx = ui.ctrlField->currentIndex();
-     ui.ctrlField->addItem("关闭标注");
-     // 获取字段名
-     QgsFields fields = mpvLayer->fields();
-     for (int i = 0; i < fields.count(); i++) {
-         ui.ctrlField->addItem(fields.at(i).name());
+     if (fieldIdx - 1 < 0) {
+         emit signalApplyMark(mstrLayerName, nullptr);
+         return;
      }
-     QString attriType = fields.at(fieldIdx).name();
+     // 标注字段
+     QgsFields fields = mpvLayer->fields();
+     QString attriType = fields.at(fieldIdx-1).name();
      // 创建文本格式
      QgsTextFormat textFormat;
      textFormat.setFont(font); // 设置字体
@@ -387,5 +389,7 @@ void SymbolManger::setSymbolByLayerType(Qgis::GeometryType layerType, QgsSymbol*
      settings.setLegendString(attriType);
      settings.setFormat(textFormat);
      settings.fieldName = attriType;
-     emit signalApplyMark(mstrLayerName, settings);
+     //emit signalApplyMark(mstrLayerName, settings);
+     QgsVectorLayerSimpleLabeling* pMark = new QgsVectorLayerSimpleLabeling(settings);
+     emit signalApplyMark(mstrLayerName, pMark);
  }
