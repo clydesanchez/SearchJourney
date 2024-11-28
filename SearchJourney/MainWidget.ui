@@ -48,7 +48,7 @@
      <x>0</x>
      <y>0</y>
      <width>981</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -86,6 +86,8 @@ color:black</string>
     </property>
     <addaction name="ctrlConnectAction"/>
     <addaction name="ctrlKMeansAction"/>
+    <addaction name="actionbuffer"/>
+    <addaction name="actionClip"/>
    </widget>
    <widget class="QMenu" name="menu_6">
     <property name="title">
@@ -669,6 +671,16 @@ background-color:#F0F0F0;</string>
   <action name="ctrlSaveEditAction">
    <property name="text">
     <string>保存编辑</string>
+   </property>
+  </action>
+  <action name="actionbuffer">
+   <property name="text">
+    <string>缓冲区</string>
+   </property>
+  </action>
+  <action name="actionClip">
+   <property name="text">
+   <string>裁剪</string>
    </property>
   </action>
  </widget>

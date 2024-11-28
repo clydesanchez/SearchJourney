@@ -32,7 +32,7 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>5.15.2_msvc2019_64</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;xml;sql;gui;svg;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
     <QtToolsDesignTime>true</QtToolsDesignTime>
   </PropertyGroup>
@@ -60,6 +60,15 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ClCompile>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -87,6 +96,9 @@
   <ItemGroup>
     <ClCompile Include="AnalyticalFunction.cpp" />
     <ClCompile Include="AttributeViewWidget.cpp" />
+    <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="Clip.cpp" />
+    <ClCompile Include="ClipMapTool.cpp" />
     <ClCompile Include="ConnectSelect.cpp" />
     <ClCompile Include="CustomAttributeTableView.cpp" />
     <ClCompile Include="EditFeature.cpp" />
@@ -112,6 +124,8 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="AttributeViewWidget.ui" />
+    <QtUic Include="Buffer.ui" />
+    <QtUic Include="Clip.ui" />
     <QtUic Include="MainWidget.ui" />
     <QtUic Include="RasterCalculatorTool.ui" />
     <QtUic Include="SymbolManger.ui" />
@@ -124,6 +138,9 @@
     <QtMoc Include="CustomAttributeTableView.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="Buffer.h" />
+    <QtMoc Include="Clip.h" />
+    <QtMoc Include="ClipMapTool.h" />
     <ClInclude Include="LayerItemMenu.h" />
     <ClInclude Include="LineEdit.h" />
     <QtMoc Include="PointEdit.h" />
