@@ -114,7 +114,8 @@ void MainWidget::onMapCanvasClicked(const QPoint& point)
             mvVertices[i]->show();
         }
         // 刷新地图
-        mcanMapCanvas->refresh();
+        vectorLayer->triggerRepaint();
+        //mcanMapCanvas->refresh();
     }
     else {
         // 删除原有符号
@@ -169,7 +170,7 @@ void MainWidget::onMapCanvasMoved(const QPoint& point) {
 
             //vectorLayer->commitChanges();
             vectorLayer->triggerRepaint();
-            mcanMapCanvas->refresh();
+            //mcanMapCanvas->refresh();
         }
         else // 单点拖动逻辑
         {
@@ -191,7 +192,7 @@ void MainWidget::onMapCanvasMoved(const QPoint& point) {
 
             //vectorLayer->commitChanges();
             vectorLayer->triggerRepaint();
-            mcanMapCanvas->refresh();
+            //mcanMapCanvas->refresh();
         }
 
         mLastMousePos = currentMousePos; // 更新最后一次鼠标位置
@@ -265,10 +266,27 @@ void MainWidget::on_ctrlEditableAction_triggered() {
                 delete mvVertices[i];
             }
             mvVertices.clear();
-            mnActiveLayerIndex = -1;
             mnSelectVertexIndex = -1;
             mbDragging = false;
             ui.ctrlEditableAction->setText("启用编辑");
+            if (mnActiveLayerIndex == -1) {
+                break;
+            }
+            // 弹出对话框提示用户确认操作
+            int ret = QMessageBox::question(
+                this,
+                "保存修改",
+                QString("是否确定保存？"),
+                QMessageBox::Yes | QMessageBox::No
+            );
+
+            // 如果用户选择 No，则取消操作
+            if (ret != QMessageBox::Yes) {
+                break;
+            }
+            qobject_cast<QgsVectorLayer*>(layers[mnActiveLayerIndex])->commitChanges();
+            mnActiveLayerIndex = -1;
+
             break;
         }
 	}
