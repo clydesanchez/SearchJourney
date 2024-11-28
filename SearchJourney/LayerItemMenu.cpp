@@ -72,6 +72,7 @@ QMenu* LayerItemMenu::createContextMenu()
 			menu->addAction(actionZoomToLayer(mcanMapCanvas, menu));//缩放到图层
 			menu->addAction(actionRemoveLayer(layer->name()));	//移除图层
 			menu->addAction(actionCrsTransform_ras( rasterLayer));	//坐标转换
+			menu->addAction(actionRasterOpacity(rasterLayer));	//不透明度
 			//menu->addAction(actionCrsTransform(layer->name(), vectorLayer));
 		}
 	}
@@ -209,6 +210,34 @@ QAction* LayerItemMenu::actionLabelManger(QString strLayerName)
 		pvLayer->setLabeling(labeling);
 		pvLayer->setLabelsEnabled(true);
 		pvLayer->triggerRepaint();
+	});
+	return action;
+}
+// 栅格图层透明度
+QAction* LayerItemMenu::actionRasterOpacity(QgsRasterLayer* rasLayer)
+{
+	QAction* action = new QAction("透明度");
+	QgsMapCanvas* canvas = mcanMapCanvas;
+	QgsProject* prjSrc = mprjProject;
+	QObject::connect(action, &QAction::triggered, [rasLayer, canvas]() {
+		// 设置输入框
+		QWidget* widget = new QWidget();
+		QGridLayout* layout = new QGridLayout(widget);
+		QLabel* label = new QLabel("不透明度");
+		QSlider* slider = new QSlider(Qt::Horizontal);
+		slider->setRange(0, 100);
+		slider->setSingleStep(1);
+		slider->setValue(rasLayer->opacity()*100);
+		layout->addWidget(label, 0, 0);
+		layout->addWidget(slider, 0, 1);
+		widget->setLayout(layout);
+		widget->show();
+		// 实时设置透明度
+		QObject::connect(slider, &QSlider::valueChanged, [rasLayer](int val) {
+			float opacity = (float)val / 100;
+			rasLayer->setOpacity(opacity);
+			rasLayer->triggerRepaint();
+		});
 	});
 	return action;
 }
