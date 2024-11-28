@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>981</width>
-    <height>682</height>
+    <height>687</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -217,7 +217,7 @@ background-color:#F0F0F0;</string>
           <x>0</x>
           <y>0</y>
           <width>157</width>
-          <height>563</height>
+          <height>568</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_5">
@@ -342,7 +342,7 @@ background-color:#F0F0F0;</string>
           <x>0</x>
           <y>0</y>
           <width>174</width>
-          <height>266</height>
+          <height>268</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_6">
@@ -410,6 +410,18 @@ background-color:#F0F0F0;</string>
    <addaction name="ctrlSaveAsSHPAction"/>
    <addaction name="ctrlSaveAsTxtAction"/>
    <addaction name="ctrlCRSAction"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar_4">
+   <property name="windowTitle">
+    <string>toolBar_4</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="ctrlChooseAction"/>
   </widget>
   <action name="ctrlOpenVectorAction">
    <property name="icon">
@@ -532,6 +544,11 @@ background-color:#F0F0F0;</string>
    </property>
    <property name="shortcut">
     <string>F11</string>
+   </property>
+  </action>
+  <action name="ctrlChooseAction">
+   <property name="text">
+    <string>选中图元</string>
    </property>
   </action>
  </widget>

@@ -89,6 +89,8 @@
     <ClCompile Include="AttributeViewWidget.cpp" />
     <ClCompile Include="ConnectSelect.cpp" />
     <ClCompile Include="CustomAttributeTableView.cpp" />
+    <ClCompile Include="DeleteFeature.cpp" />
+    <ClCompile Include="EditFeatureAttri.cpp" />
     <ClCompile Include="EditVectorLayer.cpp" />
     <ClCompile Include="FileSaveSelect.cpp" />
     <ClCompile Include="GISMapCanvas.cpp" />
@@ -100,6 +102,7 @@
     <ClCompile Include="ProjectFileIO.cpp" />
     <ClCompile Include="Projection.cpp" />
     <ClCompile Include="RasterStatisticsSelect.cpp" />
+    <ClCompile Include="SelectFeatureTool.cpp" />
     <ClCompile Include="SvgLabel.cpp" />
     <ClCompile Include="SymbolManger.cpp" />
     <ClCompile Include="TextSelect.cpp" />
@@ -118,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LayerItemMenu.h" />
+    <QtMoc Include="SelectFeatureTool.h" />
     <QtMoc Include="SvgLabel.h" />
     <QtMoc Include="SymbolManger.h" />
     <QtMoc Include="SelectDialog.h" />

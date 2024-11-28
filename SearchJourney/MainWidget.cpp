@@ -25,9 +25,10 @@ Function Lists:
     16. void on_ctrlLayerListViewAction_triggered() 图层列表视图
     17. void on_ctrlStatisticsViewAction_triggered() 统计视图
     18. void on_ctrlToolViewAction_triggered() 工具视图
-    19. void onTreeItemClicked(QTreeWidgetItem *item, int column) 点击工具栏事件
-    20. void updateLayerList() 更新图层列表
-    21. void onChangeLayerVisible(QgsLayerTreeNode *pltnNode) 改变图层可见性
+    19. void on_ctrlChooseAction_triggered() 选中图元
+    20. void onTreeItemClicked(QTreeWidgetItem *item, int column) 点击工具栏事件
+    21. void updateLayerList() 更新图层列表
+    22. void onChangeLayerVisible(QgsLayerTreeNode *pltnNode) 改变图层可见性
 */
 
 #include "MainWidget.h"
@@ -46,6 +47,7 @@ Function Lists:
 #include <qgsstylemanagerdialog.h>
 #include <QgsFeatureIterator.h>
 #include <Qgsvectorlayer.h>
+#include "SelectFeatureTool.h"
 MainWidget::MainWidget(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -163,6 +165,14 @@ void MainWidget::on_ctrlStatisticsViewAction_triggered()
 void MainWidget::on_ctrlToolViewAction_triggered()
 {
     ui.ctrlToolDock->setVisible(!ui.ctrlToolDock->isVisible());
+}
+// 选中图元
+void MainWidget::on_ctrlChooseAction_triggered() {
+    QgsMapToolSelectFeatures* pSelectTool = new QgsMapToolSelectFeatures(mcanMapCanvas);
+    
+    connect(pSelectTool, &QgsMapToolSelectFeatures::sigSelectFeatureChange,
+        this, &MainWidget::editAttribute);
+    mcanMapCanvas->setMapTool(pSelectTool);
 }
 // 点击工具栏
 void MainWidget::onTreeItemClicked(QTreeWidgetItem *item, int column)
