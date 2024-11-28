@@ -1,6 +1,6 @@
-#include "clipMapTool.h"
 #include "qgsapplication.h"
 #include "qgsvectorlayer.h"
+#include "ClipMapTool.h"
 
 RectDrawingTool::RectDrawingTool(QgsMapCanvas* mapCanvas, QgsVectorLayer* targetLayer)
     : QgsMapTool(mapCanvas), mpTargetLayer(targetLayer)

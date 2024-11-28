@@ -129,8 +129,8 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Buffer.h" />
-    <ClInclude Include="Clip.h" />
-    <ClInclude Include="ClipMapTool.h" />
+    <QtMoc Include="Clip.h" />
+    <QtMoc Include="ClipMapTool.h" />
     <ClInclude Include="LayerItemMenu.h" />
     <QtMoc Include="SymbolManger.h" />
     <QtMoc Include="SelectDialog.h" />

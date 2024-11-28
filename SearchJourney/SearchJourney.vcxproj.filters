@@ -95,6 +95,12 @@
     <ClCompile Include="Buffer.cpp">
       <Filter>Source Files\SpatialAnalysisTools</Filter>
     </ClCompile>
+    <ClCompile Include="Clip.cpp">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </ClCompile>
+    <ClCompile Include="ClipMapTool.cpp">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="TextSelect.ui">
@@ -111,6 +117,9 @@
     </QtUic>
     <QtUic Include="MainWidget.ui">
       <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Clip.ui">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +142,12 @@
       <Filter>Source Files\SymbolManger</Filter>
     </QtMoc>
     <QtMoc Include="Buffer.h">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </QtMoc>
+    <QtMoc Include="ClipMapTool.h">
+      <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </QtMoc>
+    <QtMoc Include="Clip.h">
       <Filter>Source Files\SpatialAnalysisTools</Filter>
     </QtMoc>
   </ItemGroup>
