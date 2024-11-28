@@ -326,7 +326,6 @@ int RasterCalculatorTool::performRasterCalculation()
         timer.stop(); // 停止进度更新
         QMessageBox::warning(this, tr("错误"), tr("计算失败"));
         ui.ctrlRCProgressBar->setValue(0);  // 重置进度条
-        ui.ctrlRCProgressBar->setVisible(false);
         return -1;
     }
 
@@ -338,7 +337,6 @@ int RasterCalculatorTool::performRasterCalculation()
     QgsRasterLayer* resultLayer = new QgsRasterLayer(tmpName, QStringLiteral("CalculationResult"));
     if (!resultLayer->isValid()) {
         QMessageBox::warning(this, tr("错误"), tr("计算结果无效"));
-        ui.ctrlRCProgressBar->setVisible(false);
         return -1;
     }
 
@@ -932,7 +930,7 @@ void RasterCalculatorTool::on_ctrlToolTreeWidget_doubleClicked(const QModelIndex
         ui.ctrlDebugTextBrowser->append(tr("双击工具：%1，开始执行NDBI分析。\n").arg(toolName));
         analysisNDBI();
     }
-    else if (toolName == "LST") {
+    else if (toolName == "LST Retrieval") {
         ui.ctrlDebugTextBrowser->append(tr("双击工具：%1，开始执行LST分析。\n").arg(toolName));
         analysisLST();
     }
