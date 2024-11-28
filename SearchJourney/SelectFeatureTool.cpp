@@ -7,10 +7,15 @@ QgsMapToolSelectFeatures::QgsMapToolSelectFeatures(QgsMapCanvas* mapCanvas)
 {
 
 }
+QgsMapToolSelectFeatures::~QgsMapToolSelectFeatures()
+{
+	if (mSelectionRubberBand)
+		mSelectionRubberBand.reset();
+}
 
 void QgsMapToolSelectFeatures::canvasMoveEvent(QgsMapMouseEvent* e)
 {
-    if (e->buttons() != Qt::LeftButton)
+    if (e->buttons() != Qt::RightButton)
         return;
     QRect rect;
     if (!mSelectionActive)

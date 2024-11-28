@@ -92,13 +92,19 @@
     <ClCompile Include="SymbolManger.cpp">
       <Filter>Source Files\SymbolManger</Filter>
     </ClCompile>
-    <ClCompile Include="SelectFeatureTool.cpp">
-      <Filter>Source Files\SelectFeatureTool</Filter>
+    <ClCompile Include="SvgLabel.cpp">
+      <Filter>Source Files\SymbolManger</Filter>
+    </ClCompile>
+    <ClCompile Include="Projection.cpp">
+      <Filter>Source Files\MainWidget</Filter>
     </ClCompile>
     <ClCompile Include="EditFeatureAttri.cpp">
       <Filter>Source Files\SelectFeatureTool</Filter>
     </ClCompile>
     <ClCompile Include="DeleteFeature.cpp">
+      <Filter>Source Files\SelectFeatureTool</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectFeatureTool.cpp">
       <Filter>Source Files\SelectFeatureTool</Filter>
     </ClCompile>
   </ItemGroup>
@@ -133,6 +139,9 @@
       <Filter>Source Files\MainWidget</Filter>
     </QtMoc>
     <QtMoc Include="SymbolManger.h">
+      <Filter>Source Files\SymbolManger</Filter>
+    </QtMoc>
+    <QtMoc Include="SvgLabel.h">
       <Filter>Source Files\SymbolManger</Filter>
     </QtMoc>
     <QtMoc Include="SelectFeatureTool.h">

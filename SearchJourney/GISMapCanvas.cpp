@@ -21,6 +21,16 @@ GISMapCanvas::GISMapCanvas(QWidget *parent = (QWidget *)nullptr)
 	this->setAcceptDrops(true);
 }
 
+// 复制构造函数
+GISMapCanvas::GISMapCanvas(GISMapCanvas* srcCanvas)
+	: QgsMapCanvas(nullptr)
+{
+	QgsMapCanvas::QgsMapCanvas(nullptr);
+	this->setLayers(srcCanvas->layers());
+	this->setExtent(srcCanvas->extent());
+	this->refresh();
+}
+
 GISMapCanvas::~GISMapCanvas()
 {
 	// QgsMapCanvas::~QgsMapCanvas();
@@ -28,19 +38,21 @@ GISMapCanvas::~GISMapCanvas()
 
 void GISMapCanvas::mouseMoveEvent(QMouseEvent *event)
 {
-	QgsMapCanvas::mouseMoveEvent(event);
 	// 调用基类函数
-	// 读取鼠标位置处的坐标
-	QgsPointXY point = this->getCoordinateTransform()->toMapCoordinates(event->pos().x(), event->pos().y());
-	// 保留7位小数
-	QString qstrTransX = QString::number(point.x(), 'f', 7);
-	QString qstrTransY = QString::number(point.y(), 'f', 7);
-	// 显示在状态栏
-	qsbMainWin->showMessage(QString("X: %1, Y: %2").arg(qstrTransX).arg(qstrTransY));
-	if (event->buttons() == Qt::LeftButton)
-	{
+	QgsMapCanvas::mouseMoveEvent(event);
+	if (qsbMainWin != nullptr) {
+		// 读取鼠标位置处的坐标
+		QgsPointXY point = this->getCoordinateTransform()->toMapCoordinates(event->pos().x(), event->pos().y());
+		// 保留7位小数
+		QString qstrTransX = QString::number(point.x(), 'f', 7);
+		QString qstrTransY = QString::number(point.y(), 'f', 7);
+		// 显示在状态栏
+		qsbMainWin->showMessage(QString("X: %1, Y: %2").arg(qstrTransX).arg(qstrTransY));
+		if (event->buttons() == Qt::LeftButton)
+		{
 
-		emit moved(event->pos());
+			emit moved(event->pos());
+		}
 	}
 }
 
