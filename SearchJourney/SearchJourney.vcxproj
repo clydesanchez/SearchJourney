@@ -13,14 +13,14 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A579AC81-CDEA-46B3-83C8-D515252F7E00}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
-    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0.22621.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -32,8 +32,9 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>5.15.2_msvc2019_64</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;xml;sql;gui;svg;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
+    <QtToolsDesignTime>true</QtToolsDesignTime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>5.15.2_msvc2019_64</QtInstall>
@@ -48,7 +49,7 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
-    <Import Project="QGIS二次开发.props" />
+    <Import Project="..\QGIS二次开发.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -59,16 +60,25 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ClCompile>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <DebugInformationFormat>None</DebugInformationFormat>
-      <Optimization>MaxSpeed</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -86,26 +96,40 @@
   <ItemGroup>
     <ClCompile Include="AnalyticalFunction.cpp" />
     <ClCompile Include="AttributeViewWidget.cpp" />
+    <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="Clip.cpp" />
+    <ClCompile Include="ClipMapTool.cpp" />
     <ClCompile Include="ConnectSelect.cpp" />
     <ClCompile Include="CustomAttributeTableView.cpp" />
+    <ClCompile Include="EditFeature.cpp" />
     <ClCompile Include="EditVectorLayer.cpp" />
     <ClCompile Include="FileSaveSelect.cpp" />
     <ClCompile Include="GISMapCanvas.cpp" />
     <ClCompile Include="KMeansSelect.cpp" />
     <ClCompile Include="LayerItemMenu.cpp" />
     <ClCompile Include="LayerView.cpp" />
+    <ClCompile Include="LineEdit.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWidget.cpp" />
+    <ClCompile Include="PointEdit.cpp" />
     <ClCompile Include="ProjectFileIO.cpp" />
+    <ClCompile Include="Projection.cpp" />
+    <ClCompile Include="RasterCalculatorTool.cpp" />
     <ClCompile Include="RasterStatisticsSelect.cpp" />
+    <ClCompile Include="SelectFeatureTool.cpp" />
+    <ClCompile Include="SvgLabel.cpp" />
     <ClCompile Include="RasterStyle.cpp" />
     <ClCompile Include="StyleManager.cpp" />
     <ClCompile Include="SymbolManger.cpp" />
     <ClCompile Include="TextSelect.cpp" />
+    <ClCompile Include="UseSelected.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="AttributeViewWidget.ui" />
+    <QtUic Include="Buffer.ui" />
+    <QtUic Include="Clip.ui" />
     <QtUic Include="MainWidget.ui" />
+    <QtUic Include="RasterCalculatorTool.ui" />
     <QtUic Include="RasterStyle.ui" />
     <QtUic Include="StyleManager.ui" />
     <QtUic Include="SymbolManger.ui" />
@@ -118,8 +142,16 @@
     <QtMoc Include="CustomAttributeTableView.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="Buffer.h" />
+    <QtMoc Include="Clip.h" />
+    <QtMoc Include="ClipMapTool.h" />
     <ClInclude Include="CustomSymbol.h" />
     <ClInclude Include="LayerItemMenu.h" />
+    <ClInclude Include="LineEdit.h" />
+    <QtMoc Include="PointEdit.h" />
+    <QtMoc Include="RasterCalculatorTool.h" />
+    <QtMoc Include="SelectFeatureTool.h" />
+    <QtMoc Include="SvgLabel.h" />
     <QtMoc Include="StyleManager.h" />
     <QtMoc Include="RasterStyle.h" />
     <QtMoc Include="SymbolManger.h" />
@@ -129,6 +161,10 @@
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="MainWidget.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="qss\MacOS.qss" />
+    <None Include="qss\Ubuntu.qss" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

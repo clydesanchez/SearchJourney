@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <PropertyGroup Label="QtSettings">
+    <QtModules>core;xml;sql;gui;svg;xmlpatterns;widgets</QtModules>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\OSGeo4W\include;D:\OSGeo4W\apps\qgis-ltr\include;D:\OSGeo4W\apps\Qt5\include;./thirdlib/gdal2.0.2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NOMINMAX;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>D:\OSGeo4W\lib;D:\OSGeo4W\apps\qgis-ltr\lib;D:\OSGeo4W\apps\Qt5\lib;./thirdlib/SQLite/lib;./thirdlib/gdal2.0.2/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>qgis_app.lib;qgis_core.lib;qgis_gui.lib;qgis_analysis.lib;sqlite3.lib;gdal_i.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>

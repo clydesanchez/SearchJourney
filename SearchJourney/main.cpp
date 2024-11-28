@@ -13,7 +13,15 @@ int main(int argc, char *argv[])
     qRegisterMetaType<QgsColorRamp*>("QgsColorRamp*");
 
     QApplication a(argc, argv);
+
+    QFile qssFile("./qss/MacOS.qss");
+    if (qssFile.open(QFile::ReadOnly)) {
+        a.setStyleSheet(qssFile.readAll());
+    }
+    qssFile.close();
+
     MainWidget w;
     w.show();
+
     return a.exec();
 }
