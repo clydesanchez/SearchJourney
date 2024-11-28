@@ -67,6 +67,12 @@
     <ClCompile Include="RasterCalculatorTool.cpp">
       <Filter>Source Files\SpatialAnalysisTools</Filter>
     </ClCompile>
+    <ClCompile Include="LineEdit.cpp">
+      <Filter>Source Files\Edit</Filter>
+    </ClCompile>
+    <ClCompile Include="PointEdit.cpp">
+      <Filter>Source Files\Edit</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AttributeViewWidget.h">
@@ -95,6 +101,9 @@
     </QtMoc>
     <QtMoc Include="RasterCalculatorTool.h">
       <Filter>Source Files\SpatialAnalysisTools</Filter>
+    </QtMoc>
+    <QtMoc Include="PointEdit.h">
+      <Filter>Source Files\Edit</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -151,6 +160,9 @@
     <Filter Include="Source Files\SpatialAnalysisTools">
       <UniqueIdentifier>{2eaab9b7-3e62-4c2a-91ef-9cb3354c9268}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Edit">
+      <UniqueIdentifier>{4079c499-ea71-4533-9732-0d73ed22c053}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="MainWidget.qrc">
@@ -160,6 +172,9 @@
   <ItemGroup>
     <ClInclude Include="LayerItemMenu.h">
       <Filter>Source Files\LayerItem</Filter>
+    </ClInclude>
+    <ClInclude Include="LineEdit.h">
+      <Filter>Source Files\Edit</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -96,8 +96,10 @@
     <ClCompile Include="KMeansSelect.cpp" />
     <ClCompile Include="LayerItemMenu.cpp" />
     <ClCompile Include="LayerView.cpp" />
+    <ClCompile Include="LineEdit.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWidget.cpp" />
+    <ClCompile Include="PointEdit.cpp" />
     <ClCompile Include="ProjectFileIO.cpp" />
     <ClCompile Include="Projection.cpp" />
     <ClCompile Include="RasterCalculatorTool.cpp" />
@@ -123,6 +125,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LayerItemMenu.h" />
+    <ClInclude Include="LineEdit.h" />
+    <QtMoc Include="PointEdit.h" />
     <QtMoc Include="RasterCalculatorTool.h" />
     <QtMoc Include="SelectFeatureTool.h" />
     <QtMoc Include="SvgLabel.h" />

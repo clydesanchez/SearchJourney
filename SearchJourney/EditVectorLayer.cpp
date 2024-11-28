@@ -224,10 +224,27 @@ void MainWidget::on_ctrlEditableAction_triggered() {
 		if (layers[i]->name() == chooseLayer)
 		{
 			mnActiveLayerIndex = i;
+            vectorLayer = qobject_cast<QgsVectorLayer*>(layers[i]);
             ui.ctrlEditableAction->setText(QString("当前编辑图层：%1").arg(chooseLayer));
             ui.ctrlDeleteAction->setEnabled(true);
             ui.ctrlEditAttriAction->setEnabled(true);
             ui.ctrlMoveAction->setEnabled(true);
+            ui.ctrlCopyAction->setEnabled(true);
+            //判断数据类型，启用对应编辑工具
+            if (vectorLayer->geometryType() == Qgis::GeometryType::Point) {
+                ui.ctrlAddPointAction->setEnabled(true);
+            }
+            else if (vectorLayer->geometryType() == Qgis::GeometryType::Line) {
+                ui.ctrlSmoothLineAction->setEnabled(true);
+                ui.ctrlThiningLineAction->setEnabled(true);
+            }
+            else if (vectorLayer->geometryType() == Qgis::GeometryType::Polygon) {
+                ui.ctrlPolygonToLineAction->setEnabled(true);
+            }
+            else {
+               // QMessageBox::information(this, "提示", "不支持的图层类型");
+                return;
+            }
 			break;
 		}
         if (chooseLayer == "停用编辑") {
@@ -237,6 +254,11 @@ void MainWidget::on_ctrlEditableAction_triggered() {
             ui.ctrlDeleteAction->setEnabled(false);
             ui.ctrlEditAttriAction->setEnabled(false);
             ui.ctrlMoveAction->setEnabled(false);
+            ui.ctrlCopyAction->setEnabled(false);
+            ui.ctrlAddPointAction->setEnabled(false);
+            ui.ctrlSmoothLineAction->setEnabled(false);
+            ui.ctrlThiningLineAction->setEnabled(false);
+            ui.ctrlPolygonToLineAction->setEnabled(false);
             mpfSelectFeature.clear();
             // 删除原有符号
             for (int i = 0; i < mvVertices.size() && !mvVertices.isEmpty(); i++) {

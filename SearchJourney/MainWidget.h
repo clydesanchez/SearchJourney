@@ -15,6 +15,8 @@ Description:
 #include <QgsMultiPolygon.h>
 #include <QgsLayerTreeView.h>
 #include <QgsVertexMarker.h>
+#include "PointEdit.h"
+#include "LineEdit.h"
 
 class MainWidget : public QMainWindow
 {
@@ -33,7 +35,7 @@ private:
     QList<QgsMapLayer *> mliLayersList;    // 所有图层
     QList<QgsMapLayer *> mliVisibleLayers; // 可见图层
 
-    int mnActiveLayerIndex = -1; // 激活图层索引  
+    int mnActiveLayerIndex = -1; // 激活图层索引
     QList<QgsFeature> mpfSelectFeature; // 激活要素
     int mnSelectVertexIndex = -1; // 激活顶点索引
     bool mbDragging = false; // 是否拖拽
@@ -44,6 +46,9 @@ private:
     bool mbCanvasFullScreen = false; // 画布是否全屏
     QTimer* mTimer; // 定时器
     int mnProgressValue = 0; // 进度值
+private:
+    PointEdit* mpePointEdit = nullptr; // 点编辑工具
+    QList<QgsFeature> mSelectedFeatures;  // 用于存储选中的要素
 public:
     void updateLayerList(); // 更新图层列表
 public:
@@ -81,6 +86,13 @@ public slots:
     void on_ctrlVecToRasAction_triggered();               // 矢量转栅格
     void on_ctrlOpenRasterCalculatorActionV2_triggered(); // 栅格计算器
     void on_ctrlActionCanvasFullScreen_triggered();
+    void on_ctrlAddPointAction_triggered();               // 添加点
+    void on_ctrlUndoAction_triggered();                   // 撤销
+    void on_ctrlRedoAction_triggered();                   // 重做
+    void on_ctrlSaveEditAction_triggered();                   // 保存编辑
+    void on_ctrlSmoothLineAction_triggered();             // 光滑线
+    void on_ctrlThiningLineAction_triggered();            // 线抽稀
+    void on_ctrlPolygonToLineAction_triggered();          // 面转线
 
     void onTreeItemClicked(QTreeWidgetItem *ptwiItem, int nColumn); // 点击工具栏事件
     void onChangeLayerVisible(QgsLayerTreeNode *pltnNode);          // 改变图层可见性
@@ -129,5 +141,8 @@ public:
     void editAttribute(const QList<QgsFeature>& selectedFeatures);
     void moveFeature(const QList<QgsFeature>& selectedFeatures);
     void copyFeature(const QList<QgsFeature>& selectedFeatures);
+    void selectFeatures(const QList<QgsFeature>& selectedFeatures);
+    void thiningLines(const QList<QgsFeature>& selectedFeatures);			// 抽稀线
+    void smoothLines(const QList<QgsFeature>& selectedFeatures);			// 平滑线
 };
 #endif
