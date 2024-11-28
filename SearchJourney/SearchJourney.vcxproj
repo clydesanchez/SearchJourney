@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A579AC81-CDEA-46B3-83C8-D515252F7E00}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
-    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0.22621.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
   </PropertyGroup>
@@ -60,16 +60,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
-    </ClCompile>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ClCompile>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -99,8 +89,7 @@
     <ClCompile Include="AttributeViewWidget.cpp" />
     <ClCompile Include="ConnectSelect.cpp" />
     <ClCompile Include="CustomAttributeTableView.cpp" />
-    <ClCompile Include="DeleteFeature.cpp" />
-    <ClCompile Include="EditFeatureAttri.cpp" />
+    <ClCompile Include="EditFeature.cpp" />
     <ClCompile Include="EditVectorLayer.cpp" />
     <ClCompile Include="FileSaveSelect.cpp" />
     <ClCompile Include="GISMapCanvas.cpp" />
@@ -117,6 +106,7 @@
     <ClCompile Include="SvgLabel.cpp" />
     <ClCompile Include="SymbolManger.cpp" />
     <ClCompile Include="TextSelect.cpp" />
+    <ClCompile Include="UseSelected.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="AttributeViewWidget.ui" />

@@ -48,7 +48,7 @@
      <x>0</x>
      <y>0</y>
      <width>981</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -205,8 +205,8 @@ background-color:#F0F0F0;</string>
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>163</width>
-          <height>586</height>
+          <width>157</width>
+          <height>568</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_5">
@@ -331,7 +331,7 @@ background-color:#F0F0F0;</string>
           <x>0</x>
           <y>0</y>
           <width>174</width>
-          <height>280</height>
+          <height>268</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_6">
@@ -599,7 +599,6 @@ background-color:#F0F0F0;</string>
     <string>复制图元</string>
    </property>
   </action>
-  <action name="ctrlOpenRasterCalculatorActionV2">
   <action name="ctrlActionCanvasFullScreen">
    <property name="text">
     <string>地图全屏</string>
