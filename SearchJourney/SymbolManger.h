@@ -11,6 +11,7 @@
 #include <qgscolordialog.h>
 #include <qgssymbolselectordialog.h>
 #include "MainWidget.h"
+
 class SvgTableModel : public QAbstractTableModel {
 	Q_OBJECT
 
@@ -68,6 +69,7 @@ public slots:
 	void getSelecctPenStyle(int penstyle);// 获取边界样式
 	// 应用按钮
 	void onConfirmBtnClicked();
+
 private:
 	Ui::SymbolMangerClass ui;
 	QgsColorButton* mctrlFillColorBtn;

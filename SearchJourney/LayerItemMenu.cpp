@@ -20,6 +20,13 @@
 #include <qgsattributedialog.h>
 #include <qgsattributeeditorcontext.h>
 #include <QInputDialog>
+// 栅格样式新增
+#include"RasterStyle.h"
+#include "StyleManager.h"
+#include <qgsrasterdataprovider.h>
+#include <QMessageBox>
+#include <qgssinglebandpseudocolorrenderer.h>
+
 LayerItemMenu::LayerItemMenu(QgsLayerTreeView*view, QgsMapCanvas *canvas, MainWidget* widMain,QgsProject* prjSrc)
 	: QgsLayerTreeViewMenuProvider()
 {
@@ -61,6 +68,7 @@ QMenu* LayerItemMenu::createContextMenu()
 			menu->addAction(actionSymbolManger(layer->name(), layerType,symbollist));	//符号管理
 			menu->addAction(actionShowProperties(layer->name(),vectorLayer));	//属性表
 			menu->addAction(actionCrsTransform_vec(layer->name(), vectorLayer));	//坐标转换
+            menu->addAction(actionStyleManager(layer->name(), layerType));		//符号库
 			//menu->addAction(mctrlLayerItem->defaultActions()->actionZoomToLayer(mcanMapCanvas, menu));//缩放到图层
 			//menu->addAction(mctrlLayerItem->defaultActions()->actionRemoveGroupOrLayer(menu));	//删除
 			//menu->addAction(mctrlLayerItem->defaultActions()->actionRenameGroupOrLayer(menu)); //重命名
@@ -69,8 +77,11 @@ QMenu* LayerItemMenu::createContextMenu()
 			QgsRasterLayer* rasterLayer = qobject_cast<QgsRasterLayer*>(layer);
 			menu->addAction(actionZoomToLayer(mcanMapCanvas, menu));//缩放到图层
 			menu->addAction(actionRemoveLayer(layer->name()));	//移除图层
+			menu->addAction(actionSymbolManger_ras(layer->name(), rasterLayer));	//符号管理
 			menu->addAction(actionCrsTransform_ras(layer->name(), rasterLayer));	//坐标转换
-			//menu->addAction(actionCrsTransform(layer->name(), vectorLayer));
+			//menu->addAction(actionStyleManager());		//符号库
+			//menu->addAction(actionCrsTransform(layer->name(), vectorLayer));		
+
 		}
 	}
 	return menu;
@@ -125,6 +136,19 @@ QAction* LayerItemMenu::actionSymbolManger(QString strLayerName, Qgis::GeometryT
 		// 弹出新的符号管理窗口
 		SymbolManger* symbolManger = new SymbolManger(strLayerName,layerType,widMain,Srcsymbol);
 		symbolManger->show();
+		//QgsStyleManagerDialog* styleManager = new QgsStyleManagerDialog();
+		//styleManager->show();
+		});
+	return action;
+}
+// 连接栅格图层符号管理
+QAction* LayerItemMenu::actionSymbolManger_ras(QString strLayerName, QgsRasterLayer* rasLayer) {
+	QAction* action = new QAction("符号管理");
+	MainWidget* widMain = mwidMain;
+	QObject::connect(action, &QAction::triggered, [strLayerName, rasLayer, widMain]() {
+		// 弹出新的符号管理窗口
+		RasterStyle* rasterSymbolManager = new RasterStyle(strLayerName, rasLayer, widMain);
+		rasterSymbolManager->show();
 		//QgsStyleManagerDialog* styleManager = new QgsStyleManagerDialog();
 		//styleManager->show();
 		});
@@ -187,6 +211,7 @@ QAction* LayerItemMenu::actionCrsTransform_vec(QString strLayerName, QgsVectorLa
 		});
 	return action;
 }
+
 QgsRasterLayer* TransformCRS_Ras(QgsRasterLayer* raslayer, int newCRScode);
 QAction* LayerItemMenu::actionCrsTransform_ras(QString strLayerName, QgsRasterLayer* rasLayer)
 {
@@ -220,6 +245,19 @@ QAction* LayerItemMenu::actionCrsTransform_ras(QString strLayerName, QgsRasterLa
 		});
 	return action;
 }
+
+QAction* LayerItemMenu::actionStyleManager(QString strLayerName, Qgis::GeometryType layerType) {
+	QAction* action = new QAction("符号库");
+	MainWidget* widMain = mwidMain;
+	QObject::connect(action, &QAction::triggered, [strLayerName, layerType, widMain]() {
+		// 弹出新的符号库窗口
+		StyleManager* styleManager = new StyleManager(strLayerName, layerType, widMain);
+		styleManager->show();
+		});
+	return action;
+}
+
+
 
 #include <QgsCoordinateTransform.h>
 #include <qgsMultiPolygon.h>

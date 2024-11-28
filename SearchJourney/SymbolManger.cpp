@@ -17,6 +17,7 @@
 #include <QgsSymbolLayerRegistry.h>
 #include <QPainter>
 #include <QCombobox>
+
 //#include <qgsstylemanagerdialog.h>
 //#include <qgssymbolselectordialog.h>
 SymbolManger::SymbolManger(QString strLayerName, Qgis::GeometryType layerType, MainWidget* widMain , QgsSymbolList Srcsymbol,QWidget *parent)
@@ -349,3 +350,6 @@ QVariant SvgTableModel::headerData(int section, Qt::Orientation orientation, int
 void SvgTableModel::onCellClicked(const QModelIndex& index) {
 	emit signalCellClicked(mSvgFiles.at(index.row()));
 }
+
+
+

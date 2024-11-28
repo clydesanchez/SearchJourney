@@ -58,6 +58,7 @@ void MainWidget::addRasterLayer()
     QStringList _qstrSplit = qstrFileName.split('/');
     QString qstrBasename = _qstrSplit.at(_qstrSplit.size() - 1);
     QgsRasterLayer *qvlRasterLayer = new QgsRasterLayer(qstrFileName, qstrBasename);
+
     if (!qvlRasterLayer->isValid())
     {
         QMessageBox::critical(this, "error", QString("导入栅格图层失败： \n") + qstrFileName);

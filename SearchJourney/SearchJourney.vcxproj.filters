@@ -89,6 +89,12 @@
     <ClCompile Include="SymbolManger.cpp">
       <Filter>Source Files\SymbolManger</Filter>
     </ClCompile>
+    <ClCompile Include="RasterStyle.cpp">
+      <Filter>Source Files\SymbolManger</Filter>
+    </ClCompile>
+    <ClCompile Include="StyleManager.cpp">
+      <Filter>Source Files\SymbolManger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="MainWidget.ui">
@@ -101,6 +107,12 @@
       <Filter>Source Files\Attribute</Filter>
     </QtUic>
     <QtUic Include="SymbolManger.ui">
+      <Filter>Source Files\SymbolManger</Filter>
+    </QtUic>
+    <QtUic Include="RasterStyle.ui">
+      <Filter>Source Files\SymbolManger</Filter>
+    </QtUic>
+    <QtUic Include="StyleManager.ui">
       <Filter>Source Files\SymbolManger</Filter>
     </QtUic>
   </ItemGroup>
@@ -123,15 +135,24 @@
     <QtMoc Include="SymbolManger.h">
       <Filter>Source Files\SymbolManger</Filter>
     </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="LayerItemMenu.h">
-      <Filter>Source Files\LayerItem</Filter>
-    </ClInclude>
+    <QtMoc Include="RasterStyle.h">
+      <Filter>Source Files\SymbolManger</Filter>
+    </QtMoc>
+    <QtMoc Include="StyleManager.h">
+      <Filter>Source Files\SymbolManger</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="MainWidget.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LayerItemMenu.h">
+      <Filter>Source Files\LayerItem</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomSymbol.h">
+      <Filter>Source Files\SymbolManger</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
