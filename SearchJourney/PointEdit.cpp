@@ -122,7 +122,7 @@ QString parseAnnotationText(const QString& rawText)
 
     return processedText;
 }
-// 添加注记
+//添加注记
 void PointEdit::addAnnotation(const QgsPointXY& position)
 {
     // 创建注记对象
@@ -135,11 +135,26 @@ void PointEdit::addAnnotation(const QgsPointXY& position)
     QString rawAnnotationText = QInputDialog::getText(nullptr, u8"输入注记文本", u8"请输入注记内容（格式：==内容++内容--内容）：");
     if (rawAnnotationText.isEmpty()) {
         delete annotation;
-        QMessageBox::warning(nullptr,"警告","注记文本不能为空！");
+        QMessageBox::warning(nullptr, "警告", "注记文本不能为空！");
         return;
     }
     // 解析文本，处理 ==、++、-- 规则
     QString formattedText = parseAnnotationText(rawAnnotationText);
+    // 创建点要素并添加到矢量图层
+    QgsFeature feature;
+    feature.setGeometry(QgsGeometry::fromPointXY(position));
+    QgsAttributes attributes(mVectorLayer->fields().size());
+    if (mVectorLayer->fields().isEmpty()) {
+        QMessageBox::warning(nullptr, "警告", "矢量图层缺少字段，无法存储注记文本！");
+        return;
+    }
+    attributes[0] = formattedText; // 假设第一个字段存储注记文本
+    feature.setAttributes(attributes);
+    if (!mVectorLayer->addFeature(feature)) {
+        QMessageBox::warning(nullptr, "错误", "注记添加到图层失败！");
+        return;
+    }
+
     // 创建 HTML 格式文档并设置内容
     QTextDocument* document = new QTextDocument();
     document->setHtml(formattedText);

@@ -360,6 +360,28 @@ void applySplineSmoothing(QgsVectorLayer* layer, const QList<QgsFeature>& select
     qDebug() << "Spline smoothing applied successfully.";
 }
 
+//计算高斯核
+std::vector<double> computeGaussianKernel(int kernelSize, double sigma)
+{
+    // 检查核大小是否为奇数
+    std::vector<double> kernel(kernelSize);
+    double sum = 0.0;
+    int radius = kernelSize / 2;
+    // 计算高斯核
+    for (int i = 0; i < kernelSize; ++i)
+    {
+        double x = i - radius;
+        kernel[i] = std::exp(-0.5 * (x * x) / (sigma * sigma));
+        sum += kernel[i];
+    }
+    // 归一化
+    for (int i = 0; i < kernelSize; ++i)
+    {
+        kernel[i] /= sum;
+    }
+
+    return kernel;
+}
 void applyGaussianSmoothing(QgsVectorLayer* layer, const QList<QgsFeature>& selectedFeatures, int kernelSize, double sigma)
 {
     if (!layer || selectedFeatures.isEmpty() || kernelSize <= 0 || sigma <= 0)
@@ -367,112 +389,62 @@ void applyGaussianSmoothing(QgsVectorLayer* layer, const QList<QgsFeature>& sele
         qDebug() << "无效的图层或选择的要素，或者无效的核大小或标准差。";
         return;
     }
+    // 预计算高斯核
+    std::vector<double> kernel = computeGaussianKernel(kernelSize, sigma);
+    int radius = kernelSize / 2;
 
     // 处理每个要素
     for (const QgsFeature& feature : selectedFeatures)
     {
-		QVector<QgsPointXY> points;  // 存储要素的点
+        QVector<QgsPointXY> points;
 
-        // 获取几何类型并提取点
-        Qgis::WkbType geomType = feature.geometry().wkbType();
-        qDebug() << "几何类型：" << geomType;
-
-        // 处理 LineString 类型
-        if (geomType == Qgis::WkbType::LineString)
+        // 提取点集合
+        if (feature.geometry().wkbType() == Qgis::WkbType::LineString)
         {
             points = feature.geometry().asPolyline();
         }
-        // 处理 MultiLineString 类型
-        else if (geomType == Qgis::WkbType::MultiLineString)
+        else if (feature.geometry().wkbType() == Qgis::WkbType::MultiLineString)
         {
-            const auto multiPolyline = feature.geometry().asMultiPolyline();
-            for (const auto& line : multiPolyline)
+            for (const auto& line : feature.geometry().asMultiPolyline())
             {
-                points.append(line);  // 将多个线段的点合并
+                points.append(line);
             }
         }
         else
         {
             qDebug() << "不支持的几何类型，跳过此要素。";
-            continue;  // 如果是其他几何类型，跳过该要素
+            continue;
         }
-
-        qDebug() << "提取的点的数量：" << points.size();
-
-        // 如果点数不足，跳过该要素
         if (points.size() < kernelSize)
         {
             qDebug() << "点数不足，跳过该要素的高斯平滑。";
-            continue; // 如果点数不足，跳过平滑处理
+            continue;
         }
-
-        // 计算高斯核
-        std::vector<double> kernel(kernelSize);
-        double sum = 0.0;
-        int radius = kernelSize / 2;
-
-        // 构建高斯核
-        for (int i = 0; i < kernelSize; ++i)
-        {
-            double x = i - radius;
-            kernel[i] = std::exp(-0.5 * (x * x) / (sigma * sigma));  // 使用高斯公式
-            sum += kernel[i];  // 计算高斯核的总和，用于归一化
-        }
-
-        // 归一化高斯核，使得权重之和为 1
-        for (int i = 0; i < kernelSize; ++i)
-        {
-            kernel[i] /= sum;
-        }
-
-        qDebug() << "高斯核（Kernel）:";
-        for (int i = 0; i < kernelSize; ++i)
-        {
-            qDebug() << "kernel[" << i << "] = " << kernel[i];
-        }
-
-        // 输出点的数量
-        qDebug() << "点的数量: " << points.size();
-
-
-        // 创建一个用于存放平滑点的 QVector
         QVector<QgsPointXY> smoothedPoints;
 
-        // 对每个点应用高斯平滑
+        // 应用高斯平滑
         for (int i = 0; i < points.size(); ++i)
         {
             double sumX = 0.0, sumY = 0.0;
 
-            // 处理边界点：确保首尾点有足够的邻域点
             for (int j = i - radius; j <= i + radius; ++j)
             {
-                // 检查 j 是否在有效范围内
-                if (j < 0) j = 0;  // 对第一个点进行外推处理
-                if (j >= points.size()) j = points.size() - 1;  // 对最后一个点进行外推处理
-
-                // 计算偏移量，确保索引正确
+                int clampedIdx = std::clamp(j, 0, points.size() - 1);
                 int offset = j - i + radius;
 
-                // 计算加权平均
-                sumX += points[j].x() * kernel[offset];  // X 坐标的加权平均
-                sumY += points[j].y() * kernel[offset];  // Y 坐标的加权平均
+                sumX += points[clampedIdx].x() * kernel[offset];
+                sumY += points[clampedIdx].y() * kernel[offset];
             }
-			qDebug() << "count:" << i << "sumX:" << sumX << "sumY:" << sumY;
-            // 输出每个平滑点的坐标
-            qDebug() << "平滑后的点： x:" << sumX << "y:" << sumY;
 
-            // 记录平滑后的点
-            smoothedPoints.append(QgsPointXY(sumX, sumY));  // 将平滑后的点添加到列表中
+            smoothedPoints.append(QgsPointXY(sumX, sumY));
         }
-        // 替换几何体
+        // 替换几何
         QgsGeometry newGeometry = QgsGeometry::fromPolylineXY(smoothedPoints);
         if (!layer->changeGeometry(feature.id(), newGeometry))
         {
             qDebug() << "无法更新要素 ID:" << feature.id();
         }
     }
-
-    // 刷新图层，应用更改
     layer->triggerRepaint();
     qDebug() << "高斯平滑成功应用。";
 }
