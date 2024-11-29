@@ -20,7 +20,6 @@
 #include <qgsattributedialog.h>
 #include <qgsattributeeditorcontext.h>
 #include <QInputDialog>
-// 栅格样式新增
 #include"RasterStyle.h"
 #include "StyleManager.h"
 #include <qgsrasterdataprovider.h>
@@ -72,7 +71,7 @@ QMenu* LayerItemMenu::createContextMenu()
 			menu->addAction(actionLabelManger(layer->name()));	//标注管理
 			menu->addAction(actionShowProperties(layer->name(),vectorLayer));	//属性表
 			menu->addAction(actionCrsTransform_vec( vectorLayer));	//坐标转换
-            menu->addAction(actionStyleManager(layer->name(), layerType));		//符号库
+            menu->addAction(actionStyleManager(layer->name(), layerType, vectorLayer));		//符号库
 		}
 		// 栅格图层菜单
 		else if (layer) {
@@ -316,12 +315,12 @@ QAction* LayerItemMenu::actionCrsTransform_ras( QgsRasterLayer* rasLayer)
 	return action;
 }
 
-QAction* LayerItemMenu::actionStyleManager(QString strLayerName, Qgis::GeometryType layerType) {
+QAction* LayerItemMenu::actionStyleManager(QString strLayerName, Qgis::GeometryType layerType, QgsVectorLayer* veclayer) {
 	QAction* action = new QAction("符号库");
 	MainWidget* widMain = mwidMain;
-	QObject::connect(action, &QAction::triggered, [strLayerName, layerType, widMain]() {
+	QObject::connect(action, &QAction::triggered, [strLayerName, layerType, widMain, veclayer]() {
 		// 弹出新的符号库窗口
-		StyleManager* styleManager = new StyleManager(strLayerName, layerType, widMain);
+		StyleManager* styleManager = new StyleManager(strLayerName, layerType, widMain, veclayer);
 		styleManager->show();
 		});
 	return action;

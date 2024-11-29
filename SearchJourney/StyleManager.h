@@ -20,17 +20,22 @@ class StyleManager : public QMainWindow
 	Q_OBJECT
 
 public:
-	StyleManager(QString strLayerName, Qgis::GeometryType layerType, MainWidget* widMain, QWidget *parent = nullptr);
+	StyleManager(QString strLayerName, Qgis::GeometryType layerType, MainWidget* widMain, QgsVectorLayer* veclayer, QWidget *parent = nullptr);
 	~StyleManager();
 
+	// 刷新符号库
 	void refreshStlView();
+	// 符号显示
 	void markerViewer(QListView* listView);
 	void lineViewer(QListView* listView);
 	void fillViewer(QListView* listView);
-	/*void colorRmapViewer();*/
+	// 符号库切换
 	void onTabChanged(int index);
+	// 符号导入
 	void onActionIptStl();
+	// 符号导出
 	void onActionStlExport(QListView* listView);
+    // 符号应用
 	void onActionStlApply(QListView* listView);
 
 signals:
@@ -38,11 +43,12 @@ signals:
 
 private:
 	Ui::StyleManagerClass ui;
-	QList<CustomMarkerSymbol*> mMarkerSymbols; // 存储读取到的符号信息
+	QList<CustomMarkerSymbol*> mMarkerSymbols; 
 	QList<CustomLineSymbol*> mLineSymbols;
 	QList<CustomFillSymbol*> mFillSymbols;
-	QString listViewMode;
+	QString mListViewMode;
 	QString mStlLayerName;
 	Qgis::GeometryType mStlLayerType;
+	QgsVectorLayer* mVeclayer;
 };
 

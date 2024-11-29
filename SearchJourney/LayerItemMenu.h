@@ -27,7 +27,7 @@ public:
 
 
     QAction* actionSymbolManger_ras(QString strLayerName, QgsRasterLayer* rasLayer);
-    QAction* actionStyleManager(QString strLayerName, Qgis::GeometryType layerType);
+    QAction* actionStyleManager(QString strLayerName, Qgis::GeometryType layerType, QgsVectorLayer* veclayer);
 
 private:
     QgsMapCanvas* mcanMapCanvas;

@@ -17,7 +17,6 @@
 #include <QList>
 #include <QDockWidget>
 
-// 声明 QgsColorRamp* 类型
 Q_DECLARE_METATYPE(QgsColorRamp*)
 
 class RasterStyle : public QDockWidget {
@@ -28,24 +27,26 @@ public:
     ~RasterStyle();
 
 public slots:
-    void onActionApplyStyle_ras();                 // 点击“Apply”时应用样式
-    void getSelectedBand(int rasBand);             // 获取用户选择的波段
-    void getSelectedColorRamp(QgsColorRamp* ramp); // 获取用户选择的色带
-    void getMinValue(double rasMinValue);          // 获取分层设色的最小值
-    void getMaxValue(double rasMaxValue);          // 获取分层设色的最大值
-    void getNumClasses(int rasNumClasses);         // 获取分层设色的分级数
-
-    void createRasterSymbolDock(MainWidget* widMain);                 // 样式设置的 Dock 创建逻辑
+    // 点击“Apply”时应用样式
+    void onActionApplyStyle_ras();           
+    // 获取用户更改
+    void getSelectedBand(int rasBand);             
+    void getSelectedColorRamp(QgsColorRamp* ramp); 
+    void getMinValue(double rasMinValue);          
+    void getMaxValue(double rasMaxValue);          
+    void getNumClasses(int rasNumClasses);      
+    // 窗口样式创建
+    void createRasterSymbolDock(MainWidget* widMain);                 
 
 private:
     Ui::RasterStyleClass ui;
-    QgsRasterLayer* mRasLayer;        // 当前栅格图层
-    int mrasBand = 1;                 // 当前选择的波段
-    QgsColorRamp* mrasColorRamp = nullptr; // 当前选择的色带
-    double mrasMinValue = -9764.0;        // 分层设色的最小值
-    double mrasMaxValue = 1821.0;        // 分层设色的最大值
-    int mrasNumClasses = 6;             // 分层设色的分级数
-    int mInterpType = 0;               // 当前选择的插值类型
+    QgsRasterLayer* mRasLayer;       
+    int mrasBand = 1;                
+    QgsColorRamp* mrasColorRamp = nullptr; 
+    double mrasMinValue = -1300.0;      
+    double mrasMaxValue = 1821.0;        
+    int mrasNumClasses = 6;            
+    int mInterpType = 0;             
     int mModType = 0;                
 
 };
@@ -70,8 +71,8 @@ public:
             if (ramp) {
                 // 渐变色带的绘制
                 QLinearGradient gradient(option.rect.left(), option.rect.top(), option.rect.right(), option.rect.top());
-                gradient.setColorAt(0, ramp->color(0));  // 渐变的起始颜色
-                gradient.setColorAt(1, ramp->color(1));  // 渐变的结束颜色
+                gradient.setColorAt(0, ramp->color(0));  
+                gradient.setColorAt(1, ramp->color(1));  
 
                 painter->fillRect(option.rect, gradient);
             }

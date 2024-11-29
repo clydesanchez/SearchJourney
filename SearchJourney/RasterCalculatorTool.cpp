@@ -326,7 +326,7 @@ int RasterCalculatorTool::performRasterCalculation()
         timer.stop(); // 停止进度更新
         QMessageBox::warning(this, tr("错误"), tr("计算失败"));
         ui.ctrlRCProgressBar->setValue(0);  // 重置进度条
-        ui.ctrlRCProgressBar->setVisible(false);
+
         return -1;
     }
 
@@ -338,7 +338,7 @@ int RasterCalculatorTool::performRasterCalculation()
     QgsRasterLayer* resultLayer = new QgsRasterLayer(tmpName, QStringLiteral("CalculationResult"));
     if (!resultLayer->isValid()) {
         QMessageBox::warning(this, tr("错误"), tr("计算结果无效"));
-        ui.ctrlRCProgressBar->setVisible(false);
+
         return -1;
     }
 

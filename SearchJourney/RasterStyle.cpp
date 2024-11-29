@@ -15,6 +15,7 @@
 #include <qgsrastershader.h>
 #include <qgsstyle.h>
 #include <QgsColorRampShader.h>
+#include <qgscolorrampimpl.h.>
 
 RasterStyle::RasterStyle(QString strLayerName, QgsRasterLayer* rasLayer, MainWidget* widMain, QWidget* parent)
     : QDockWidget(parent), mRasLayer(rasLayer), mrasColorRamp(nullptr) {
@@ -24,7 +25,6 @@ RasterStyle::RasterStyle(QString strLayerName, QgsRasterLayer* rasLayer, MainWid
 
 RasterStyle::~RasterStyle() {
     if (mrasColorRamp) {
-        delete mrasColorRamp;
         mrasColorRamp = nullptr;
     }
 }
@@ -46,30 +46,30 @@ void RasterStyle::createRasterSymbolDock(MainWidget* widMain) {
 
     // 获取栅格波段信息
     if (mRasLayer) {
-        int bandCount = mRasLayer->bandCount(); // 获取波段总数
+        int bandCount = mRasLayer->bandCount();
         for (int i = 1; i <= bandCount; ++i) {
-            cmbBand->addItem(tr("Band %1").arg(i), i); // 填充下拉框，数据存储波段索引
+            cmbBand->addItem(tr("Band %1").arg(i), i); 
         }
     }
     else {
-        cmbBand->addItem(tr("No bands available")); // 栅格图层为空时提示
+        cmbBand->addItem(tr("No bands available")); 
     }
 
     // Interpolation 选择控件
     QLabel* lblInterpolation = new QLabel(tr("Interpolation:"));
     QComboBox* cmbInterpolation = new QComboBox();
-    cmbInterpolation->addItem(tr("Discrete"), 0);  // Discrete 对应值 0
-    cmbInterpolation->addItem(tr("Linear"), 1);   // Linear 对应值 1
-    cmbInterpolation->addItem(tr("Exact"), 2);    // Exact 对应值 2
+    cmbInterpolation->addItem(tr("Discrete"), 0);  
+    cmbInterpolation->addItem(tr("Linear"), 1);   
+    cmbInterpolation->addItem(tr("Exact"), 2);    
     layout->addWidget(lblInterpolation);
     layout->addWidget(cmbInterpolation);
 
     // Mode 选择控件
     QLabel* lblMode = new QLabel(tr("Mode:"));
     QComboBox* cmbMode = new QComboBox();
-    cmbMode->addItem(tr("Continuous"), 0);  // Continuous 对应值 0
-    cmbMode->addItem(tr("Equal Interval"), 1);   // Equal Interval 对应值 1
-    cmbMode->addItem(tr("Quantile"), 2);    // Quantile 对应值 2
+    cmbMode->addItem(tr("Continuous"), 0);  
+    cmbMode->addItem(tr("Equal Interval"), 1);   
+    cmbMode->addItem(tr("Quantile"), 2); 
     layout->addWidget(lblMode);
     layout->addWidget(cmbMode);
 
@@ -88,8 +88,8 @@ void RasterStyle::createRasterSymbolDock(MainWidget* widMain) {
     // 分级数选择框
     QLabel* lblClasses = new QLabel(tr("Number of Classes:"));
     QSpinBox* spinBoxClasses = new QSpinBox();
-    spinBoxClasses->setRange(2, 10);  // 设置最小分级数为 2，最大分级数为 10
-    spinBoxClasses->setValue(5);      // 默认值为 5
+    spinBoxClasses->setRange(2, 20); 
+    spinBoxClasses->setValue(5);    
     layout->addWidget(lblClasses);
     layout->addWidget(spinBoxClasses);
 
@@ -99,11 +99,8 @@ void RasterStyle::createRasterSymbolDock(MainWidget* widMain) {
     layout->addWidget(lblColorRamp);
     layout->addWidget(cmbColorRamp);
 
-    // 设置自定义委托来绘制色带样式
-    cmbColorRamp->setItemDelegate(new ColorRampDelegate(cmbColorRamp));
-
     // 加载色带文件
-    QString colorRampFilePath = "E:/GISdes/styles/Color/pokemon_UCHqlV3.xml"; // 考虑替换为相对路径
+    QString colorRampFilePath = "../styles/Color/pokemon_UCHqlV3.xml"; 
     QFile file(colorRampFilePath);
     if (file.open(QIODevice::ReadOnly)) {
         QDomDocument doc;
@@ -129,7 +126,7 @@ void RasterStyle::createRasterSymbolDock(MainWidget* widMain) {
                             QDomElement propElement = props.at(k).toElement();
                             if (!propElement.isNull()) {
                                 QString colorValue = propElement.attribute("v"); // 获取颜色值
-                                QString key = propElement.attribute("k");       // 可选：获取键名（如有其他用途）
+                                QString key = propElement.attribute("k");       
 
                                 // 检查颜色值是否是 RGBA 格式
                                 QStringList rgba = colorValue.split(",");
@@ -142,13 +139,26 @@ void RasterStyle::createRasterSymbolDock(MainWidget* widMain) {
 
                         // 检查是否成功提取了至少两个颜色
                         if (colorList.size() >= 2) {
-                            // 使用颜色列表创建渐变色带
-                            auto* colorRamp = new QgsGradientColorRamp(colorList.first(), colorList.last());
+                            // 创建渐变色带对象
+                            auto* colorRamp = new QgsGradientColorRamp();
 
-                            // 如果需要支持多点渐变（非线性），可以用 QgsGradientStop 或类似扩展
-                            // 示例：遍历 colorList，添加中间点到 colorRamp
+                            // 添加首尾颜色
+                            colorRamp->setColor1(colorList.first());
+                            colorRamp->setColor2(colorList.last());
 
-                            cmbColorRamp->addItem(rampName, QVariant::fromValue<QgsColorRamp*>(colorRamp)); // 存储色带对象
+                            // 添加中间颜色为渐变停靠点
+                            int totalColors = colorList.size();
+                            for (int j = 1; j < totalColors - 1; ++j) {  
+                                double position = static_cast<double>(j) / (totalColors - 1); 
+
+                                QgsGradientStop stop(position, colorList[j]);
+
+                                // 将停靠点添加到渐变色带
+                                colorRamp->stops().append(stop);
+                            }
+
+                            // 将色带对象存储到下拉框中
+                            cmbColorRamp->addItem(rampName, QVariant::fromValue<QgsColorRamp*>(colorRamp));
                         }
                     }
                 }
@@ -160,6 +170,8 @@ void RasterStyle::createRasterSymbolDock(MainWidget* widMain) {
         qDebug() << "Failed to open file: " << colorRampFilePath;
     }
 
+    // 设置自定义委托来绘制色带样式
+    cmbColorRamp->setItemDelegate(new ColorRampDelegate(cmbColorRamp));
 
     // 按钮：Apply 和 Cancel
     QHBoxLayout* buttonLayout = new QHBoxLayout();
@@ -182,18 +194,16 @@ void RasterStyle::createRasterSymbolDock(MainWidget* widMain) {
     // 信号槽连接
     connect(cmbBand, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &RasterStyle::getSelectedBand);
 
-    // 连接信号槽，将用户选择的插值方式传递给成员变量 mInterpType
     connect(cmbInterpolation, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=](int index) {
-        mInterpType = cmbInterpolation->itemData(index).toInt(); // 获取插值类型
+        mInterpType = cmbInterpolation->itemData(index).toInt(); 
         qDebug() << "Selected interpolation type:" << mInterpType;
         });
 
     connect(cmbMode, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=](int index) {
-        mModType = cmbMode->itemData(index).toInt(); // 获取插值类型
+        mModType = cmbMode->itemData(index).toInt(); 
         qDebug() << "Selected interpolation type:" << mModType;
         });
 
-    // 连接信号槽
     connect(cmbColorRamp, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=](int index) {
         QVariant rampVariant = cmbColorRamp->itemData(index, Qt::UserRole);
         if (rampVariant.isValid()) {
@@ -228,7 +238,7 @@ void RasterStyle::createRasterSymbolDock(MainWidget* widMain) {
         });
     connect(btnApply, &QPushButton::clicked, this, &RasterStyle::onActionApplyStyle_ras);
     connect(btnCancel, &QPushButton::clicked, this, [=]() {
-        this->close(); // 点击 Cancel 时关闭窗口
+        this->close(); 
         });
 
     connect(spinBoxClasses, QOverload<int>::of(&QSpinBox::valueChanged), this, &RasterStyle::getNumClasses);
@@ -325,6 +335,5 @@ void RasterStyle::onActionApplyStyle_ras() {
 
     QMessageBox::information(this, tr("Success"), tr("Raster style applied successfully."));
 
-    // 关闭窗口并清理资源
     this->close();
 }

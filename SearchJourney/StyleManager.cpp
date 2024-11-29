@@ -17,28 +17,28 @@
 #include <qgssymbollayerutils.h>
 #include <qgsreadwritecontext.h>
 #include <qgsscreenproperties.h>
+#include <qgssldexportcontext.h>
+#include <qgsmaplayer.h>
 #include "qgssymbol.h" 
 #include "qgis_core.h"
 
 
-StyleManager::StyleManager(QString strLayerName, Qgis::GeometryType layerType, MainWidget* widMain, QWidget* parent)
+StyleManager::StyleManager(QString strLayerName, Qgis::GeometryType layerType, MainWidget* widMain, QgsVectorLayer* veclayer, QWidget* parent)
     : QMainWindow(parent) {
     ui.setupUi(this);
 
     this->mStlLayerName = strLayerName;
     this->mStlLayerType = layerType;
+    this->mVeclayer = veclayer;
 
     // 创建 Tab Widget
     QTabWidget* tabWidget = new QTabWidget(this);
     tabWidget->addTab(new QWidget(), tr("Marker"));
     tabWidget->addTab(new QWidget(), tr("Line"));
     tabWidget->addTab(new QWidget(), tr("Fill"));
-    //tabWidget->addTab(new QWidget(), tr("Color Ramp"));
     tabWidget->setMaximumHeight(50);
     tabWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-
-    // 默认 listViewMode 为 Marker
-    listViewMode = "Marker";
+    mListViewMode = "Marker";
 
     // 绑定 tabWidget 的 currentChanged 信号
     connect(tabWidget, &QTabWidget::currentChanged, this, &StyleManager::onTabChanged);
@@ -65,18 +65,18 @@ StyleManager::StyleManager(QString strLayerName, Qgis::GeometryType layerType, M
 
     // 主布局
     QVBoxLayout* mainLayout = new QVBoxLayout();
-    mainLayout->setContentsMargins(0, 0, 0, 0); // 去掉边距
+    mainLayout->setContentsMargins(0, 0, 0, 0); 
     mainLayout->setSpacing(5);
 
     // 将控件添加到主布局
-    mainLayout->addWidget(tabWidget);     // TabWidget 占用扩展空间
-    mainLayout->addWidget(listView);      // QListView 占用扩展空间
-    mainLayout->addLayout(buttonLayout);  // 按钮区域
+    mainLayout->addWidget(tabWidget);     
+    mainLayout->addWidget(listView);     
+    mainLayout->addLayout(buttonLayout); 
 
     // 创建主窗口部件
     QWidget* centralWidget = new QWidget(this);
     centralWidget->setLayout(mainLayout);
-    setCentralWidget(centralWidget); // 设置为主窗口的中心部件
+    setCentralWidget(centralWidget); 
 
     // 信号槽连接
     connect(tabWidget, &QTabWidget::currentChanged, [=](int index) {
@@ -91,14 +91,13 @@ StyleManager::StyleManager(QString strLayerName, Qgis::GeometryType layerType, M
         case 2: 
             fillViewer(listView);
             break;
-        /*case 3: 
-            items << "Color Ramp 1" << "Color Ramp 2" << "Color Ramp 3";
-            colorRmapViewer(); 
-            break;*/
         default: break;
         }
         listModel->setStringList(items);
         });
+
+    listView->setIconSize(QSize(200, 200));
+    listView->setGridSize(QSize(220, 240));
 
     connect(importButton, &QPushButton::clicked, this, &StyleManager::onActionIptStl);
 
@@ -130,13 +129,13 @@ StyleManager::~StyleManager() {}
 void StyleManager::onTabChanged(int index) {
     switch (index) {
     case 0: // Marker 标签页
-        listViewMode = "Marker";
+        mListViewMode = "Marker";
         break;
     case 1: // Line 标签页
-        listViewMode = "Line";
+        mListViewMode = "Line";
         break;
     case 2: // Fill 标签页
-        listViewMode = "Fill";
+        mListViewMode = "Fill";
         break;
     default:
         QMessageBox::warning(this, tr("Error"), tr("Unknown tab index."));
@@ -152,7 +151,7 @@ void StyleManager::refreshStlView() {
     mFillSymbols.clear();
 
     // 定义符号文件夹路径
-    QString folderPath = "E:/GISdes/styles/mystyle";
+    QString folderPath = "../styles/mystyle";
     QDir dir(folderPath);
     if (!dir.exists()) {
         qDebug() << "Directory does not exist:" << folderPath;
@@ -193,7 +192,6 @@ void StyleManager::refreshStlView() {
             QDomElement symbolElem = symbols.at(i).toElement();
             if (symbolElem.isNull()) continue;
 
-            // 使用 QgsSymbolLayerUtils::loadSymbol 加载符号
             QgsSymbol* symbol = QgsSymbolLayerUtils::loadSymbol(symbolElem, readWriteContext);
             if (!symbol) {
                 qDebug() << "Failed to load symbol from file:" << filePath;
@@ -228,34 +226,31 @@ void StyleManager::refreshStlView() {
 void StyleManager::markerViewer(QListView* listView) {
     if (!listView) return;
 
-    // 创建模型用于显示符号名称和预览
     QStandardItemModel* model = new QStandardItemModel(this);
 
     for (int i = 0; i < mMarkerSymbols.size(); ++i) {
         CustomMarkerSymbol* markerSymbol = mMarkerSymbols[i];
-
         QString symbolName = markerSymbol->getName();
 
         // 创建符号预览图
         QImage image = markerSymbol->getSymbol()->bigSymbolPreviewImage(nullptr, Qgis::SymbolPreviewFlags(), QgsScreenProperties());
         QPixmap pixmap = QPixmap::fromImage(image);
 
-        // 创建模型项，设置名称和图标
+        // 创建模型项
         QStandardItem* item = new QStandardItem();
-        item->setText(symbolName); // 使用符号名称作为显示文本
+        item->setText(symbolName);
         item->setIcon(QIcon(pixmap));
-
-        // 添加到模型
         model->appendRow(item);
     }
 
-    // 将模型绑定到 QListView
     listView->setModel(model);
-    listView->setIconSize(QSize(128, 128)); // 设置列表项图标的大小
-    listView->setGridSize(QSize(160, 160)); // 设置列表项的网格大小
-    listView->setViewMode(QListView::IconMode); // 图标模式
-    listView->setSpacing(10); // 设置间距
+    listView->setViewMode(QListView::IconMode);    // 图标模式
+    listView->setFlow(QListView::LeftToRight);    // 从左到右排列
+    listView->setResizeMode(QListView::Adjust);   // 自动调整布局
+    listView->setSpacing(10);                     // 项目之间的间距
+
 }
+
 
 
 void StyleManager::lineViewer(QListView* listView) {
@@ -268,7 +263,7 @@ void StyleManager::lineViewer(QListView* listView) {
         CustomLineSymbol* lineSymbol = mLineSymbols[i];
 
         // 假设符号名称已经在 XML 中解析并存储
-        QString symbolName = lineSymbol->getName(); // 如果没有名称，可以设置默认名称
+        QString symbolName = lineSymbol->getName(); 
 
         // 创建符号预览图
         QImage image = lineSymbol->getSymbol()->bigSymbolPreviewImage(nullptr, Qgis::SymbolPreviewFlags(), QgsScreenProperties());
@@ -276,19 +271,16 @@ void StyleManager::lineViewer(QListView* listView) {
 
         // 创建模型项，设置名称和图标
         QStandardItem* item = new QStandardItem();
-        item->setText(symbolName); // 使用符号名称作为显示文本
+        item->setText(symbolName); 
         item->setIcon(QIcon(pixmap));
-
-        // 添加到模型
         model->appendRow(item);
     }
 
-    // 将模型绑定到 QListView
     listView->setModel(model);
-    listView->setIconSize(QSize(128, 128)); // 设置列表项图标的大小
-    listView->setGridSize(QSize(160, 160)); // 设置列表项的网格大小
-    listView->setViewMode(QListView::IconMode); // 图标模式
-    listView->setSpacing(10); // 设置间距
+    listView->setViewMode(QListView::IconMode);    // 图标模式
+    listView->setFlow(QListView::LeftToRight);    // 从左到右排列
+    listView->setResizeMode(QListView::Adjust);   // 自动调整布局
+    listView->setSpacing(10);
 }
 
 
@@ -302,7 +294,7 @@ void StyleManager::fillViewer(QListView* listView) {
         CustomFillSymbol* fillSymbol = mFillSymbols[i];
 
         // 假设符号名称已经在 XML 中解析并存储到 QList<QgsFillSymbol*> 时通过额外的列表保存
-        QString symbolName = fillSymbol->getName(); // 如果没有名称，可以设置默认名称
+        QString symbolName = fillSymbol->getName(); 
 
         // 创建符号预览图
         QImage image = fillSymbol->getSymbol()->bigSymbolPreviewImage(nullptr, Qgis::SymbolPreviewFlags(), QgsScreenProperties());
@@ -310,19 +302,18 @@ void StyleManager::fillViewer(QListView* listView) {
 
         // 创建模型项，设置名称和图标
         QStandardItem* item = new QStandardItem();
-        item->setText(symbolName); // 使用符号名称作为显示文本
+        item->setText(symbolName); 
         item->setIcon(QIcon(pixmap));
 
         // 添加到模型
         model->appendRow(item);
     }
 
-    // 将模型绑定到 QListView
     listView->setModel(model);
-    listView->setIconSize(QSize(128, 128)); // 设置列表项图标的大小
-    listView->setGridSize(QSize(160, 160)); // 设置列表项的网格大小
-    listView->setViewMode(QListView::IconMode); // 图标模式
-    listView->setSpacing(10); // 设置间距
+    listView->setViewMode(QListView::IconMode);    // 图标模式
+    listView->setFlow(QListView::LeftToRight);    // 从左到右排列
+    listView->setResizeMode(QListView::Adjust);   // 自动调整布局
+    listView->setSpacing(10);
 }
 
 void StyleManager::onActionIptStl() {
@@ -331,7 +322,7 @@ void StyleManager::onActionIptStl() {
         nullptr,
         "Import Symbol Library",
         "",
-        "XML Files (*.xml)" // 仅显示 XML 文件
+        "XML Files (*.xml)"
     );
 
     // 如果用户未选择文件，直接返回
@@ -341,7 +332,7 @@ void StyleManager::onActionIptStl() {
     }
 
     // 定义目标文件夹路径
-    QString destFolderPath = "E:/GISdes/styles/mystyle";
+    QString destFolderPath = "../styles/mystyle";
     QDir destDir(destFolderPath);
 
     // 检查目标文件夹是否存在
@@ -367,7 +358,7 @@ void StyleManager::onActionIptStl() {
 
     qDebug() << "File successfully copied to:" << destFilePath;
 
-    // 调用 refreshStlView() 刷新符号视图
+    // 刷新符号视图
     refreshStlView();
 }
 
@@ -384,21 +375,21 @@ void StyleManager::onActionStlExport(QListView* listView) {
     }
 
     int row = selectedIndex.row();
-    QgsSymbol* symbol = nullptr;
     QString symbolName;
+    QgsSymbol* symbol = nullptr;
 
-    // 获取用户选择的符号
-    if (listViewMode == "Marker" && row >= 0 && row < mMarkerSymbols.size()) {
+    // 获取符号和名称
+    if (mListViewMode == "Marker" && row >= 0 && row < mMarkerSymbols.size()) {
         CustomMarkerSymbol* selectedSymbol = mMarkerSymbols[row];
         symbol = selectedSymbol->getSymbol();
         symbolName = selectedSymbol->getName();
     }
-    else if (listViewMode == "Line" && row >= 0 && row < mLineSymbols.size()) {
+    else if (mListViewMode == "Line" && row >= 0 && row < mLineSymbols.size()) {
         CustomLineSymbol* selectedSymbol = mLineSymbols[row];
         symbol = selectedSymbol->getSymbol();
         symbolName = selectedSymbol->getName();
     }
-    else if (listViewMode == "Fill" && row >= 0 && row < mFillSymbols.size()) {
+    else if (mListViewMode == "Fill" && row >= 0 && row < mFillSymbols.size()) {
         CustomFillSymbol* selectedSymbol = mFillSymbols[row];
         symbol = selectedSymbol->getSymbol();
         symbolName = selectedSymbol->getName();
@@ -426,143 +417,23 @@ void StyleManager::onActionStlExport(QListView* listView) {
         return;
     }
 
-    // 创建 SLD 文档
-    QDomDocument doc;
-    QDomElement root = doc.createElement("sld:StyledLayerDescriptor");
-    root.setAttribute("version", "1.0.0");
-    root.setAttribute("xsi:schemaLocation", "http://www.opengis.net/sld StyledLayerDescriptor.xsd");
-    root.setAttribute("xmlns:sld", "http://www.opengis.net/sld");
-    root.setAttribute("xmlns:ogc", "http://www.opengis.net/ogc");
-    root.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
-    root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-    doc.appendChild(root);
+    // 创建 SLD 导出上下文
+    QgsSldExportContext exportContext;
+    exportContext.setExportFilePath(saveFilePath);
 
-    QDomElement namedLayer = doc.createElement("sld:NamedLayer");
-    root.appendChild(namedLayer);
+    // 调用 saveSldStyleV2
+    bool resultFlag = false;
+    QString statusMessage = mVeclayer->saveSldStyleV2(resultFlag, exportContext);
 
-    QDomElement nameElement = doc.createElement("sld:Name");
-    nameElement.appendChild(doc.createTextNode(symbolName));
-    namedLayer.appendChild(nameElement);
-
-    QDomElement userStyle = doc.createElement("sld:UserStyle");
-    namedLayer.appendChild(userStyle);
-
-    QDomElement titleElement = doc.createElement("sld:Title");
-    titleElement.appendChild(doc.createTextNode(tr("Style for %1").arg(symbolName)));
-    userStyle.appendChild(titleElement);
-
-    QDomElement featureTypeStyle = doc.createElement("sld:FeatureTypeStyle");
-    userStyle.appendChild(featureTypeStyle);
-
-    QDomElement rule = doc.createElement("sld:Rule");
-    featureTypeStyle.appendChild(rule);
-
-    QDomElement ruleTitle = doc.createElement("sld:Title");
-    ruleTitle.appendChild(doc.createTextNode(tr("Rule for %1").arg(symbolName)));
-    rule.appendChild(ruleTitle);
-
-    // 根据符号类型动态生成 Symbolizer
-    if (QgsMarkerSymbol* markerSymbol = dynamic_cast<QgsMarkerSymbol*>(symbol)) {
-        // 点符号
-        QDomElement pointSymbolizer = doc.createElement("sld:PointSymbolizer");
-        QDomElement graphic = doc.createElement("sld:Graphic");
-        pointSymbolizer.appendChild(graphic);
-
-        QDomElement mark = doc.createElement("sld:Mark");
-        graphic.appendChild(mark);
-
-        QDomElement wellKnownName = doc.createElement("sld:WellKnownName");
-        wellKnownName.appendChild(doc.createTextNode("circle")); // 示例：圆形
-        mark.appendChild(wellKnownName);
-
-        // 填充颜色
-        QDomElement fill = doc.createElement("sld:Fill");
-        QDomElement fillColor = doc.createElement("sld:CssParameter");
-        fillColor.setAttribute("name", "fill");
-        fillColor.appendChild(doc.createTextNode(markerSymbol->color().name())); // 动态填充颜色
-        fill.appendChild(fillColor);
-        mark.appendChild(fill);
-
-        // 大小
-        QDomElement size = doc.createElement("sld:Size");
-        size.appendChild(doc.createTextNode(QString::number(markerSymbol->size()))); // 动态获取大小
-        graphic.appendChild(size);
-
-        rule.appendChild(pointSymbolizer);
-
+    if (resultFlag) {
+        QMessageBox::information(this, tr("Export Successful"), tr("SLD exported successfully to %1").arg(saveFilePath));
     }
-    else if (QgsLineSymbol* lineSymbol = dynamic_cast<QgsLineSymbol*>(symbol)) {
-        // 线符号
-        QDomElement lineSymbolizer = doc.createElement("sld:LineSymbolizer");
-        QDomElement stroke = doc.createElement("sld:Stroke");
-
-        // 线颜色
-        QDomElement strokeColor = doc.createElement("sld:CssParameter");
-        strokeColor.setAttribute("name", "stroke");
-        strokeColor.appendChild(doc.createTextNode(lineSymbol->color().name())); // 动态线颜色
-        stroke.appendChild(strokeColor);
-
-        // 线宽
-        QDomElement strokeWidth = doc.createElement("sld:CssParameter");
-        strokeWidth.setAttribute("name", "stroke-width");
-        strokeWidth.appendChild(doc.createTextNode(QString::number(lineSymbol->width()))); // 动态线宽
-        stroke.appendChild(strokeWidth);
-
-        lineSymbolizer.appendChild(stroke);
-        rule.appendChild(lineSymbolizer);
-
+    else {
+        QMessageBox::warning(this, tr("Export Failed"), tr("Failed to export SLD:\n%1").arg(statusMessage));
     }
-    else if (QgsFillSymbol* fillSymbol = dynamic_cast<QgsFillSymbol*>(symbol)) {
-        QDomElement polygonSymbolizer = doc.createElement("sld:PolygonSymbolizer");
-
-        // 获取填充颜色
-        QDomElement fill = doc.createElement("sld:Fill");
-        QDomElement fillColor = doc.createElement("sld:CssParameter");
-        fillColor.setAttribute("name", "fill");
-        fillColor.appendChild(doc.createTextNode(fillSymbol->color().name())); // 获取填充颜色
-        fill.appendChild(fillColor);
-        polygonSymbolizer.appendChild(fill);
-
-        // 获取边框颜色和宽度
-        QColor strokeColor = Qt::black; // 默认边框颜色
-        double strokeWidth = 1.0;       // 默认边框宽度
-
-        // 创建 Stroke
-        QDomElement stroke = doc.createElement("sld:Stroke");
-
-        // 设置边框颜色
-        QDomElement strokeColorElement = doc.createElement("sld:CssParameter");
-        strokeColorElement.setAttribute("name", "stroke");
-        strokeColorElement.appendChild(doc.createTextNode(strokeColor.name())); // 设置边框颜色
-        stroke.appendChild(strokeColorElement);
-
-        // 设置边框宽度
-        QDomElement strokeWidthElement = doc.createElement("sld:CssParameter");
-        strokeWidthElement.setAttribute("name", "stroke-width");
-        strokeWidthElement.appendChild(doc.createTextNode(QString::number(strokeWidth))); // 设置边框宽度
-        stroke.appendChild(strokeWidthElement);
-
-        polygonSymbolizer.appendChild(stroke);
-
-        // 将生成的符号器添加到规则中
-        rule.appendChild(polygonSymbolizer);
-    }
-
-
-    // 写入 SLD 文件
-    QFile file(saveFilePath);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QMessageBox::warning(this, tr("Error"), tr("Failed to write file: %1").arg(saveFilePath));
-        return;
-    }
-
-    QTextStream out(&file);
-    out.setCodec("UTF-8");
-    out << doc.toString();
-    file.close();
-
-    QMessageBox::information(this, tr("Export Successful"), tr("Symbol exported successfully to %1").arg(saveFilePath));
 }
+
+
 
 
 void StyleManager::onActionStlApply(QListView* listView) {
@@ -582,17 +453,17 @@ void StyleManager::onActionStlApply(QListView* listView) {
     QString symbolName;
 
     // 根据 listViewMode 判断符号类型
-    if (listViewMode == "Marker" && row >= 0 && row < mMarkerSymbols.size()) {
+    if (mListViewMode == "Marker" && row >= 0 && row < mMarkerSymbols.size()) {
         CustomMarkerSymbol* selectedSymbol = mMarkerSymbols[row];
         symbol = selectedSymbol->getSymbol();
         symbolName = selectedSymbol->getName();
     }
-    else if (listViewMode == "Line" && row >= 0 && row < mLineSymbols.size()) {
+    else if (mListViewMode == "Line" && row >= 0 && row < mLineSymbols.size()) {
         CustomLineSymbol* selectedSymbol = mLineSymbols[row];
         symbol = selectedSymbol->getSymbol();
         symbolName = selectedSymbol->getName();
     }
-    else if (listViewMode == "Fill" && row >= 0 && row < mFillSymbols.size()) {
+    else if (mListViewMode == "Fill" && row >= 0 && row < mFillSymbols.size()) {
         CustomFillSymbol* selectedSymbol = mFillSymbols[row];
         symbol = selectedSymbol->getSymbol();
         symbolName = selectedSymbol->getName();
