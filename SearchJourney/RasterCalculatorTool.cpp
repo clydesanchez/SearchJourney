@@ -932,7 +932,7 @@ void RasterCalculatorTool::on_ctrlToolTreeWidget_doubleClicked(const QModelIndex
         ui.ctrlDebugTextBrowser->append(tr("双击工具：%1，开始执行NDBI分析。\n").arg(toolName));
         analysisNDBI();
     }
-    else if (toolName == "LST") {
+    else if (toolName == "LST Retrieval") {
         ui.ctrlDebugTextBrowser->append(tr("双击工具：%1，开始执行LST分析。\n").arg(toolName));
         analysisLST();
     }

@@ -48,7 +48,7 @@
      <x>0</x>
      <y>0</y>
      <width>981</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -157,6 +157,11 @@ background-color:#F0F0F0;</string>
        <property name="styleSheet">
         <string notr="true">color:black</string>
        </property>
+       <column>
+        <property name="text">
+         <string notr="true">1</string>
+        </property>
+       </column>
       </widget>
      </item>
     </layout>
@@ -472,7 +477,7 @@ background-color:#F0F0F0;</string>
      <normaloff>:/icon/openCSV.png</normaloff>:/icon/openCSV.png</iconset>
    </property>
    <property name="text">
-    <string>添加分隔符文本图层</string>
+    <string>添加CSV文件</string>
    </property>
   </action>
   <action name="ctrlKMeansAction">
@@ -680,7 +685,7 @@ background-color:#F0F0F0;</string>
   </action>
   <action name="actionClip">
    <property name="text">
-   <string>裁剪</string>
+    <string>裁剪</string>
    </property>
   </action>
  </widget>
