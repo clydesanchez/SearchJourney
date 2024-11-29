@@ -226,6 +226,7 @@ void MainWidget::on_ctrlEditableAction_triggered() {
 		{
 			mnActiveLayerIndex = i;
             vectorLayer = qobject_cast<QgsVectorLayer*>(layers[i]);
+            vectorLayer->startEditing();
             ui.ctrlEditableAction->setText(QString("当前编辑图层：%1").arg(chooseLayer));
             ui.ctrlDeleteAction->setEnabled(true);
             ui.ctrlEditAttriAction->setEnabled(true);

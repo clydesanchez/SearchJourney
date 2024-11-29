@@ -157,11 +157,6 @@ background-color:#F0F0F0;</string>
        <property name="styleSheet">
         <string notr="true">color:black</string>
        </property>
-       <column>
-        <property name="text">
-         <string notr="true">1</string>
-        </property>
-       </column>
       </widget>
      </item>
     </layout>
