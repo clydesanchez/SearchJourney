@@ -9,6 +9,16 @@ Buffer::Buffer(QWidget *parent, GISMapCanvas* mapCanvas, QgsProject* project)
 	ui.spinBox_segments->setValue(36);
 	ui.checkBox_output->setChecked(true);
 
+	// 添加端点样式选项
+	ui.endCapStyleComboBox->addItem("平直端点");
+	ui.endCapStyleComboBox->addItem("圆形端点");
+	ui.endCapStyleComboBox->addItem("方形端点");
+
+	// 添加连接样式选项
+	ui.joinStyleComboBox->addItem("圆角连接");
+	ui.joinStyleComboBox->addItem("斜切连接");
+	ui.joinStyleComboBox->addItem("尖角连接");
+
 	connect(ui.pushButton_output, &QPushButton::clicked, this, &Buffer::onButtonOutputClicked);
 	connect(ui.pushButton_ok, &QPushButton::clicked, this, &Buffer::onButtonOKClicked);
     connect(ui.pushButton_cancel, &QPushButton::clicked, this, &QWidget::close);
@@ -16,7 +26,6 @@ Buffer::Buffer(QWidget *parent, GISMapCanvas* mapCanvas, QgsProject* project)
 
 Buffer::~Buffer()
 {
-	delete mpMapCanvas;
 }
 
 void Buffer::onButtonOKClicked() {
@@ -58,6 +67,7 @@ void Buffer::runBuffer() {
 
     double distance = ui.doubleSpinBox_radius->value();
 	int segments = ui.spinBox_segments->value();
+
 	QgsVectorLayer* sourceLayer = nullptr;
 	// 根据图层名，找到对应矢量图层
 	for (QgsMapLayer* layer : mliMapLayers)
@@ -76,8 +86,10 @@ void Buffer::runBuffer() {
 
     QgsFields fields = dataProvider->fields();
 
-	
-	QgsVectorLayer* bufferLayer = new QgsVectorLayer("Polygon?crs=EPSG:4326", "Buffer Layer", "memory");
+	// 获取图层的 CRS
+	QgsCoordinateReferenceSystem layerCRS = sourceLayer->crs();
+
+	QgsVectorLayer* bufferLayer = new QgsVectorLayer("Polygon?crs=" + layerCRS.authid(), "Buffer Layer", "memory");
 	QgsVectorDataProvider* bufferDataProvider = bufferLayer->dataProvider();
 
 	
@@ -137,6 +149,26 @@ QgsGeometry Buffer::bufferByMeter(QgsGeometry geo, float trans, int segments, Qg
 	if (!sourceLayer)return geo;
 	if (trans <= 0)return geo;
 	
+	// 获取端点样式
+	QString endCapStyleStr = ui.endCapStyleComboBox->currentText();
+	Qgis::EndCapStyle endCapStyle = Qgis::EndCapStyle::Flat; // 默认值
+	if (endCapStyleStr == "圆形端点") {
+		endCapStyle = Qgis::EndCapStyle::Round;
+	}
+	else if (endCapStyleStr == "方形端点") {
+		endCapStyle = Qgis::EndCapStyle::Square;
+	}
+
+	// 获取连接样式
+	QString joinStyleStr = ui.joinStyleComboBox->currentText();
+	Qgis::JoinStyle joinStyle = Qgis::JoinStyle::Round; // 默认值
+	if (joinStyleStr == "斜切连接") {
+		joinStyle = Qgis::JoinStyle::Bevel;
+	}
+	else if (joinStyleStr == "尖角连接") {
+		joinStyle = Qgis::JoinStyle::Miter;
+	}
+
 	// 获取图层的 CRS
 	QgsCoordinateReferenceSystem layerCRS = sourceLayer->crs();
 
@@ -149,8 +181,8 @@ QgsGeometry Buffer::bufferByMeter(QgsGeometry geo, float trans, int segments, Qg
 		factor = 1.0; // 米到米
 	}
 	else if (unit == Qgis::DistanceUnit::Degrees) {
-		factor = 1.0 / 111000.0; // 大约每度 111 公里
+		factor = 1.0 / 111000.0; // 每度大约 111 公里
 	}
 	double distance = factor * trans;
-	return geo.buffer(distance, 36);
+	return geo.buffer(distance, segments, endCapStyle, joinStyle, 10.0);
 }

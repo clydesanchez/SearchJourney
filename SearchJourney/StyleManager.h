@@ -20,7 +20,7 @@ class StyleManager : public QMainWindow
 	Q_OBJECT
 
 public:
-	StyleManager(QString strLayerName, Qgis::GeometryType layerType, MainWidget* widMain, QgsVectorLayer* veclayer, QWidget *parent = nullptr);
+	StyleManager(QString strLayerName, Qgis::GeometryType layerType, MainWidget* widMain, QgsVectorLayer* veclayer, QString strStylePath,QWidget *parent = nullptr);
 	~StyleManager();
 
 	// 刷新符号库
@@ -48,6 +48,7 @@ private:
 	QList<CustomFillSymbol*> mFillSymbols;
 	QString mListViewMode;
 	QString mStlLayerName;
+	QString mstrStylePath;
 	Qgis::GeometryType mStlLayerType;
 	QgsVectorLayer* mVeclayer;
 };

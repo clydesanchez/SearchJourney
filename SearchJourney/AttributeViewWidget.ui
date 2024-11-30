@@ -23,12 +23,20 @@
          <property name="text">
           <string>启用编辑</string>
          </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>resource/开始编辑.png</normaloff>resource/开始编辑.png</iconset>
+         </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="ctrl_btnAddAttri">
          <property name="text">
           <string>添加字段</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>resource/工具.png</normaloff>resource/工具.png</iconset>
          </property>
         </widget>
        </item>
@@ -37,12 +45,20 @@
          <property name="text">
           <string>删除字段</string>
          </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>resource/清除.png</normaloff>resource/清除.png</iconset>
+         </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="ctrl_btnModifyAttri">
          <property name="text">
           <string>修改字段</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>resource/编辑图元属性.png</normaloff>resource/编辑图元属性.png</iconset>
          </property>
         </widget>
        </item>
@@ -51,12 +67,20 @@
          <property name="text">
           <string>新增要素</string>
          </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>resource/添加点.png</normaloff>resource/添加点.png</iconset>
+         </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="ctrl_btnDelFeature">
          <property name="text">
           <string>删除要素</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>resource/清除.png</normaloff>resource/清除.png</iconset>
          </property>
         </widget>
        </item>

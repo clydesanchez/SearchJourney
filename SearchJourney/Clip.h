@@ -26,6 +26,7 @@ public:
 	void populateLayers();
 	void clipVectorLayers();
 	void beginClip();
+	void output();
 	void setMapLayers(QList<QgsMapLayer*> liMapLayers);
 
 private:

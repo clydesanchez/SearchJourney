@@ -1,5 +1,5 @@
 #include "Clip.h"
-
+#include <QFileDialog>
 Clip::Clip(QWidget *parent, QgsMapCanvas* mapcanvas, QgsProject* project)
 	: QDialog(parent), mpMapCanvas(mapcanvas), mppjProject(project)
 {
@@ -10,6 +10,8 @@ Clip::Clip(QWidget *parent, QgsMapCanvas* mapcanvas, QgsProject* project)
 	//populateLayers();
 	connect(ui.comboBox_Type, QOverload<int>::of(&QComboBox::activated), this, &Clip::userChoice);
 	connect(ui.pushButton_ok_, &QPushButton::clicked, this, &Clip::beginClip);
+    connect(ui.pushButton_output, &QPushButton::clicked, this, &Clip::output);
+
 }
 
 Clip::~Clip()
@@ -189,3 +191,10 @@ void Clip::clipVectorLayers() {
     mppjProject->addMapLayer(clippedLayer);
     QMessageBox::information(this, "Success", "Clipping completed and layer added to project.");
 }
+void Clip::output() {
+    QString outputPath = QFileDialog::getSaveFileName(this, "Save File", "", "Shapefile (*.shp)");
+    if (outputPath.isEmpty()) {
+        return;
+    }
+    ui.textEdit_output->setText(outputPath);
+};

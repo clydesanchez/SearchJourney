@@ -26,8 +26,8 @@ public:
     QAction* actionCrsTransform_ras( QgsRasterLayer* rasLayer);// 坐标转换 栅格
 
 
-    QAction* actionSymbolManger_ras(QString strLayerName, QgsRasterLayer* rasLayer);
-    QAction* actionStyleManager(QString strLayerName, Qgis::GeometryType layerType, QgsVectorLayer* veclayer);
+    QAction* actionSymbolManger_ras(QString strLayerName, QgsRasterLayer* rasLayer);//符号管理 栅格
+    QAction* actionStyleManager(QString strLayerName, Qgis::GeometryType layerType, QgsVectorLayer* veclayer);//样式管理
 
 private:
     QgsMapCanvas* mcanMapCanvas;

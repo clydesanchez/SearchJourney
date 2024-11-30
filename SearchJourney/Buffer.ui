@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>516</width>
-    <height>424</height>
+    <height>459</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>60</y>
+     <y>40</y>
      <width>101</width>
      <height>31</height>
     </rect>
@@ -29,8 +29,8 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>250</y>
+     <x>60</x>
+     <y>290</y>
      <width>101</width>
      <height>31</height>
     </rect>
@@ -43,7 +43,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>130</y>
+     <y>90</y>
      <width>101</width>
      <height>31</height>
     </rect>
@@ -56,7 +56,7 @@
    <property name="geometry">
     <rect>
      <x>180</x>
-     <y>60</y>
+     <y>40</y>
      <width>271</width>
      <height>31</height>
     </rect>
@@ -66,7 +66,7 @@
    <property name="geometry">
     <rect>
      <x>180</x>
-     <y>130</y>
+     <y>90</y>
      <width>271</width>
      <height>31</height>
     </rect>
@@ -78,14 +78,14 @@
     <double>0.000000000000000</double>
    </property>
    <property name="maximum">
-    <double>9999.000000000000000</double>
+    <double>500.000000000000000</double>
    </property>
   </widget>
   <widget class="QTextEdit" name="textEdit_output">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>280</y>
+     <x>60</x>
+     <y>330</y>
      <width>321</width>
      <height>31</height>
     </rect>
@@ -95,7 +95,7 @@
    <property name="geometry">
     <rect>
      <x>400</x>
-     <y>280</y>
+     <y>330</y>
      <width>51</width>
      <height>31</height>
     </rect>
@@ -108,7 +108,7 @@
    <property name="geometry">
     <rect>
      <x>280</x>
-     <y>350</y>
+     <y>400</y>
      <width>81</width>
      <height>31</height>
     </rect>
@@ -121,7 +121,7 @@
    <property name="geometry">
     <rect>
      <x>370</x>
-     <y>350</y>
+     <y>400</y>
      <width>81</width>
      <height>31</height>
     </rect>
@@ -134,7 +134,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>190</y>
+     <y>140</y>
      <width>131</width>
      <height>31</height>
     </rect>
@@ -147,7 +147,7 @@
    <property name="geometry">
     <rect>
      <x>180</x>
-     <y>190</y>
+     <y>140</y>
      <width>271</width>
      <height>31</height>
     </rect>
@@ -157,13 +157,59 @@
    <property name="geometry">
     <rect>
      <x>370</x>
-     <y>250</y>
+     <y>300</y>
      <width>91</width>
      <height>21</height>
     </rect>
    </property>
    <property name="text">
     <string>输出为文件</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="endCapStyleComboBox">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>190</y>
+     <width>271</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="joinStyleComboBox">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>240</y>
+     <width>271</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>190</y>
+     <width>101</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>选择端点样式：</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>240</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>选择连接样式：</string>
    </property>
   </widget>
  </widget>

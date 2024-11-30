@@ -18,18 +18,25 @@
 #include <qgsreadwritecontext.h>
 #include <qgsscreenproperties.h>
 #include <qgssldexportcontext.h>
+#include <QMessageBox>
 #include <qgsmaplayer.h>
 #include "qgssymbol.h" 
 #include "qgis_core.h"
 
 
-StyleManager::StyleManager(QString strLayerName, Qgis::GeometryType layerType, MainWidget* widMain, QgsVectorLayer* veclayer, QWidget* parent)
+StyleManager::StyleManager(QString strLayerName, Qgis::GeometryType layerType, MainWidget* widMain, QgsVectorLayer* veclayer, QString strStylePath, QWidget* parent)
     : QMainWindow(parent) {
     ui.setupUi(this);
 
     this->mStlLayerName = strLayerName;
     this->mStlLayerType = layerType;
     this->mVeclayer = veclayer;
+    this->mstrStylePath = strStylePath;
+    // 判断路径
+    if(mstrStylePath.isEmpty())
+	{
+		QMessageBox::warning(this, tr("错误"), tr("未导入符号库"));
+	}
 
     // 创建 Tab Widget
     QTabWidget* tabWidget = new QTabWidget(this);
@@ -151,7 +158,8 @@ void StyleManager::refreshStlView() {
     mFillSymbols.clear();
 
     // 定义符号文件夹路径
-    QString folderPath = "../styles/mystyle";
+    //QString folderPath = "../styles/mystyle";
+    QString folderPath = mstrStylePath;
     QDir dir(folderPath);
     if (!dir.exists()) {
         qDebug() << "Directory does not exist:" << folderPath;
@@ -332,7 +340,8 @@ void StyleManager::onActionIptStl() {
     }
 
     // 定义目标文件夹路径
-    QString destFolderPath = "../styles/mystyle";
+    //QString destFolderPath = "../styles/mystyle";
+    QString destFolderPath = mstrStylePath;
     QDir destDir(destFolderPath);
 
     // 检查目标文件夹是否存在

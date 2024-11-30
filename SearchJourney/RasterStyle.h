@@ -23,7 +23,7 @@ class RasterStyle : public QDockWidget {
     Q_OBJECT
 
 public:
-    RasterStyle(QString strLayerName, QgsRasterLayer* rasLayer, MainWidget* widMain, QWidget* parent = nullptr);
+    RasterStyle(QString strLayerName, QgsRasterLayer* rasLayer, MainWidget* widMain, QString rampPath,QWidget* parent = nullptr);
     ~RasterStyle();
 
 public slots:
@@ -41,6 +41,7 @@ public slots:
 private:
     Ui::RasterStyleClass ui;
     QgsRasterLayer* mRasLayer;       
+    QString mstrRampPath;
     int mrasBand = 1;                
     QgsColorRamp* mrasColorRamp = nullptr; 
     double mrasMinValue = -1300.0;      

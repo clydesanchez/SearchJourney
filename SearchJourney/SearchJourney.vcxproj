@@ -163,6 +163,7 @@
     <QtRcc Include="MainWidget.qrc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="qss\BrightTheme.qss" />
     <None Include="qss\MacOS.qss" />
     <None Include="qss\Ubuntu.qss" />
   </ItemGroup>

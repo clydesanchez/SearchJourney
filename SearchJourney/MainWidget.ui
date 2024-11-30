@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWidget</string>
+   <string>SearchJourney</string>
   </property>
   <property name="windowIcon">
    <iconset resource="MainWidget.qrc">
@@ -91,11 +91,13 @@ color:black</string>
    </property>
    <widget class="QMenu" name="menu">
     <property name="title">
-     <string>工程·</string>
+     <string>工程</string>
     </property>
     <addaction name="ctrlOpenProjectAction"/>
     <addaction name="ctrlSaveProjectAction"/>
     <addaction name="ctrlSaveAsSHPAction"/>
+    <addaction name="ctrlActionImportStyle"/>
+    <addaction name="ctrlActionRamp"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -138,6 +140,12 @@ color:black</string>
    <addaction name="menu_6"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
+   <property name="font">
+    <font>
+     <family>Agency FB</family>
+     <pointsize>7</pointsize>
+    </font>
+   </property>
    <property name="toolButtonStyle">
     <enum>Qt::ToolButtonTextUnderIcon</enum>
    </property>
@@ -245,7 +253,7 @@ color:black</string>
         <enum>QFrame::Plain</enum>
        </property>
        <property name="lineWidth">
-        <number>1</number>
+        <number>0</number>
        </property>
        <property name="widgetResizable">
         <bool>true</bool>
@@ -255,7 +263,7 @@ color:black</string>
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>177</width>
+          <width>178</width>
           <height>568</height>
          </rect>
         </property>
@@ -307,19 +315,62 @@ color:black</string>
             <property name="text">
              <string>矢量分析</string>
             </property>
+            <property name="icon">
+             <iconset resource="MainWidget.qrc">
+              <normaloff>:/resource/工具箱.png</normaloff>:/resource/工具箱.png</iconset>
+            </property>
             <item>
              <property name="text">
               <string>K-Means聚类</string>
+             </property>
+             <property name="icon">
+              <iconset resource="MainWidget.qrc">
+               <normaloff>:/resource/工具箱.png</normaloff>:/resource/工具箱.png</iconset>
              </property>
             </item>
             <item>
              <property name="text">
               <string>按空间连接</string>
              </property>
+             <property name="icon">
+              <iconset resource="MainWidget.qrc">
+               <normaloff>:/resource/工具箱.png</normaloff>:/resource/工具箱.png</iconset>
+             </property>
             </item>
             <item>
              <property name="text">
               <string>保存为SHP</string>
+             </property>
+             <property name="icon">
+              <iconset resource="MainWidget.qrc">
+               <normaloff>:/resource/工具箱.png</normaloff>:/resource/工具箱.png</iconset>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>矢量栅格化</string>
+             </property>
+             <property name="icon">
+              <iconset resource="MainWidget.qrc">
+               <normaloff>:/resource/工具箱.png</normaloff>:/resource/工具箱.png</iconset>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>缓冲区</string>
+             </property>
+             <property name="icon">
+              <iconset resource="MainWidget.qrc">
+               <normaloff>:/resource/工具箱.png</normaloff>:/resource/工具箱.png</iconset>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>裁剪</string>
+             </property>
+             <property name="icon">
+              <iconset resource="MainWidget.qrc">
+               <normaloff>:/resource/工具箱.png</normaloff>:/resource/工具箱.png</iconset>
              </property>
             </item>
            </item>
@@ -327,14 +378,35 @@ color:black</string>
             <property name="text">
              <string>栅格分析</string>
             </property>
+            <property name="icon">
+             <iconset resource="MainWidget.qrc">
+              <normaloff>:/resource/工具箱.png</normaloff>:/resource/工具箱.png</iconset>
+            </property>
             <item>
              <property name="text">
               <string>栅格统计</string>
+             </property>
+             <property name="icon">
+              <iconset resource="MainWidget.qrc">
+               <normaloff>:/resource/工具箱.png</normaloff>:/resource/工具箱.png</iconset>
              </property>
             </item>
             <item>
              <property name="text">
               <string>保存统计结果</string>
+             </property>
+             <property name="icon">
+              <iconset resource="MainWidget.qrc">
+               <normaloff>:/resource/工具箱.png</normaloff>:/resource/工具箱.png</iconset>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>栅格计算器</string>
+             </property>
+             <property name="icon">
+              <iconset resource="MainWidget.qrc">
+               <normaloff>:/resource/工具箱.png</normaloff>:/resource/工具箱.png</iconset>
              </property>
             </item>
            </item>
@@ -383,7 +455,13 @@ color:black</string>
      <item row="0" column="0">
       <widget class="QScrollArea" name="scrollArea_2">
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
        </property>
        <property name="widgetResizable">
         <bool>true</bool>
@@ -393,8 +471,8 @@ color:black</string>
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>176</width>
-          <height>268</height>
+          <width>177</width>
+          <height>269</height>
          </rect>
         </property>
         <property name="autoFillBackground">
@@ -419,7 +497,7 @@ color:black</string>
          <item row="0" column="0">
           <widget class="QListView" name="ctrlStatisticsView">
            <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
+            <enum>QFrame::StyledPanel</enum>
            </property>
            <property name="frameShadow">
             <enum>QFrame::Plain</enum>
@@ -437,6 +515,12 @@ color:black</string>
    </widget>
   </widget>
   <widget class="QToolBar" name="toolBar">
+   <property name="font">
+    <font>
+     <family>Agency FB</family>
+     <pointsize>7</pointsize>
+    </font>
+   </property>
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
@@ -515,6 +599,9 @@ color:black</string>
    <property name="windowTitle">
     <string>toolBar_5</string>
    </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -531,7 +618,7 @@ color:black</string>
      <normaloff>:/resource/添加shp图层.png</normaloff>:/resource/添加shp图层.png</iconset>
    </property>
    <property name="text">
-    <string>添加矢量图层</string>
+    <string>添加矢量</string>
    </property>
   </action>
   <action name="ctrlOpenRasterAction">
@@ -540,7 +627,7 @@ color:black</string>
      <normaloff>:/resource/添加栅格图层.png</normaloff>:/resource/添加栅格图层.png</iconset>
    </property>
    <property name="text">
-    <string>添加栅格图层</string>
+    <string>添加栅格</string>
    </property>
   </action>
   <action name="ctrlOpenTextAction">
@@ -549,7 +636,7 @@ color:black</string>
      <normaloff>:/resource/添加CSV图层.png</normaloff>:/resource/添加CSV图层.png</iconset>
    </property>
    <property name="text">
-    <string>添加CSV文件</string>
+    <string>添加CSV</string>
    </property>
   </action>
   <action name="ctrlKMeansAction">
@@ -558,7 +645,7 @@ color:black</string>
      <normaloff>:/resource/密度聚类.png</normaloff>:/resource/密度聚类.png</iconset>
    </property>
    <property name="text">
-    <string>K-Means聚类分析</string>
+    <string>K-Means</string>
    </property>
   </action>
   <action name="ctrlConnectAction">
@@ -576,13 +663,13 @@ color:black</string>
      <normaloff>:/resource/栅格统计.png</normaloff>:/resource/栅格统计.png</iconset>
    </property>
    <property name="text">
-    <string>栅格图层统计</string>
+    <string>栅格统计</string>
    </property>
   </action>
   <action name="ctrlSaveProjectAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/resource/保存为工程2.png</normaloff>:/resource/保存为工程2.png</iconset>
+     <normaloff>:/resource/保存为工程1.png</normaloff>:/resource/保存为工程1.png</iconset>
    </property>
    <property name="text">
     <string>保存工程</string>
@@ -591,10 +678,10 @@ color:black</string>
   <action name="ctrlOpenProjectAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/resource/打开文档.png</normaloff>:/resource/打开文档.png</iconset>
+     <normaloff>:/resource/打开工程.png</normaloff>:/resource/打开工程.png</iconset>
    </property>
    <property name="text">
-    <string>打开工程文件</string>
+    <string>打开工程</string>
    </property>
   </action>
   <action name="ctrlSaveAsSHPAction">
@@ -612,7 +699,7 @@ color:black</string>
      <normaloff>:/resource/保存统计结果.png</normaloff>:/resource/保存统计结果.png</iconset>
    </property>
    <property name="text">
-    <string>保存统计结果</string>
+    <string>保存统计</string>
    </property>
   </action>
   <action name="ctrlLayerListViewAction">
@@ -675,16 +762,16 @@ color:black</string>
   <action name="ctrlEditAttriAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/resource/缺省属性.png</normaloff>:/resource/缺省属性.png</iconset>
+     <normaloff>:/resource/编辑图元属性.png</normaloff>:/resource/编辑图元属性.png</iconset>
    </property>
    <property name="text">
-    <string>编辑图元属性</string>
+    <string>编辑属性</string>
    </property>
   </action>
   <action name="ctrlMoveAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/resource/地图操作.png</normaloff>:/resource/地图操作.png</iconset>
+     <normaloff>:/resource/平移.png</normaloff>:/resource/平移.png</iconset>
    </property>
    <property name="text">
     <string>平移图元</string>
@@ -709,6 +796,10 @@ color:black</string>
    </property>
   </action>
   <action name="ctrlActionCanvasFullScreen">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/全屏.png</normaloff>:/resource/全屏.png</iconset>
+   </property>
    <property name="text">
     <string>地图全屏</string>
    </property>
@@ -810,6 +901,24 @@ color:black</string>
    </property>
    <property name="text">
     <string>裁剪</string>
+   </property>
+  </action>
+  <action name="ctrlActionImportStyle">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/符号库.png</normaloff>:/resource/符号库.png</iconset>
+   </property>
+   <property name="text">
+    <string>导入样式库</string>
+   </property>
+  </action>
+  <action name="ctrlActionRamp">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/icons8-color-wheel-96.png</normaloff>:/resource/icons8-color-wheel-96.png</iconset>
+   </property>
+   <property name="text">
+    <string>导入栅格色带</string>
    </property>
   </action>
  </widget>

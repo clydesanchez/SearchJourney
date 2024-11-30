@@ -15,6 +15,7 @@ Description:
 #include <QgsMultiPolygon.h>
 #include <QgsLayerTreeView.h>
 #include <QgsVertexMarker.h>
+#include <QLabel>
 #include "PointEdit.h"
 #include "LineEdit.h"
 
@@ -54,6 +55,11 @@ private:
 
     Buffer* mpBuffer; // 缓冲区分析
     Clip* mpClip; // 裁剪分析
+private:
+    QLabel* mqlbStatusBarCRS; // 状态栏坐标系
+public:
+    QString mstrRampPath; // 色带路径
+    QString mstrStylePath; // 样式路径
 
 public:
     void updateLayerList(); // 更新图层列表
@@ -99,6 +105,8 @@ public slots:
     void on_ctrlSmoothLineAction_triggered();             // 光滑线
     void on_ctrlThiningLineAction_triggered();            // 线抽稀
     void on_ctrlPolygonToLineAction_triggered();          // 面转线
+    void on_ctrlActionRamp_triggered();                   // 栅格色带
+    void on_ctrlActionImportStyle_triggered();            // 导入样式
 
     void onTreeItemClicked(QTreeWidgetItem *ptwiItem, int nColumn); // 点击工具栏事件
     void onChangeLayerVisible(QgsLayerTreeNode *pltnNode);          // 改变图层可见性

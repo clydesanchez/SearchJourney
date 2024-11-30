@@ -64,5 +64,8 @@
         <file>resource/矢量转栅格.png</file>
         <file>resource/添加点.png</file>
         <file>resource/栅格计算器.png</file>
+        <file>resource/工具箱.png</file>
+        <file>resource/icons8-color-wheel-96.png</file>
+        <file>resource/符号库.png</file>
     </qresource>
 </RCC>

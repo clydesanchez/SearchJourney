@@ -156,7 +156,8 @@ QAction* LayerItemMenu::actionSymbolManger_ras(QString strLayerName, QgsRasterLa
 	MainWidget* widMain = mwidMain;
 	QObject::connect(action, &QAction::triggered, [strLayerName, rasLayer, widMain]() {
 		// 弹出新的符号管理窗口
-		RasterStyle* rasterSymbolManager = new RasterStyle(strLayerName, rasLayer, widMain);
+		QString strRampPath = widMain->mstrRampPath;
+		RasterStyle* rasterSymbolManager = new RasterStyle(strLayerName, rasLayer, widMain, strRampPath);
 		rasterSymbolManager->show();
 		//QgsStyleManagerDialog* styleManager = new QgsStyleManagerDialog();
 		//styleManager->show();
@@ -164,7 +165,6 @@ QAction* LayerItemMenu::actionSymbolManger_ras(QString strLayerName, QgsRasterLa
 	return action;
 }
 // 属性表右键菜单
-
 QAction* LayerItemMenu::actionShowProperties(QString strLayerName, QgsVectorLayer* vectorlayer)
 {
 	QAction* action = new QAction("属性表");
@@ -314,13 +314,14 @@ QAction* LayerItemMenu::actionCrsTransform_ras( QgsRasterLayer* rasLayer)
 		});
 	return action;
 }
-
+// 样式管理
 QAction* LayerItemMenu::actionStyleManager(QString strLayerName, Qgis::GeometryType layerType, QgsVectorLayer* veclayer) {
 	QAction* action = new QAction("符号库");
 	MainWidget* widMain = mwidMain;
 	QObject::connect(action, &QAction::triggered, [strLayerName, layerType, widMain, veclayer]() {
+		QString strStylePath = widMain->mstrStylePath;
 		// 弹出新的符号库窗口
-		StyleManager* styleManager = new StyleManager(strLayerName, layerType, widMain, veclayer);
+		StyleManager* styleManager = new StyleManager(strLayerName, layerType, widMain, veclayer,strStylePath);
 		styleManager->show();
 		});
 	return action;

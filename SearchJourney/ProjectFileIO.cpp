@@ -180,9 +180,11 @@ void MainWidget::on_ctrlCRSAction_triggered() {
     qDebug()  << srcCRScode;
     bool* confirm = false;
     int newCRScode = QInputDialog::getInt(this, "设置坐标系", "输入坐标系编号", srcCRScode,0,99999999,1,confirm);
-    if(&confirm==false) return;
+    if (&confirm == false) { return; }
     // 设置工程文件坐标系
     QgsProject::instance()->setCrs(QgsCoordinateReferenceSystem(newCRScode));
+    // 将坐标系写在状态栏右侧
+    mqlbStatusBarCRS->setText(QString("坐标系：%1").arg(newCRScode));
     // 保存
     QgsProject::instance()->write();
     QMessageBox::information(this, tr("成功"), tr("坐标系已成功设置为 %1").arg(newCRScode));

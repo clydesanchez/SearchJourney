@@ -45,7 +45,7 @@ Function Lists:
 #include "LayerItemMenu.h"
 #include <QGis.h>
 #include <qgsapplication.h>
-
+#include <QFileDialog>
 #include <QSqlDatabase>
 #include <qgsstylemanagerdialog.h>
 #include <QgsFeatureIterator.h>
@@ -65,6 +65,9 @@ MainWidget::MainWidget(QWidget *parent)
     mcanMapCanvas->setCanvasColor(QColor(255, 255, 255));
     mcanMapCanvas->setVisible(true);
     mcanMapCanvas->enableAntiAliasing(true);
+    // 状态栏信息
+    mqlbStatusBarCRS = new QLabel("");
+    ui.statusBar->addPermanentWidget(mqlbStatusBarCRS);
     connect(mcanMapCanvas, &GISMapCanvas::pressed, this, &MainWidget::onMapCanvasClicked);
     connect(mcanMapCanvas, &GISMapCanvas::released, this, &MainWidget::onMapCanvasReleased);
     connect(mcanMapCanvas, &GISMapCanvas::moved, this, &MainWidget::onMapCanvasMoved);
@@ -89,7 +92,7 @@ MainWidget::MainWidget(QWidget *parent)
     ui.ctrlThiningLineAction->setEnabled(false);
     ui.ctrlPolygonToLineAction->setEnabled(false);
     // 重命名窗口标题
-    this->setWindowTitle("OOP_GIS_System");
+    this->setWindowTitle("SearchJourney");
 }
 
 MainWidget::~MainWidget()
@@ -204,9 +207,24 @@ void MainWidget::onTreeItemClicked(QTreeWidgetItem *item, int column)
     {
         saveAsTxt();
     }
-    else if (qstrLayerName == "保存为SHP")
-    {
+    else if (qstrLayerName == "保存为SHP") {
         saveAsSHP();
+    }
+    else if (qstrLayerName == "栅格计算器")
+    {
+        on_ctrlOpenRasterCalculatorActionV2_triggered();
+    }
+    else if (qstrLayerName == "矢量栅格化")
+    {
+        on_ctrlVecToRasAction_triggered();
+    }
+    else if (qstrLayerName == "缓冲区")
+    {
+        on_actionbuffer_triggered();
+    }
+    else if (qstrLayerName == "裁剪")
+    {
+        on_actionClip_triggered();
     }
 }
 void MainWidget::on_actionbuffer_triggered() {
@@ -343,4 +361,18 @@ void MainWidget::on_ctrlOpenRasterCalculatorActionV2_triggered()
 
     // 释放内存
     delete rasterCalculatorDialog;
+}
+// 添加栅格色带
+void MainWidget::on_ctrlActionRamp_triggered()
+{
+	// 获取色带文件夹路径
+    //mstrRampPath = QFileDialog::getExistingDirectory(this, tr("选择色带文件夹"), "");
+    // 获取xml文件
+    mstrRampPath = QFileDialog::getOpenFileName(this, tr("选择色带文件"), "../", tr("(*.xml)"));
+}
+// 添加样式
+void MainWidget::on_ctrlActionImportStyle_triggered()
+{
+	// 获取样式文件夹路径
+	mstrStylePath = QFileDialog::getExistingDirectory(this, tr("选择样式文件夹"), "../");
 }

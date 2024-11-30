@@ -232,5 +232,8 @@
     <None Include="qss\Ubuntu.qss">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="qss\BrightTheme.qss">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

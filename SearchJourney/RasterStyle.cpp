@@ -17,10 +17,14 @@
 #include <QgsColorRampShader.h>
 #include <qgscolorrampimpl.h.>
 
-RasterStyle::RasterStyle(QString strLayerName, QgsRasterLayer* rasLayer, MainWidget* widMain, QWidget* parent)
-    : QDockWidget(parent), mRasLayer(rasLayer), mrasColorRamp(nullptr) {
+RasterStyle::RasterStyle(QString strLayerName, QgsRasterLayer* rasLayer, MainWidget* widMain,QString rampPath, QWidget* parent)
+    : QDockWidget(parent), mRasLayer(rasLayer), mstrRampPath(rampPath), mrasColorRamp(nullptr) {
 
     createRasterSymbolDock(widMain);
+    if(rampPath.isEmpty())
+	{
+		QMessageBox::warning(this, tr("警告"), tr("未导入色带文件"));
+	}
 }
 
 RasterStyle::~RasterStyle() {
@@ -100,7 +104,8 @@ void RasterStyle::createRasterSymbolDock(MainWidget* widMain) {
     layout->addWidget(cmbColorRamp);
 
     // 加载色带文件
-    QString colorRampFilePath = "../styles/Color/pokemon_UCHqlV3.xml"; 
+    //QString colorRampFilePath = "../styles/Color/pokemon_UCHqlV3.xml"; 
+    QString colorRampFilePath = mstrRampPath;
     QFile file(colorRampFilePath);
     if (file.open(QIODevice::ReadOnly)) {
         QDomDocument doc;

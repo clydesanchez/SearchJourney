@@ -1,0 +1,632 @@
+/*
+File: BrightTheme.qss
+Author: SearchJourney
+Date: 2024.11.30
+Description: 程序暗色浅色样式
+ */
+/* 主窗口背景颜色 */
+QMainWindow {
+    background-color: #ececec; /* 浅灰色背景 */
+}
+
+/* 按钮样式，包括普通按钮、工具按钮和命令链接按钮 */
+QPushButton, QToolButton, QCommandLinkButton {
+    padding: 0 5px 0 5px; /* 内边距 */
+    border-style: solid; /* 边框样式为实线 */
+    border-top-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #c1c9cf, stop:1 #d2d8dd); /* 顶部边框渐变色 */
+    border-right-color: qlineargradient(spread:pad, x1:1, y1:0, x2:0, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd); /* 右边边框渐变色 */
+    border-bottom-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd); /* 底部边框渐变色 */
+    border-left-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd); /* 左边边框渐变色 */
+    border-width: 2px; /* 边框宽度 */
+    border-radius: 8px; /* 圆角半径 */
+    color: #616161; /* 文字颜色 */
+    font-weight: bold; /* 粗体文字 */
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #fbfdfd, stop:0.5 #ffffff, stop:1 #fbfdfd); /* 背景渐变色 */
+}
+
+/* 默认按钮样式 */
+QPushButton::default, QToolButton::default, QCommandLinkButton::default {
+    border: 2px solid transparent; /* 透明边框 */
+    color: #FFFFFF; /* 白色文字 */
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #84afe5, stop:1 #1168e4); /* 蓝色背景渐变 */
+}
+
+/* 鼠标悬停时的按钮样式 */
+QPushButton:hover, QToolButton:hover, QCommandLinkButton:hover {
+    color: #3d3d3d; /* 文字颜色保持深灰色 */
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #f8e6c1, stop:0.5 #fbe8c7, stop:1 #f8e6c1); /* 米黄色渐变背景 */
+}
+
+/* 按钮被按下时的样式 */
+QPushButton:pressed, QToolButton:pressed, QCommandLinkButton:pressed {
+    color: #3d3d3d; /* 文字颜色保持深灰色 */
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #f5dca7, stop:0.5 #f6e0b0, stop:1 #f5dca7); /* 更深的米黄色渐变背景 */
+}
+
+
+/* 按钮未激活状态样式，确保按下后返回原始颜色 */
+QPushButton:!hover:!pressed, QToolButton:!hover:!pressed, QCommandLinkButton:!hover:!pressed {
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #fbfdfd, stop:0.5 #ffffff, stop:1 #fbfdfd); /* 恢复为默认背景颜色 */
+    color: #3d3d3d; /* 深灰色字体 */
+}
+
+
+/* 按钮禁用状态的样式 */
+QPushButton:disabled, QToolButton:disabled, QCommandLinkButton:disabled {
+    color: #616161; /* 深灰色文字 */
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #dce7eb, stop:0.5 #e0e8eb, stop:1 #dee7ec); /* 浅蓝灰背景渐变 */
+}
+
+/* 文本输入框、数字输入框等样式 */
+QLineEdit, QTextEdit, QPlainTextEdit, QSpinBox, QDoubleSpinBox, QTimeEdit, QDateEdit, QDateTimeEdit {
+    border-width: 2px; /* 边框宽度 */
+    border-radius: 8px; /* 圆角半径 */
+    border-style: solid; /* 边框样式为实线 */
+    border-top-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd); /* 顶部边框渐变 */
+    border-right-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd); /* 右边边框渐变 */
+    border-bottom-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #c1c9cf, stop:1 #d2d8dd); /* 底部边框渐变 */
+    border-left-color: qlineargradient(spread:pad, x1:1, y1:0, x2:0, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd); /* 左边边框渐变 */
+    background-color: #f4f4f4; /* 浅灰色背景 */
+    color: #3d3d3d; /* 深灰色文字 */
+}
+
+/* 输入框聚焦时的样式 */
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QTimeEdit:focus, QDateEdit:focus, QDateTimeEdit:focus {
+    border-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 #f5deb3, stop:1 #ffe4b5); /* 聚焦时米黄色边框渐变 */
+    background-color: #f4f4f4; /* 背景不变 */
+    color: #3d3d3d; /* 深灰文字 */
+}
+
+/* 禁用状态的输入框 */
+QLineEdit:disabled, QTextEdit:disabled, QPlainTextEdit:disabled, QSpinBox:disabled, QDoubleSpinBox:disabled, QTimeEdit:disabled, QDateEdit:disabled, QDateTimeEdit:disabled {
+    color: #b9b9b9; /* 浅灰色文字 */
+}
+/* 上箭头按钮样式（适用于 QSpinBox、QDoubleSpinBox、QTimeEdit、QDateEdit 和 QDateTimeEdit） */
+QSpinBox::up-button, QDoubleSpinBox::up-button, QTimeEdit::up-button, QDateEdit::up-button, QDateTimeEdit::up-button {
+    subcontrol-origin: padding; /* 子控件位置基于内边距 */
+    subcontrol-position: top right; /* 按钮位于右上角 */
+    width: 15px; /* 按钮宽度 */
+    color: #272727; /* 深灰色文本 */
+    border-left-width: 1px; /* 左边框宽度 */
+    border-left-color: darkgray; /* 左边框颜色为深灰色 */
+    border-left-style: solid; /* 实线左边框 */
+    border-top-right-radius: 3px; /* 顶部右圆角 */
+    padding: 3px; /* 按钮内边距 */
+}
+
+/* 下箭头按钮样式（适用于 QSpinBox、QDoubleSpinBox、QTimeEdit、QDateEdit 和 QDateTimeEdit） */
+QSpinBox::down-button, QDoubleSpinBox::down-button, QTimeEdit::down-button, QDateEdit::down-button, QDateTimeEdit::down-button {
+    subcontrol-origin: padding; /* 子控件位置基于内边距 */
+    subcontrol-position: bottom right; /* 按钮位于右下角 */
+    width: 15px; /* 按钮宽度 */
+    color: #272727; /* 深灰色文本 */
+    border-left-width: 1px; /* 左边框宽度 */
+    border-left-color: darkgray; /* 左边框颜色为深灰色 */
+    border-left-style: solid; /* 实线左边框 */
+    border-bottom-right-radius: 3px; /* 底部右圆角 */
+    padding: 3px; /* 按钮内边距 */
+}
+
+/* 上箭头按钮按下时的样式 */
+QSpinBox::up-button:pressed, QDoubleSpinBox::up-button:pressed, QTimeEdit::up-button:pressed, QDateEdit::up-button:pressed, QDateTimeEdit::up-button:pressed {
+    color: #aeaeae; /* 浅灰色文本 */
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #ffffff, stop:0.5 #fbfdfd, stop:1 #ffffff); /* 浅白色背景渐变 */
+}
+
+/* 下箭头按钮按下时的样式 */
+QSpinBox::down-button:pressed, QDoubleSpinBox::down-button:pressed, QTimeEdit::down-button:pressed, QDateEdit::down-button:pressed, QDateTimeEdit::down-button:pressed {
+    color: #aeaeae; /* 浅灰色文本 */
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #ffffff, stop:0.5 #fbfdfd, stop:1 #ffffff); /* 浅白色背景渐变 */
+}
+
+/* 上箭头按钮鼠标悬停时的样式 */
+QSpinBox::up-button:hover, QDoubleSpinBox::up-button:hover, QTimeEdit::up-button:hover, QDateEdit::up-button:hover, QDateTimeEdit::up-button:hover {
+    color: #FFFFFF; /* 白色文本 */
+    border-top-right-radius: 5px; /* 鼠标悬停时顶部右圆角变大 */
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #84afe5, stop:1 #1168e4); /* 蓝色背景渐变 */
+}
+
+/* 下箭头按钮鼠标悬停时的样式 */
+QSpinBox::down-button:hover, QDoubleSpinBox::down-button:hover, QTimeEdit::down-button:hover, QDateEdit::down-button:hover, QDateTimeEdit::down-button:hover {
+    color: #FFFFFF; /* 白色文本 */
+    border-bottom-right-radius: 5px; /* 鼠标悬停时底部右圆角变大 */
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #84afe5, stop:1 #1168e4); /* 蓝色背景渐变 */
+}
+
+/* 上箭头图标 */
+QSpinBox::up-arrow, QDoubleSpinBox::up-arrow, QTimeEdit::up-arrow, QDateEdit::up-arrow, QDateTimeEdit::up-arrow {
+    image: url(/usr/share/icons/Adwaita/16x16/actions/go-up-symbolic.symbolic.png); /* 图标路径 */
+}
+
+/* 下箭头图标 */
+QSpinBox::down-arrow, QDoubleSpinBox::down-arrow, QTimeEdit::down-arrow, QDateEdit::down-arrow, QDateTimeEdit::down-arrow {
+    image: url(/usr/share/icons/Adwaita/16x16/actions/go-down-symbolic.symbolic.png); /* 图标路径 */
+}
+
+/* 进度条样式 */
+QProgressBar {
+    text-align: center; /* 文本居中 */
+    color: rgb(0, 0, 0); /* 黑色文字 */
+    border: 1px inset rgb(150, 150, 150); /* 凹陷边框 */
+    border-radius: 10px; /* 圆角 */
+    background-color: rgb(255, 255, 255); /* 米黄色背景 */
+}
+
+/* 水平进度条的填充样式 */
+QProgressBar::chunk:horizontal {
+    background-color: rgb(235, 220, 180); /* 深一点的米黄色填充颜色 */
+    border: 1px solid rgb(210, 190, 160); /* 边框为稍深的米黄色 */
+    border-radius: 8px; /* 圆角 */
+}
+
+
+/* 滑块样式 */
+QSlider::groove {
+    border: 1px solid #bbbbbb; /* 浅灰色边框 */
+    background-color: #52595d; /* 灰色背景 */
+    border-radius: 4px; /* 圆角 */
+}
+QSlider::groove:horizontal {
+    height: 6px; /* 水平滑槽高度 */
+}
+QSlider::groove:vertical {
+    width: 6px; /* 垂直滑槽宽度 */
+}
+/* 滑块的滑动按钮样式（水平和垂直） */
+QSlider::handle:horizontal {
+    background: #ffffff; /* 白色背景 */
+    border-style: solid; /* 实线边框 */
+    border-width: 1px; /* 边框宽度 */
+    border-color: rgb(207, 207, 207); /* 浅灰色边框 */
+    width: 12px; /* 滑块宽度 */
+    margin: -5px 0; /* 滑块边距调整 */
+    border-radius: 7px; /* 圆角 */
+}
+QSlider::handle:vertical {
+    background: #ffffff; /* 白色背景 */
+    border-style: solid; /* 实线边框 */
+    border-width: 1px; /* 边框宽度 */
+    border-color: rgb(207, 207, 207); /* 浅灰色边框 */
+    height: 12px; /* 滑块高度 */
+    margin: 0 -5px; /* 滑块边距调整 */
+    border-radius: 7px; /* 圆角 */
+}
+
+/* 滑槽填充部分样式 */
+QSlider::add-page, QSlider::sub-page {
+    border: 1px transparent; /* 透明边框 */
+    background-color: #52595d; /* 灰色背景 */
+    border-radius: 4px; /* 圆角 */
+}
+
+/* 水平滑槽未填充部分样式 */
+QSlider::add-page:horizontal {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #ddd5d5, stop:0.5 #dad3d3, stop:1 #ddd5d5); /* 浅灰色渐变 */
+}
+
+/* 水平滑槽已填充部分样式 */
+QSlider::sub-page:horizontal {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #467dd1, stop:0.5 #3b88fc, stop:1 #467dd1); /* 蓝色渐变 */
+}
+
+/* 垂直滑槽未填充部分样式 */
+QSlider::add-page:vertical {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #467dd1, stop:0.5 #3b88fc, stop:1 #467dd1); /* 蓝色渐变 */
+}
+
+/* 垂直滑槽已填充部分样式 */
+QSlider::sub-page:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #ddd5d5, stop:0.5 #dad3d3, stop:1 #ddd5d5); /* 浅灰色渐变 */
+}
+
+/* 禁用状态下的滑槽样式 */
+QSlider::add-page:horizontal:disabled, QSlider::sub-page:horizontal:disabled, QSlider::add-page:vertical:disabled, QSlider::sub-page:vertical:disabled {
+    background: #b9b9b9; /* 灰色背景 */
+}
+/* 下拉框和字体选择框的样式 */
+QComboBox, QFontComboBox {
+    border-width: 2px; /* 边框宽度 */
+    border-radius: 8px; /* 圆角半径 */
+    border-style: solid; /* 边框样式为实线 */
+    border-top-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd); /* 顶部边框渐变色 */
+    border-right-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd); /* 右边边框渐变色 */
+    border-bottom-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #c1c9cf, stop:1 #d2d8dd); /* 底部边框渐变色 */
+    border-left-color: qlineargradient(spread:pad, x1:1, y1:0, x2:0, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd); /* 左边边框渐变色 */
+    background-color: #f4f4f4; /* 浅灰色背景 */
+    color: #272727; /* 深灰色文本 */
+    padding-left: 5px; /* 左侧内边距 */
+}
+
+/* 可编辑和非可编辑状态下拉框的背景颜色 */
+QComboBox:editable, QComboBox:!editable, QComboBox::drop-down:editable, QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background: #ffffff; /* 白色背景 */
+}
+
+/* 下拉箭头部分的样式 */
+QComboBox::drop-down {
+    subcontrol-origin: padding; /* 子控件位置基于内边距 */
+    subcontrol-position: top right; /* 子控件位置位于右上角 */
+    width: 15px; /* 下拉按钮宽度 */
+    color: #272727; /* 深灰色箭头颜色 */
+    border-left-width: 1px; /* 左边框宽度 */
+    border-left-color: darkgray; /* 左边框颜色为深灰色 */
+    border-left-style: solid; /* 实线左边框 */
+    border-top-right-radius: 3px; /* 顶部右圆角 */
+    border-bottom-right-radius: 3px; /* 底部右圆角 */
+}
+
+/* 下拉箭头图标 */
+QComboBox::down-arrow {
+    image: url(/usr/share/icons/Adwaita/16x16/actions/go-down-symbolic.symbolic.png); /* 图标路径 */
+}
+
+/* 下拉箭头被点击时的样式 */
+QComboBox::down-arrow:on {
+    top: 1px; /* 箭头向下偏移1像素 */
+    left: 1px; /* 箭头向右偏移1像素 */
+}
+
+/* 下拉框列表视图的样式 */
+QComboBox QAbstractItemView {
+    border: 1px solid darkgray; /* 深灰色边框 */
+    border-radius: 8px; /* 圆角半径 */
+    selection-background-color: #dadada; /* 选中项的背景颜色 */
+    selection-color: #272727; /* 选中项的文字颜色 */
+    color: #272727; /* 列表项的默认文字颜色 */
+    background: white; /* 列表项的背景颜色 */
+}
+
+/* 标签、复选框和单选按钮的样式 */
+QLabel, QCheckBox, QRadioButton {
+    color: #272727; /* 深灰色文字颜色 */
+}
+
+/* 复选框的基本样式 */
+QCheckBox {
+    padding: 2px; /* 内边距 */
+}
+
+/* 禁用状态下的复选框和单选按钮样式 */
+QCheckBox:disabled, QRadioButton:disabled {
+    color: #b0b09b; /* 灰米色文字颜色 */
+    padding: 2px; /* 保持内边距一致 */
+}
+
+/* 鼠标悬停在复选框上的样式 */
+QCheckBox:hover {
+    border-radius: 4px; /* 圆角 */
+    border-style: solid; /* 实线边框 */
+    padding-left: 1px; /* 左边距 */
+    padding-right: 1px; /* 右边距 */
+    padding-bottom: 1px; /* 底边距 */
+    padding-top: 1px; /* 顶部边距 */
+    border-width: 1px; /* 边框宽度 */
+    border-color: transparent; /* 边框透明 */
+}
+
+/* 复选框被选中时的指示器样式 */
+QCheckBox::indicator:checked {
+    image: url(/usr/share/icons/Adwaita/16x16/actions/check-symbolic.symbolic.png); /* 选中状态的勾图标 */
+    height: 15px; /* 指示器高度 */
+    width: 15px; /* 指示器宽度 */
+    border-style: solid; /* 实线边框 */
+    border-width: 1px; /* 边框宽度 */
+    border-color: #98c5a4; /* 边框颜色为浅绿色 */
+    color: #ffffff; /* 图标颜色为白色 */
+    border-radius: 3px; /* 圆角 */
+    background-color: rgb(190, 230, 190); /* 浅绿色背景 */
+}
+
+/* 复选框未选中时的指示器样式 */
+QCheckBox::indicator:unchecked {
+    height: 15px; /* 指示器高度 */
+    width: 15px; /* 指示器宽度 */
+    border-style: solid; /* 实线边框 */
+    border-width: 1px; /* 边框宽度 */
+    border-color: #f4f4f4; /* 边框颜色为米黄色 */
+    border-radius: 3px; /* 圆角 */
+    background-color: #f9f3d6; /* 浅米黄色背景 */
+}
+
+
+/* LCD 数字显示控件的文字颜色 */
+QLCDNumber {
+    color: #616161; /* 灰色文字颜色 */
+}
+
+/* 菜单栏的背景颜色 */
+QMenuBar {
+    background-color: #ececec; /* 浅灰背景 */
+}
+
+/* 菜单栏项的样式 */
+QMenuBar::item {
+    color: #616161; /* 深灰文字颜色 */
+    spacing: 3px; /* 间距 */
+    padding: 1px 4px; /* 内边距 */
+    background-color: #ececec; /* 浅灰背景 */
+}
+
+/* 菜单栏项被选中时的样式 */
+QMenuBar::item:selected {
+    background-color: #dadada; /* 浅灰背景 */
+    color: #3d3d3d; /* 深灰文字颜色 */
+}
+
+/* 菜单的背景颜色 */
+QMenu {
+    background-color: #ececec; /* 浅灰背景 */
+}
+
+/* 菜单项被选中时的样式 */
+QMenu::item:selected {
+    background-color: #dadada; /* 浅灰背景 */
+    color: #3d3d3d; /* 深灰文字颜色 */
+}
+
+/* 菜单项的默认样式 */
+QMenu::item {
+    color: #616161; /* 深灰文字颜色 */
+    background-color: #e0e0e0; /* 浅灰背景 */
+}
+
+/* Tab 控件的文本颜色和背景颜色 */
+QTabWidget {
+    color: rgb(0, 0, 0); /* 黑色文字 */
+    background-color: #000000; /* 黑色背景 */
+}
+
+/* Tab 面板的样式 */
+QTabWidget::pane {
+    border-color: #050a0e; /* 深灰边框颜色 */
+    background-color: #e0e0e0; /* 浅灰背景 */
+    border-width: 1px; /* 边框宽度 */
+    border-radius: 4px; /* 圆角 */
+    position: absolute; /* 绝对定位 */
+    top: -0.5em; /* 向上偏移 */
+    padding-top: 0.5em; /* 顶部内边距 */
+}
+
+/* Tab 控件的选项卡栏对齐方式 */
+QTabWidget::tab-bar {
+    alignment: center; /* 选项卡居中对齐 */
+}
+
+/* QTabBar 样式定义 */
+
+/* Tab 项的默认样式 */
+QTabBar::tab {
+    border-bottom: 1px solid #c0c0c0; /* 底部边框为浅灰色 */
+    padding: 3px; /* 内边距 */
+    color: #272727; /* 深灰色文字 */
+    background-color: #fefefc; /* 浅白色背景 */
+    margin-left: 0px; /* 无左边距 */
+}
+
+/* 非最后一个 Tab 的边框样式 */
+QTabBar::tab:!last {
+    border-right: 1px solid; /* 右边边框 */
+    border-right-color: #c0c0c0; /* 右边框颜色 */
+    border-bottom-color: #c0c0c0; /* 底部边框颜色 */
+}
+
+/* 第一个 Tab 的圆角边框 */
+QTabBar::tab:first {
+    border-top-left-radius: 4px; /* 顶部左圆角 */
+    border-bottom-left-radius: 4px; /* 底部左圆角 */
+}
+
+/* 最后一个 Tab 的圆角边框 */
+QTabBar::tab:last {
+    border-top-right-radius: 4px; /* 顶部右圆角 */
+    border-bottom-right-radius: 4px; /* 底部右圆角 */
+}
+
+/* 选中状态和鼠标悬停状态的样式 */
+QTabBar::tab:selected, QTabBar::tab:last:selected, QTabBar::tab:hover {
+    color: #FFFFFF; /* 白色文字 */
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #84afe5, stop:1 #1168e4); /* 蓝色背景渐变 */
+}
+
+/* QRadioButton 样式定义 */
+
+/* 单选按钮指示器的默认样式 */
+QRadioButton::indicator {
+    height: 14px; /* 指示器高度 */
+    width: 14px; /* 指示器宽度 */
+    border-style: solid; /* 实线边框 */
+    border-radius: 7px; /* 圆角 */
+    border-width: 1px; /* 边框宽度 */
+}
+
+/* 单选按钮被选中时的样式 */
+QRadioButton::indicator:checked {
+    border-color: #48a5fd; /* 蓝色边框 */
+    background-color: qradialgradient(cx:0.5, cy:0.5, radius:0.4, fx:0.5, fy:0.5, stop:0 #ffffff, stop:0.5 #ffffff, stop:0.6 #48a5fd, stop:1 #48a5fd); /* 蓝色径向渐变背景 */
+}
+
+/* 单选按钮未选中时的样式 */
+QRadioButton::indicator:!checked {
+    border-color: #a9b7c6; /* 浅灰边框 */
+    background-color: #fbfdfa; /* 浅灰背景 */
+}
+
+/* QStatusBar 样式定义 */
+QStatusBar {
+    color: #027f7f; /* 青绿色文字 */
+}
+
+/* QDial 样式定义 */
+QDial {
+    background: #16a085; /* 青绿色背景 */
+}
+
+/* QToolBox 样式定义 */
+
+/* QToolBox 的文字颜色和背景颜色 */
+QToolBox {
+    color: #a9b7c6; /* 浅灰色文字 */
+    background-color: #222b2e; /* 深灰背景 */
+}
+
+/* QToolBox 每个标签的默认样式 */
+QToolBox::tab {
+    color: #a9b7c6; /* 浅灰色文字 */
+    background-color: #222b2e; /* 深灰背景 */
+}
+
+/* QToolBox 选中标签的样式 */
+QToolBox::tab:selected {
+    color: #FFFFFF; /* 白色文字 */
+    background-color: #222b2e; /* 深灰背景 */
+}
+
+/* QScrollArea 样式定义 */
+QScrollArea {
+    color: #FFFFFF; /* 白色文字 */
+    background-color: #222b2e; /* 深灰背景 */
+}
+
+/* QScrollBar 样式定义 */
+
+/* 水平滚动条的样式 */
+QScrollBar:horizontal {
+    max-height: 10px; /* 最大高度 */
+    border: 1px transparent grey; /* 透明边框 */
+    margin: 0px 20px 0px 20px; /* 滚动条的边距 */
+    background: transparent; /* 透明背景 */
+}
+
+/* 垂直滚动条的样式 */
+QScrollBar:vertical {
+    max-width: 10px; /* 最大宽度 */
+    border: 1px transparent grey; /* 透明边框 */
+    margin: 20px 0px 20px 0px; /* 滚动条的边距 */
+    background: transparent; /* 透明背景 */
+}
+
+/* 滚动条的滑块样式 */
+QScrollBar::handle:vertical, QScrollBar::handle:horizontal {
+    background: #52595d; /* 灰色背景 */
+    border-style: transparent; /* 透明边框 */
+    border-radius: 4px; /* 圆角 */
+    min-height: 25px; /* 最小高度 */
+}
+
+/* 滚动条滑块在鼠标悬停时的样式 */
+QScrollBar::handle:horizontal:hover, QScrollBar::handle:vertical:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #467dd1, stop:0.5 #3b88fc, stop:1 #467dd1); /* 蓝色渐变背景 */
+}
+
+/* 滚动条的增加和减少按钮样式 */
+QScrollBar::add-line, QScrollBar::sub-line {
+    border: 2px transparent grey; /* 透明边框 */
+    border-radius: 4px; /* 圆角 */
+    subcontrol-origin: margin; /* 子控件位置 */
+    background: #b9b9b9; /* 浅灰背景 */
+}
+
+/* 水平滚动条的增加按钮位置 */
+QScrollBar::add-line:horizontal {
+    width: 20px; /* 宽度 */
+    subcontrol-position: right; /* 靠右对齐 */
+}
+
+/* 垂直滚动条的增加按钮位置 */
+QScrollBar::add-line:vertical {
+    height: 20px; /* 高度 */
+    subcontrol-position: bottom; /* 靠下对齐 */
+}
+
+/* 水平滚动条的减少按钮位置 */
+QScrollBar::sub-line:horizontal {
+    width: 20px; /* 宽度 */
+    subcontrol-position: left; /* 靠左对齐 */
+}
+
+/* 垂直滚动条的减少按钮位置 */
+QScrollBar::sub-line:vertical {
+    height: 20px; /* 高度 */
+    subcontrol-position: top; /* 靠上对齐 */
+}
+
+/* 滚动条按钮被按下时的样式 */
+QScrollBar::add-line:vertical:pressed, QScrollBar::add-line:horizontal:pressed, QScrollBar::sub-line:horizontal:pressed, QScrollBar::sub-line:vertical:pressed {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #467dd1, stop:0.5 #3b88fc, stop:1 #467dd1); /* 蓝色渐变背景 */
+}
+
+/* 滚动条的增加和减少按钮背景 */
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal, QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none; /* 无背景 */
+}
+
+/* 滚动条的箭头图标 */
+QScrollBar::up-arrow:vertical {
+    image: url(/usr/share/icons/Adwaita/16x16/actions/go-up-symbolic.symbolic.png); /* 向上箭头图标 */
+}
+QScrollBar::down-arrow:vertical {
+    image: url(/usr/share/icons/Adwaita/16x16/actions/go-down-symbolic.symbolic.png); /* 向下箭头图标 */
+}
+QScrollBar::left-arrow:horizontal {
+    image: url(/usr/share/icons/Adwaita/16x16/actions/go-previous-symbolic.symbolic.png); /* 向左箭头图标 */
+}
+QScrollBar::right-arrow:horizontal {
+    image: url(/usr/share/icons/Adwaita/16x16/actions/go-next-symbolic.symbolic.png); /* 向右箭头图标 */
+}
+
+/* QDockWidget 样式定义 */
+
+/* 停靠窗口的默认样式 */
+QDockWidget {
+    titlebar-close-icon: url(:/icons/close.png); /* 关闭按钮图标 */
+    titlebar-normal-icon: url(:/icons/normal.png); /* 正常按钮图标 */
+    border-width: 2px; /* 边框宽度 */
+    border-radius: 8px; /* 圆角 */
+    border-style: solid; /* 实线边框 */
+    border-top-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #c1c9cf, stop:1 #d2d8dd); /* 顶部边框渐变 */
+    border-right-color: qlineargradient(spread:pad, x1:1, y1:0, x2:0, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd); /* 右边边框渐变 */
+    border-bottom-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd); /* 底部边框渐变 */
+    border-left-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd); /* 左边边框渐变 */
+    background-color: #f4f4f4; /* 浅灰背景 */
+    color: #3d3d3d; /* 深灰文字 */
+}
+
+/* 停靠窗口标题栏样式 */
+QDockWidget::title {
+    text-align: center; /* 文本居中对齐 */
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #ffffff, stop:1 #fbfdfd); /* 白色渐变背景 */
+    font-weight: bold; /* 粗体文字 */
+    color: #616161; /* 灰色文字 */
+    padding: 2px; /* 内边距 */
+    border-radius: 4px; /* 圆角 */
+}
+
+/* 工具栏的默认样式 */
+QToolBar {
+    border-width: 2px; /* 边框宽度 */
+    border-radius: 8px; /* 圆角 */
+    border-style: solid; /* 实线边框 */
+    border-top-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #f7eddc, stop:1 #f5e6ca); /* 顶部边框更浅的米黄渐变 */
+    border-right-color: qlineargradient(spread:pad, x1:1, y1:0, x2:0, y2:0, stop:0 #f7eddc, stop:1 #f5e6ca); /* 右边边框更浅的米黄渐变 */
+    border-bottom-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 #f7eddc, stop:1 #f5e6ca); /* 底部边框更浅的米黄渐变 */
+    border-left-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #f7eddc, stop:1 #f5e6ca); /* 左边边框更浅的米黄渐变 */
+    background-color: #fbf5e8; /* 更浅的米黄色背景 */
+    color: #6a5e4c; /* 深米黄色文字 */
+}
+
+/* 工具栏手柄样式 */
+QToolBar::handle {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #e7c98d, stop:0.5 #d9b87a, stop:1 #e7c98d); /* 深米黄色渐变背景 */
+    width: 7px; /* 增加手柄宽度 */
+    border-radius: 2px; /* 手柄圆角 */
+    margin: 2px; /* 与工具栏背景留出距离 */
+}
+
+/* 工具栏分隔符样式 */
+QToolBar::separator {
+    background-color: #e0d3b9; /* 中性的米黄颜色，作为分隔符背景 */
+    width: 2px; /* 分隔符宽度 */
+    margin: 2px; /* 分隔符边距 */
+    border-radius: 1px; /* 圆角分隔符 */
+}
+
