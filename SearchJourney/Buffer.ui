@@ -77,6 +77,9 @@
    <property name="minimum">
     <double>0.000000000000000</double>
    </property>
+   <property name="maximum">
+    <double>9999.000000000000000</double>
+   </property>
   </widget>
   <widget class="QTextEdit" name="textEdit_output">
    <property name="geometry">

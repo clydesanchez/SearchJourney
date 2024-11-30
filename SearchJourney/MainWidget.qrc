@@ -36,5 +36,33 @@
         <file>resource/icons8-添加行-30.png</file>
         <file>resource/地图操作.png</file>
         <file>resource/坐标定位.png</file>
+        <file>resource/添加CSV图层.png</file>
+        <file>resource/添加shp图层.png</file>
+        <file>resource/添加栅格图层.png</file>
+        <file>resource/保存编辑.png</file>
+        <file>resource/保存统计结果.png</file>
+        <file>resource/保存为SHP.png</file>
+        <file>resource/保存为工程1.png</file>
+        <file>resource/保存为工程2.png</file>
+        <file>resource/编辑图元属性.png</file>
+        <file>resource/裁剪.png</file>
+        <file>resource/撤销.png</file>
+        <file>resource/抽稀线2.png</file>
+        <file>resource/打开CSV.png</file>
+        <file>resource/打开SHP.png</file>
+        <file>resource/打开TIFF.png</file>
+        <file>resource/打开工程.png</file>
+        <file>resource/反撤销.png</file>
+        <file>resource/复制图元.png</file>
+        <file>resource/缓冲区.png</file>
+        <file>resource/开始编辑.png</file>
+        <file>resource/面边界转线.png</file>
+        <file>resource/面边界转线2.png</file>
+        <file>resource/平滑线2.png</file>
+        <file>resource/平移.png</file>
+        <file>resource/全屏.png</file>
+        <file>resource/矢量转栅格.png</file>
+        <file>resource/添加点.png</file>
+        <file>resource/栅格计算器.png</file>
     </qresource>
 </RCC>

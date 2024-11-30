@@ -256,7 +256,7 @@ color:black</string>
           <x>0</x>
           <y>0</y>
           <width>177</width>
-          <height>574</height>
+          <height>568</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_5">
@@ -394,7 +394,7 @@ color:black</string>
           <x>0</x>
           <y>0</y>
           <width>176</width>
-          <height>271</height>
+          <height>268</height>
          </rect>
         </property>
         <property name="autoFillBackground">
@@ -528,7 +528,7 @@ color:black</string>
   <action name="ctrlOpenVectorAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/resource/shp导入.png</normaloff>:/resource/shp导入.png</iconset>
+     <normaloff>:/resource/添加shp图层.png</normaloff>:/resource/添加shp图层.png</iconset>
    </property>
    <property name="text">
     <string>添加矢量图层</string>
@@ -537,7 +537,7 @@ color:black</string>
   <action name="ctrlOpenRasterAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/resource/栅格影像.png</normaloff>:/resource/栅格影像.png</iconset>
+     <normaloff>:/resource/添加栅格图层.png</normaloff>:/resource/添加栅格图层.png</iconset>
    </property>
    <property name="text">
     <string>添加栅格图层</string>
@@ -546,7 +546,7 @@ color:black</string>
   <action name="ctrlOpenTextAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/icon/openCSV.png</normaloff>:/icon/openCSV.png</iconset>
+     <normaloff>:/resource/添加CSV图层.png</normaloff>:/resource/添加CSV图层.png</iconset>
    </property>
    <property name="text">
     <string>添加CSV文件</string>
@@ -582,7 +582,7 @@ color:black</string>
   <action name="ctrlSaveProjectAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/resource/保存.png</normaloff>:/resource/保存.png</iconset>
+     <normaloff>:/resource/保存为工程2.png</normaloff>:/resource/保存为工程2.png</iconset>
    </property>
    <property name="text">
     <string>保存工程</string>
@@ -600,7 +600,7 @@ color:black</string>
   <action name="ctrlSaveAsSHPAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/resource/保存为数据集.png</normaloff>:/resource/保存为数据集.png</iconset>
+     <normaloff>:/resource/保存为SHP.png</normaloff>:/resource/保存为SHP.png</iconset>
    </property>
    <property name="text">
     <string>保存为shp</string>
@@ -609,7 +609,7 @@ color:black</string>
   <action name="ctrlSaveAsTxtAction">
    <property name="icon">
     <iconset resource="MainWidget.qrc">
-     <normaloff>:/resource/导出统计图.png</normaloff>:/resource/导出统计图.png</iconset>
+     <normaloff>:/resource/保存统计结果.png</normaloff>:/resource/保存统计结果.png</iconset>
    </property>
    <property name="text">
     <string>保存统计结果</string>
@@ -643,6 +643,10 @@ color:black</string>
    </property>
   </action>
   <action name="ctrlEditableAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/开始编辑.png</normaloff>:/resource/开始编辑.png</iconset>
+   </property>
    <property name="text">
     <string>启用编辑</string>
    </property>
@@ -687,11 +691,19 @@ color:black</string>
    </property>
   </action>
   <action name="ctrlVecToRasAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/矢量转栅格.png</normaloff>:/resource/矢量转栅格.png</iconset>
+   </property>
    <property name="text">
     <string>矢量转栅格</string>
    </property>
   </action>
   <action name="ctrlCopyAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/复制图元.png</normaloff>:/resource/复制图元.png</iconset>
+   </property>
    <property name="text">
     <string>复制图元</string>
    </property>
@@ -705,31 +717,55 @@ color:black</string>
    </property>
   </action>
   <action name="ctrlOpenRasterCalculatorActionV2">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/栅格计算器.png</normaloff>:/resource/栅格计算器.png</iconset>
+   </property>
    <property name="text">
     <string>栅格计算器...</string>
    </property>
   </action>
   <action name="ctrlAddPointAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/添加点.png</normaloff>:/resource/添加点.png</iconset>
+   </property>
    <property name="text">
     <string>添加点</string>
    </property>
   </action>
   <action name="ctrlSmoothLineAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/平滑线2.png</normaloff>:/resource/平滑线2.png</iconset>
+   </property>
    <property name="text">
     <string>光滑线</string>
    </property>
   </action>
   <action name="ctrlThiningLineAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/抽稀线2.png</normaloff>:/resource/抽稀线2.png</iconset>
+   </property>
    <property name="text">
     <string>抽稀线</string>
    </property>
   </action>
   <action name="ctrlPolygonToLineAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/面边界转线.png</normaloff>:/resource/面边界转线.png</iconset>
+   </property>
    <property name="text">
     <string>面边界转线</string>
    </property>
   </action>
   <action name="ctrlUndoAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/撤销.png</normaloff>:/resource/撤销.png</iconset>
+   </property>
    <property name="text">
     <string>撤销</string>
    </property>
@@ -738,6 +774,10 @@ color:black</string>
    </property>
   </action>
   <action name="ctrlRedoAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/反撤销.png</normaloff>:/resource/反撤销.png</iconset>
+   </property>
    <property name="text">
     <string>反撤销</string>
    </property>
@@ -746,16 +786,28 @@ color:black</string>
    </property>
   </action>
   <action name="ctrlSaveEditAction">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/保存编辑.png</normaloff>:/resource/保存编辑.png</iconset>
+   </property>
    <property name="text">
     <string>保存编辑</string>
    </property>
   </action>
   <action name="actionbuffer">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/缓冲区.png</normaloff>:/resource/缓冲区.png</iconset>
+   </property>
    <property name="text">
     <string>缓冲区</string>
    </property>
   </action>
   <action name="actionClip">
+   <property name="icon">
+    <iconset resource="MainWidget.qrc">
+     <normaloff>:/resource/裁剪.png</normaloff>:/resource/裁剪.png</iconset>
+   </property>
    <property name="text">
     <string>裁剪</string>
    </property>

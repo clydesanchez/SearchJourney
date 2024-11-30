@@ -88,7 +88,7 @@ void RasterStyle::createRasterSymbolDock(MainWidget* widMain) {
     // 分级数选择框
     QLabel* lblClasses = new QLabel(tr("Number of Classes:"));
     QSpinBox* spinBoxClasses = new QSpinBox();
-    spinBoxClasses->setRange(2, 20); 
+    spinBoxClasses->setRange(2, 999); 
     spinBoxClasses->setValue(5);    
     layout->addWidget(lblClasses);
     layout->addWidget(spinBoxClasses);
