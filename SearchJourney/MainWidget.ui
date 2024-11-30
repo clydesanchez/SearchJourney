@@ -636,7 +636,7 @@ color:black</string>
      <normaloff>:/resource/添加CSV图层.png</normaloff>:/resource/添加CSV图层.png</iconset>
    </property>
    <property name="text">
-    <string>添加CSV</string>
+    <string>表格转矢量</string>
    </property>
   </action>
   <action name="ctrlKMeansAction">

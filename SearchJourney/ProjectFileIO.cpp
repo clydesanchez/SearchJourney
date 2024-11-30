@@ -41,6 +41,7 @@ void MainWidget::saveProjectAsQGZ()
 
     // 获取当前项目实例
     QgsProject *project = QgsProject::instance();
+    //QList<QgsMapLayer *> layers = project->mapLayers().values();
     // 将当前图层添加到项目中
     for (QgsMapLayer *layer : mliLayersList)
     {
