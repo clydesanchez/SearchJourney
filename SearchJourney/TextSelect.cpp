@@ -17,6 +17,7 @@ Function Lists:
 
 #include "SelectDialog.h"
 #include <QMessageBox>
+#include <QLineEdit>
 TextSelect::TextSelect(QWidget *parent)
 	: QDialog(parent)
 {
@@ -27,10 +28,15 @@ TextSelect::TextSelect(QWidget *parent)
 	ui.ctrlComboBoxX->clear();
 	ui.ctrlComboBoxY->clear();
 	ui.ctrlSpinBox->hide();
+	ui.ctrlComboBoxCRS->hide();
+
+	mpctrlCRS = new QLineEdit(this);
+	mpctrlCRS->setGeometry(ui.ctrlComboBoxCRS->geometry());
+	mpctrlCRS->show();
+	ui.ctrlLabelCRS->show();
 	ui.ctrlComboBoxY->show();
 	ui.ctrlComboBoxX->show();
-	ui.ctrlComboBoxCRS->show();
-	ui.ctrlLabelCRS->show();
+
 }
 
 TextSelect::~TextSelect()
@@ -61,7 +67,7 @@ void TextSelect::on_ctrlBtnConfirm_clicked()
 {
 	mqstrNameX = ui.ctrlComboBoxX->currentText();
 	mqstrNameY = ui.ctrlComboBoxY->currentText();
-	mqstrNameCRS = ui.ctrlComboBoxCRS->currentText();
+	mqstrNameCRS = mpctrlCRS->text();
 	if (mqstrNameX.isEmpty() || mqstrNameY.isEmpty() || mqstrNameCRS.isEmpty())
 	{
 		QMessageBox::critical(this, "error", "请选择经纬度字段");

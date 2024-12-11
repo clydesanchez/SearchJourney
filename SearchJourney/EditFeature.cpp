@@ -34,7 +34,10 @@ void MainWidget::deleteFeature(const QList<QgsFeature>& selectedFeatures) {
 		}
 
 		vectorLayer->startEditing();
+		vectorLayer->beginEditCommand("批量删除要素");
 		vectorLayer->deleteSelectedFeatures();  // 删除当前选中的图元
+		// 提交批量编辑命令
+		vectorLayer->endEditCommand();
 		//vectorLayer->commitChanges();  // 提交更改
 	}
 }
@@ -55,7 +58,7 @@ void MainWidget::moveFeature(const QList<QgsFeature>& selectedFeatures) {
 
 	// 开始编辑图层
 	vectorLayer->startEditing();
-
+	vectorLayer->beginEditCommand("批量移动要素");
 	// 清空当前显示的所有顶点符号
 	for (int i = 0; i < mvVertices.size() && !mvVertices.isEmpty(); i++) {
 		delete mvVertices[i];
@@ -108,7 +111,8 @@ void MainWidget::moveFeature(const QList<QgsFeature>& selectedFeatures) {
 			mvVertices.append(vertexMarker);
 		}
 	}
-
+	// 提交批量编辑命令
+	vectorLayer->endEditCommand();
 	// 刷新地图
 	mcanMapCanvas->refresh();
 	mnSelectVertexIndex = -1;
@@ -226,7 +230,7 @@ void MainWidget::copyFeature(const QList<QgsFeature>& selectedFeatures) {
 			return;
 		}
 	}
-
+	vectorLayer->beginEditCommand("批量复制要素");
 	QDialog* pDl = new QDialog();
 	QVBoxLayout* pVbl = new QVBoxLayout();
 	QHBoxLayout* pHb1 = new QHBoxLayout();
@@ -338,12 +342,9 @@ void MainWidget::copyFeature(const QList<QgsFeature>& selectedFeatures) {
 	//}
 
 	// 提交事务并刷新目标图层
-	if (!vectorLayer->commitChanges()) {
-		QMessageBox::warning(this, "错误", "提交事务失败！");
-		vectorLayer->rollBack();
-	}
-	else {
-		vectorLayer->triggerRepaint();
-		QMessageBox::information(this, "成功", "要素复制完成！");
-	}
+	// 提交批量编辑命令
+	vectorLayer->endEditCommand();
+	vectorLayer->triggerRepaint();
+	QMessageBox::information(this, "成功", "要素复制完成！");
+
 }

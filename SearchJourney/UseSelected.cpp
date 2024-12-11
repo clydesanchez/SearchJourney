@@ -24,6 +24,21 @@
 #include <cmath>
 #include <vector>
 
+
+// 启用批处理模式
+void MainWidget::startBatchEdit(QgsVectorLayer* vectorLayer, const QString& description) {
+    if (vectorLayer && vectorLayer->isEditable()) {
+        vectorLayer->beginEditCommand(description); // 开始一个新的编辑命令
+    }
+}
+
+// 提交批处理模式
+void MainWidget::commitBatchEdit(QgsVectorLayer* vectorLayer) {
+    if (vectorLayer && vectorLayer->isEditable()) {
+        vectorLayer->endEditCommand(); // 提交编辑命令
+    }
+}
+
 void MainWidget::on_ctrlDeleteAction_triggered() {
     // 获取当前的矢量图层
     QList<QgsMapLayer*> layers = mcanMapCanvas->layers();

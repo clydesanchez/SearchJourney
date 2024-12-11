@@ -18,6 +18,7 @@ Description:
 #include <Qgsvectorlayer.h>
 #include <Qgsrasterlayer.h>
 #include <qprogressbar.h>
+#include <QLineEdit>
 // 导入分隔符文本图层 选择字段窗口
 class TextSelect : public QDialog
 {
@@ -40,7 +41,7 @@ private:
 	QString mqstrNameX;
 	QString mqstrNameY;
 	QString mqstrNameCRS;
-
+	QLineEdit *mpctrlCRS;
 private:
 	Ui::TextSelectClass ui;
 };

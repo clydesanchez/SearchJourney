@@ -94,8 +94,14 @@ void MainWidget::addTextLayer()
     QString qstrNameCRS = ctrlChooseWidget->getNameCRS();
 
     // 创建一个内存图层
-    QString qstrLayerUri = "Point?crs=epsg:4326:integer&index=yes";
+    QString qstrLayerUri = QString("Point?crs=epsg:%1:integer&index=yes").arg(qstrNameCRS);
     QgsVectorLayer *pvlMemoryLayer = new QgsVectorLayer(qstrLayerUri, qstrBasename, "memory");
+    QgsCoordinateReferenceSystem crs(qstrNameCRS.toLong());
+    if(!crs.isValid())
+	{
+		QMessageBox::critical(this, "error", QString("不存在该坐标系"+qstrNameCRS));
+		return;
+	}
     // 创建一个要素列表
     QgsFeatureList featureList;
     // 获取要素迭代器

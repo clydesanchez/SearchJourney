@@ -117,6 +117,9 @@ public slots:
     void on_actionbuffer_triggered(); // 缓冲区分析
     void on_actionClip_triggered(); // 裁剪分析
 
+    void startBatchEdit(QgsVectorLayer* vectorLayer, const QString& description);   // 开始批量编辑
+    void commitBatchEdit(QgsVectorLayer* vectorLayer);                              // 提交批量编辑
+
     // 分析工具
 public:
     void createKMeans();                                                                 // 构建聚类分析图层

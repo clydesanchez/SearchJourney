@@ -232,7 +232,7 @@ void SymbolManger::setSymbolByLayerType(Qgis::GeometryType layerType, QgsSymbol*
     case Qgis::GeometryType::Point:
     {
         QgsSvgMarkerSymbolLayer* svgSymbolLayer = new QgsSvgMarkerSymbolLayer(svgPath);
-        svgSymbolLayer->setSize(40);  // 设置符号大小
+        svgSymbolLayer->setSize(4);  // 设置符号大小
         // 设置边界线
         svgSymbolLayer->setStrokeColor(mStrokeColor);
         svgSymbolLayer->setStrokeWidth(mStrokeWidth);
